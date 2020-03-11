@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<!-- 
+  /**
+ * @Class Name : Device API.html
+ * @Description : Device API 가이드 프로그램 index 화면
+ * @Modification Information
+ * 
+ * @  수정일                 수정자                 수정내용
+ * @ ---------   ---------   -------------------------------
+ * @ 2012.07.09    서형주                  최초생성
+ * 
+ * @author 모바일 디바이스 API 팀
+ * @since 2012. 07. 09
+ * @version 1.0
+ * @see
+ * 
+ *  Copyright (C) by MOPAS All right reserved.
+ */
+ -->
+<html LANG="ko"> 
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>DeviceInfo Device API Guide</title>
+
+    <!-- Phonegap.js import -->
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/cmm/cordova.js"></script>
+    
+    <!-- eGovFrame Common import -->        
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.4.5.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/theme-1.1.1.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.4.5.css" />
+    
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery-2.1.4.min.js"></script>
+    <script>
+   	var deviceReadyDeferred = $.Deferred();
+	var jqmReadyDeferred = $.Deferred();
+	
+	document.addEventListener("deviceready", onDeviceReady, false);
+
+	function onDeviceReady() {
+	    document.addEventListener("backbutton", backKeyDown, false);
+		deviceReadyDeferred.resolve();
+		var permissions = cordova.plugins.permissions;
+        permissions.requestPermission(permissions.READ_PHONE_STATE, permissionSuccess, permissionError);
+        permissions.requestPermission(permissions.READ_SMS, permissionSuccess, permissionError);
+        permissions.requestPermission(permissions.READ_PHONE_NUMBERS, permissionSuccess, permissionError);
+	}
+	
+    $(document).on("pageinit", function(){
+                     $.mobile.defaultPageTransition = 'none';
+                     jqmReadyDeferred.resolve();
+                     
+                     });
+    </script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/modernizr-3.6.0.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.4.6.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovHybrid.js"></script>
+
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.validate.min.js"></script>
+    <!--<!--<script type="text/javascript" src="js/egovframework/mbl/cmm/json2.js"></script>-->-->
+        
+    <!-- iScroll.js import -->
+    <script type="text/javascript" src="js/iscroll/iscroll.js"></script>
+ 
+    <!-- Customm CSS import --> 
+    <link rel="stylesheet" href="css/egovframework/mbl/hyb/DeviceInfoAPI.css" />
+   
+    <!-- Customm js import -->     
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/hyb/DeviceInfoAPI.js"></script>
+       
+    <script type="text/javascript">
+             
+    $.when(deviceReadyDeferred, jqmReadyDeferred).then(DeviceAPIInit);
+
+    function DeviceAPIInit() {  
+        fn_egov_init_hrefLink();//버튼 링크 주소 등록
+        fn_egov_load_iScroll();//아이스크롤 초기화
+        fn_egov_regist_batteryInvent();//배터리 관려 이벤트 등록
+       
+    }                      
+    </script>    
+        
+</head>
+<body>
+    <!-- main Page -->
+    <div id="main" data-role="page">
+        <div id="header" data-role="header" data-theme="z" data-position="fixed">
+            <h1>DeviceInfo 디바이스 API 가이드 프로그램<br>(Android APP)</h1>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html" data-ajax="false" data-theme="a">기능설명</a></li>
+                    <li><a href="DeviceInfoAPI.html"  data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="content" data-role="content">
+            <div class="indexInfomation">
+                <p>Device API 기능을 이용하여 모바일 디바이스의 메타 데이터 정보를 조회하고 조회된 정보를 서버에 전송, 조회, 삭제 할 수 있는 기능을 제공함</p>
+            </div>
+            <ul data-role="listview">
+                <li><a id="btnMoveDeviceInfo" href="#">디바이스 정보 조회 </a></li>
+            </ul>
+        </div>
+        <div id="footer" data-role="footer" data-theme="z" data-position="fixed">
+            <h4>Copyright 2008-2019 MOIS<br>(Ministry of the Interior and Safety)</h4>
+        </div>
+    </div>
+     
+    <!-- Device Info Page -->
+    <div id="deviceInfo" data-role="page">
+        
+        <div data-role="header" data-theme="z" data-position="fixed">
+            <h1>DeviceInfo 디바이스 API 가이드 프로그램<br>(Android APP)</h1>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html"  data-ajax="false" data-theme="a">기능설명</a></li>
+                    <li><a href="DeviceInfoAPI.html"  data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+            
+        </div>
+        
+        <div id="content" data-role="content">
+            <div class="indexInfomation">
+                <p>Device API 기능을 이용하여 모바일 디바이스의 메타 데이터 정보를 조회하고 조회된 정보를 서버에 전송, 조회, 삭제 할 수 있는 기능을 제공합니다.</p>
+            </div>
+            <div id="infoWrapper">
+                <div  class="deviceDetail">
+                    <ul>
+                        <li>
+                            <span class="deviceaTitle">OS</span>
+                            <span class="deviceInfo">&nbsp;</span>
+                        </li>
+                        <li>
+                            <span class="deviceaTitle">UUID</span>
+                            <span class="deviceInfo">&nbsp;</span>
+                        </li>
+                        <li>
+                            <span class="deviceaTitle">PhoneGap Version</span>
+                            <span class="deviceInfo">&nbsp;</span>
+                        </li>
+                        <li>
+                            <span class="deviceaTitle">Device Number</span>
+                            <span class="deviceInfo">&nbsp;</span>
+                        </li>
+                        <li>
+                            <span class="deviceaTitle">Connection Type</span>
+                            <span class="deviceInfo">&nbsp;</span>
+                        </li>
+                        <li>
+                            <span class="deviceaTitle">Total Memory</span>
+                            <span class="deviceInfo">&nbsp;</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div id="footer" data-role="footer" data-theme="z" data-position="fixed">
+            
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#" id="btnDeviceInfoList" data-icon="grid" data-theme="a">서버목록조회</a></li>
+                    <li><a href="#" id="btnregistDeviceInfo" data-icon="gear" data-theme="a">정보 업로드</a></li>
+                    
+                </ul>
+            </div><!-- /navbar -->
+        </div>
+        
+    </div>
+    <!-- Device Info List Saved In Server -->
+    <div id="deviceInfoList" data-role="page">
+        <div id="header" data-role="header" data-theme="z" data-position="fixed">
+            <h1>Device Info List<br>(Android APP)</h1>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html"  data-ajax="false" data-theme="a">기능설명</a></li>
+                    <li><a href="DeviceInfoAPI.html"  data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="content"  data-role="content">
+            <div class="indexInfomation">
+                <p>서버에 전송된 모바일 디바이스의 메타 데이터 정보들의 리스트를 조회 합니다.</p>
+            </div>
+            <div id="listWrapper">
+                <ul id="theList" data-role="listview">
+                </ul>
+            </div>
+            
+        </div>
+        <div id="footer" data-role="footer" data-theme="a" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#" id="btnDeviceInfo" data-icon="grid" data-theme="a">디바이스 정보 조회</a></li>
+                </ul>
+            </div>
+            
+            
+        </div>
+    </div>
+    
+    
+    <!-- Device Info Detail Page -->
+    <div id="deviceInfoDetail" data-role="page">
+        <div id="header" data-role="header" data-theme="z" data-position="fixed">
+            <h1>Device 상세 정보<br>(Android APP)</h1>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html"  data-ajax="false" data-theme="a">기능설명</a></li>
+                    <li><a href="DeviceInfoAPI.html"  data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="content"  data-role="content">
+            <div class="indexInfomation">
+                <p>서버에 전송된 모바일 디바이스의 메타 데이터 정보를 상세 조회하고 조회된 정보를 삭제 할 수 있는 화면입니다.</p>
+            </div>
+            <div id="detailWrapper">
+                <div class="deviceDetail">
+                    <ul>
+                        <li>
+                            <span class="deviceaTitle">OS</span>
+                            <span class="deviceInfo">&nbsp;</span>
+                        </li>
+                        <li>
+                            <span class="deviceaTitle">UUID</span>
+                            <span class="deviceInfo">&nbsp;</span>
+                        </li>
+                        <li>
+                            <span class="deviceaTitle">PhoneGap Version</span>
+                            <span class="deviceInfo">&nbsp;</span>
+                        </li>
+                        <li>
+                            <span class="deviceaTitle">Contacts</span>
+                            <span class="deviceInfo">&nbsp;</span>
+                        </li>
+                        <li>
+                            <span class="deviceaTitle">Connection Type</span>
+                            <span class="deviceInfo">&nbsp;</span>
+                        </li>
+                        <li>
+                            <span class="deviceaTitle">Total Memory</span>
+                            <span class="deviceInfo">&nbsp;</span>
+                        </li>
+                    </ul>
+                    
+                </div>
+            </div>
+            
+            
+            
+        </div>
+        <div id="footer" data-role="footer" data-theme="a" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#" id="btnMoveDeviceInfoList" data-icon="grid">목록</a></li>
+                    <li><a href="#" id="btnDelDeviceInfo" data-icon="delete">삭제</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+        
+        
+</body>
+</html>

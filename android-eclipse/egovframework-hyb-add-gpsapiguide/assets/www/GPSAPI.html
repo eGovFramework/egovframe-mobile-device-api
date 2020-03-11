@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html LANG="ko"> 
+<!-- 
+  /**
+  * @Class Name : GPSAPI.html
+  * @Description : 가이드 프로그램 표준코드 index 화면
+  * @Modification Information
+  * 
+  *   수정일      수정자                   수정내용
+  *
+  *  2012.08.27      나신일         최초생성
+  *
+  *  
+  * Copyright (C) 2009 by MOPAS  All right reserved.
+  */
+ -->
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>GPS Device API Guide</title>
+      
+    <!-- Phonegap.js import -->
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/cmm/cordova.js"></script>  
+    
+    <!-- eGovFrame Common import -->        
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.4.5.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/theme-1.1.1.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.4.5.css" />
+    
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery-2.1.4.min.js"></script>
+    <script>
+   	var deviceReadyDeferred = $.Deferred();
+	var jqmReadyDeferred = $.Deferred();
+	
+	document.addEventListener("deviceready", onDeviceReady, false);
+	function onDeviceReady() {
+		deviceReadyDeferred.resolve();
+		var permissions = cordova.plugins.permissions;
+        permissions.requestPermission(permissions.ACCESS_FINE_LOCATION, permissionSuccess, permissionError);
+	}
+	
+    $(document).on("pageinit", function(){
+                     $.mobile.defaultPageTransition = 'none';
+                     jqmReadyDeferred.resolve();
+                     
+                     });
+    </script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/modernizr-3.6.0.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.4.6.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovHybrid.js"></script>
+
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.validate.min.js"></script>
+    <!--<script type="text/javascript" src="js/egovframework/mbl/cmm/json2.js"></script>-->
+        
+    <!-- iScroll.js import -->
+    <script type="text/javascript" src="js/iscroll/iscroll.js"></script>  
+        
+    <!-- Customm CSS import -->
+    <link rel="stylesheet" href="css/egovframework/mbl/hyb/GPSAPI.css" />
+   
+    <!-- Customm js import -->
+    <script type="text/javascript" src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=b0fdac4f718d71a02d796f8fe3e12987"></script>
+    
+    <!-- DAUM_MAPS_DEMO_APIKEY b0fdac4f718d71a02d796f8fe3e12987-->
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/hyb/GPSAPI.js"></script>
+        
+    <script type="text/javascript">
+
+    $.when(deviceReadyDeferred, jqmReadyDeferred).then(DeviceAPIInit);
+
+	</script>
+</head>
+
+<body>
+	<!-- ImportanceList -->
+	<div id="main" data-role="page">
+	    <div id="header" data-role="header" data-theme="z" data-position="fixed">        
+	        <h1>GPS 디바이스 API 가이드 프로그램<br>(Android App)</h1>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html"  data-ajax="false" data-theme="a">기능설명</a></li>
+                    <li><a href="GPSAPI.html"  data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+	    </div>
+	    <div id="content"  data-role="content">
+	    	<div class="indexInfomation">
+	    		<p>디바이스 API를 통해 geoLocation 센서접근(현재 좌표) 정보를 호출하여 지도에 표시하고, 서버에 저장된 GPS 로그를 조회하는 기능을 제공 함</p>
+	    	</div>
+		    <div id="wrapperInfo">
+		    	<div>
+			        <ul data-role="listview" data-inset="true">
+			           <li><a href="#" id="goMyLocation">GPS API 정보 호출</a></li>
+			           <li><a href="#" id="goGpsInfoList">GPS API 정보 DB 목록</a></li>
+			        </ul>
+		        </div>
+		    </div>
+	    </div>
+	    <div id="footer" data-role="footer" data-theme="z" data-position="fixed">
+            <h4>Copyright 2008-2019 MOIS<br>(Ministry of the Interior and Safety)</h4>
+		</div>
+	</div> 
+    
+    <!-- 내위치 보기 -->
+	<div id="myLocation" data-role="page">
+	    <div id="header" data-role="header" data-theme="z" data-position="fixed">        
+	        <h1>GPS 디바이스 API 가이드 프로그램<br>(Android App)</h1>          
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html"  data-ajax="false" data-theme="a">기능설명</a></li>
+                    <li><a href="GPSAPI.html"  data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+	    </div>
+	    <div id="content"  data-role="content">            
+            <div class="Latitude">
+                <p id="latlngInfo"></p>
+            </div>
+            <div id="map" style="max-width:100%;height:265px;margin:0 auto"></div>
+	    </div>
+	    <div id="footer" data-role="footer" data-theme="z" data-position="fixed">
+			<div data-role="navbar">
+               <ul>
+               	   <li><a id="reloadBtn" href="#" data-icon="refresh" data-theme="b">다시보기</a></li>
+                   <li><a id="saveBtn" href="#" data-icon="plus" data-theme="b">DB저장</a></li>
+               </ul>
+           </div><!-- /navbar -->
+		</div>
+	</div>
+    
+	<!-- GPS 값 List Saved In Server -->
+    <div id="gpsInfoList" data-role="page">
+        <div id="header" data-role="header" data-theme="z"  data-position="fixed">
+            <h1>GPS 디바이스 API 가이드 프로그램<br>(Android App)</h1>
+			<div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html"  data-ajax="false" data-theme="a">기능설명</a></li>
+                    <li><a href="GPSAPI.html"  data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="content"  data-role="content">
+	        <div id="wrapperList">
+	            <div id="scroller">
+	                <ul id="theLogList" data-role="listview" data-inset="true">
+	                    
+	                </ul>
+	            </div>
+	        </div>	        
+        </div>
+        <div id="footer" data-role="footer" data-theme="z" data-position="fixed">
+			<div data-role="navbar">
+               <ul>
+               	   <li><a id="deleteBtn" href="#" data-icon="delete" data-theme="b">DB삭제</a></li>                   
+               </ul>
+           </div><!-- /navbar -->
+		</div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

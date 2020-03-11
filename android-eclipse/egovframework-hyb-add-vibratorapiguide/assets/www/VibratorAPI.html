@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html LANG="ko"> 
+    <!-- 
+     /**
+     * @Class Name : VibratorAPI.html
+     * @Description : Vibrator API 가이드 프로그램 VibratorAPI 화면
+     * @Modification Information
+     * 
+     * @ 수정일         수정자        수정내용
+     * @ ----------   ---------   -------------------------------
+     * @ 2012.08.16   이율경        최초생성
+     * @ 2019.10.17   신용호 		  서버 저장이력 안내메시지 추가
+     * 
+     * @author 모바일 디바이스 API 실행환경팀
+     * @since 2012. 08.16
+     * @version 1.0
+     * @see
+     * 
+     *  Copyright (C) by MOPAS All right reserved.
+     */
+     -->
+<head> 
+      <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Vibrator Device API Guide</title>
+    
+    <!-- Phonegap.js import -->
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/cmm/cordova.js"></script>  
+    
+    <!-- eGovFrame Common import -->        
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.4.5.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/theme-1.1.1.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.4.5.css" />
+    
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery-2.1.4.min.js"></script>
+    <script>
+
+   	var deviceReadyDeferred = $.Deferred();
+	var jqmReadyDeferred = $.Deferred();
+	
+	document.addEventListener("deviceready", onDeviceReady, false);
+	function onDeviceReady() {
+		deviceReadyDeferred.resolve();
+	}
+	
+    $(document).on("pageinit", function(){
+                     $.mobile.defaultPageTransition = 'none';
+                     jqmReadyDeferred.resolve();
+                     
+                     $("#txtNotification").on('click', function(){
+                    	 $("#txtNotification").css('diplay', 'block');
+                     });
+                      
+                     });
+    </script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/modernizr-3.6.0.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.4.6.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovHybrid.js"></script>
+
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.validate.min.js"></script>
+    <!--<script type="text/javascript" src="js/egovframework/mbl/cmm/json2.js"></script>-->
+        
+    <!-- iScroll.js import -->
+    <script type="text/javascript" src="js/iscroll/iscroll.js"></script>    
+    
+    
+    <!-- Customm CSS import --> 
+    <link rel="stylesheet" href="css/egovframework/mbl/hyb/VibratorAPI.css" />
+    
+    <!-- Customm js import -->     
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/hyb/messages_ko.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/hyb/VibratorAPI.js"></script>
+    
+    <script type="text/javascript">
+    $.when(deviceReadyDeferred, jqmReadyDeferred).then(DeviceAPIInit);
+
+    </script>    
+</head>
+    
+<body>
+<!-- Main Page -->
+<div id="vbrMain" data-role="page">
+    
+    <!-- header start -->
+    <div data-role="header" data-position="fixed" data-theme="z">
+        <h1>Vibrator 디바이스 API 가이드 프로그램<br>(Android App)</h1>
+        <div data-role="navbar">
+            <ul>
+                <li><a href="overview.html" data-ajax="false" data-theme="a" >기능설명</a></li>
+                <li><a href="VibratorAPI.html" data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- header end -->
+    
+    <form id="myform" action="#">
+        
+        <!-- contents start -->
+        <div id="content" data-role="content">
+            <div class="DetailView">Vibrator API Guide 프로그램은 디바이스 내 notification API를 호출하여, 알림 시간을 설정한 뒤 설정한 시간이 되면 Vibrator, Beep 를 사용하여 사용자에게 알림을 전달하는 가이드 프로그램. </div>
+            <div class="vibrlist">  
+               <ul  data-role="listview" data-inset="true">
+                <li>
+                    <label for="swchBeep" class="labTex">소리로 알림 :</label>
+                    <select name="slider" id="swchBeep" data-role="slider">
+                        <option value="off">Off</option>
+                        <option value="on">On</option>
+                    </select>
+                </li>
+                <li>
+                    <label for="swchVibration" class="labTex">진동으로 알림 :</label>
+                    <select name="slider" id="swchVibration" data-role="slider">
+                        <option value="off">Off</option>
+                        <option value="on">On</option>
+                    </select>
+                </li>
+                <li>
+                    <label for="txtNotification">타이머 설정</label>
+                    <input name="timeer" class="required number" id="txtNotification" type="number" maxlength="5" minlength="2" />
+                    <span>초 후 알림</span>
+                </li>
+                </ul>
+             </div> 
+        </div>
+        <!-- contents end -->
+    </form>
+    
+    <!-- footer start -->
+    <div data-role="footer" data-theme="z" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#" class="ui-btn-active" id="btnNotificationList" data-icon="grid" data-iconpos="top" onclick="javascript:if(fn_egov_network_check(false)) { fn_egov_select_data_event(); }">알림 목록</a></li>
+                <li><a href="#" id="btnNotification" data-icon="gear" data-iconpos="top" onclick="javascript:if(fn_egov_network_check(false)) { fn_egov_insert_data_event(); }">설정완료</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- footer end -->
+</div>
+        
+<div id="apiListView" data-role="page">
+    <!-- header start -->
+    <div data-role="header" data-position="fixed" data-theme="z">
+        <h1 id="apiName">Vibrator API 상세 화면<br>(Android App)</h1>
+        <div data-role="navbar">
+            <ul>
+                <li><a href="overview.html" data-ajax="false" data-theme="a" >기능설명</a></li>
+                <li><a href="VibratorAPI.html" data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- header end -->
+    
+    <!-- contents start -->
+    
+       <div id="listContent" data-role="content">
+           <div id="wrapper">           
+            <ul data-role="listview" data-inset="true" id="dataList">
+            </ul>
+        </div> 
+   </div>
+
+    <!-- contents end -->
+    
+    <!-- footer start -->
+    <div data-role="footer" data-theme="z" data-position="fixed">
+        <h4>Copyright 2008-2019 MOIS<br>(Ministry of the Interior and Safety)</h4>
+    </div>
+    <!-- footer end -->
+</div>
+</body>
+    
+</html>

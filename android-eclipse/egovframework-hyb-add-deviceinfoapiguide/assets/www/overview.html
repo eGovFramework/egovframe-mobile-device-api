@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html LANG="ko"> 
+<!-- 
+  /**
+  * @Class Name : overview.html
+  * @Description : 디바이스 API  overview 화면
+  * @Modification Information
+  * 
+  *   수정일            수정자                수정내용
+  * ---------   ---------   -------------------------------  
+  *  2012.07.25  구지연                최초작성
+  *
+  *  
+  * Copyright (C) 2009 by MOPAS  All right reserved.
+  */
+ -->
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>DeviceInfo Device API Guide</title>
+
+    <!-- Phonegap.js import -->
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/cmm/cordova.js"></script>  
+    
+    <!-- eGovFrame Common import -->        
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.4.5.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.4.5.css" />
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery-2.1.4.min.js"></script>
+    <script>
+        $(document).on("pageinit", function(){
+                         $.mobile.defaultPageTransition = 'none';
+                         });
+    </script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.4.6.js"></script>        
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovHybrid.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.validate.min.js"></script>
+
+    <!-- iScroll.js import -->
+    <script type="text/javascript" src="js/iscroll/iscroll.js"></script>
+
+	<!-- Customm CSS import -->
+	<link rel="stylesheet"
+		href="css/egovframework/mbl/hyb/DeviceInfoAPI.css" />
+	
+	<!-- Customm js import -->
+	<script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/hyb/DeviceInfoAPI.js"></script>
+	   <script type="text/javascript">
+        
+
+        
+        
+              
+    </script>    
+   
+</head>
+	
+<body>
+
+
+	<!-- Main Page -->
+    <div id="main" data-role="page">
+        <div id="header" data-role="header" data-theme="z" data-position="fixed">
+            <h1>DeviceInfo 디바이스 API 가이드 프로그램<br>(Android APP)</h1>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html" data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">기능설명</a></li>
+                    <li><a href="DeviceInfoAPI.html" data-ajax="false" data-theme="a">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="content" data-role="content">
+            <div class="overcontents">
+        		<div class="botomLine">
+		            <div class="egov-grid">
+		            	<div class="egov-wid3"><img src="images/egovframework/mbl/hyb/app_logo.png" alt="" /></div>
+		            	<div class="egov-wid9 paddT5">모바일 DeviceInfo API 가이드 </div>
+		            </div>
+	            </div>
+	            <div class="overViewInfo">
+	            	<h3>설명</h3>
+	            	<p>행정안전부 전자정부 표준프레임워크 센터에서는 전자정부 표준프레임워크를 이용하여 하이브리드 앱 개발 을 할 수 있는 모바일 디바이스 API 실행환경, 개발환경, 가이드프로그램을 제작 배포하고 있습니다.
+	            	</p>
+	            	<p>DeviceInfo API 가이드 프로그램은 DeviceInfo 구현 시 참고 및 활용할 수 있는 가이드 앱 입니다.
+	            	</p>
+	            	<h3>기능사양</h3>
+	            	<ul class="structure">
+                        <li><b>적용 오픈 소스</b>
+                            <br/>Cordova v8.1.2, jQuery Mobile 1.4.5, jQuery 2.1.4, eGovMoible 1.4.6, iScroll5, three.js
+                        </li>
+                        <li><b>적용 라이브러리</b>
+                            <br/>android.jar, annotation.jar, spring-android-rest-template-1.0.1.RELEASE.jar, spring-android-core-1.0.1.RELEASE.jar
+                        </li>
+                        <li><b>운영 플랫폼</b>
+                            <br/>Android SDK Revision 23 이상, 전자정부 표준프레임워크 3.9
+                        </li>
+                        <li><b>개발환경</b>
+                            <br/>전자정부 표준프레임워크 개발환경 3.9
+                        </li>
+                        <li><b>적용 디바이스 API</b>
+                            <ol>
+                                <li>Cordova : DeviceInfo API</li>
+                                <li>전자정부 표준프레임워크 : Interface API</li>
+                            </ol>
+                        </li>
+	            	</ul>
+	            	<h3>기능설명</h3>
+	            	<ul class="explanation">
+	            		<li>디바이스 정보 조회 : DeviceInfo API 기능을 이용하여 모바일 디바이스의 메타 데이터 정보를 조회하고 조회된 정보를 서버에 전송, 조회, 삭제 합니다.</li>
+					</ul>
+	            	<h3>애플리케이션 캡처화면 </h3>
+	            	<div style="overflow: scroll; width:320px;" data-role="none">
+                    <div class="Screen" id="context" data-role="none">
+                        <ul>
+                        <li><img src="images/egovframework/mbl/hyb/main.jpeg" alt="" /></li>
+                        <li><img src="images/egovframework/mbl/hyb/listImage.jpeg" alt="" /></li>
+                        <li><img src="images/egovframework/mbl/hyb/detailImage.jpeg" alt="" /></li>
+                        </ul>
+                    </div>
+                    </div>
+	            </div>
+            </div>
+           
+        </div>
+        <div id="footer" data-role="footer" data-theme="z" data-position="fixed">
+            <h4>Copyright 2008-2019 MOIS<br>(Ministry of the Interior and Safety)</h4>
+        </div>
+    </div>
+   
+</body>
+</html>

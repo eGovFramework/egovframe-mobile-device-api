@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="SERVER_URL">http://192.168.100.155:9700/Template-DeviceAPI-Total_Web</string>
+</resources>
