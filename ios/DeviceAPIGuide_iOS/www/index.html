@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html LANG="ko">
+    <!--
+     /**
+     * @Class Name : index.html
+     * @Description : 디바이스 API 예제 프로그램 index 화면
+     * @Modification Information
+     *
+     *   수정일      수정자                수정내용
+     *  -------    --------    ---------------------------
+     *  2012.07.02  서준식                최초작성
+     *
+     *
+     * Copyright (C) 2009 by MOPAS  All right reserved.
+     */
+     -->
+    <head>
+        <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <title>eGovFrame Mobile Device API</title>
+            
+            <!-- eGovFrame Common import -->
+            <!-- <link rel="stylesheet" href="jquery.mobile-1.0.1/jquery.mobile.structure-1.0.1.min.css" /> -->
+            
+            <link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.4.5.css" />
+            
+            <link rel="stylesheet" href="css/egovframework/mbl/cmm/theme-1.1.1.css" />
+            <link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.4.5.css" />
+            
+            <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery-2.1.4.min.js"></script>
+            <script>
+                $(document).bind("mobileinit", function(){
+                                 $.mobile.defaultPageTransition = 'none';
+                });
+            </script>
+            <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.mobile-1.4.5.min.js"></script>
+            <script type="text/javascript" src="js/egovframework/mbl/cmm/modernizr-3.6.0.js"></script>
+            <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.4.6.js"></script>
+            <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.validate.min.js"></script>
+            <!--<script type="text/javascript" src="js/egovframework/mbl/cmm/json2.js"></script>-->
+            
+            <!-- iScroll.js import -->
+            <script type="text/javascript" src="js/iscroll/iscroll.js"></script>
+            
+            <!-- Phonegap.js import -->
+            <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/cmm/cordova.js"></script>
+            
+            
+            <!-- Plugin.js import -->
+            <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/cmm/EGovComModuleAPI.js"></script>
+            
+            <!-- Customm CSS import -->
+            
+            <!-- Customm js import -->
+            <script type="text/javascript" charset="utf-8" src="./custom.js"></script>
+            
+            <script type="text/javascript" charset="utf-8">
+                
+                // Wait for PhoneGap to load
+                //
+                document.addEventListener("deviceready", onDeviceReady, false);
+                
+                // PhoneGap is loaded and it is now safe to make calls PhoneGap methods
+                //
+                function onDeviceReady() {
+
+                    console.log("[DeviceAPI Guide] Debugging Message : ");
+                    
+                    var customMyPlugin = new CustomMyPlugin();
+                    
+                    //customMyPlugin.echo("Webview메세지 UIAlertView를 이용해서 출력"); // web=>native
+                    //customMyPlugin.getMessage(); // web => native => web
+                    //customMyPlugin.runJavaScript(); // native => web
+                    customMyPlugin.echo("Hello! Device API~");
+
+                }
+                </script>
+    </head>
+	
+    <body>
+        <!-- Main Page -->
+        <div id="Main" data-role="page" data-theme="d">
+            <div id="header" data-role="header" data-theme="d">
+                <h1>Header</h1>
+            </div>
+            <div id="content">
+                Hello! eGovFrame Mobile Device API!!
+                
+            </div>
+            <div id="footer" data-role="footer" data-theme="a" data-position="fixed">
+                <h1>Footer</h1>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'EGovComModule' target in the 'EGovComModule' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif
