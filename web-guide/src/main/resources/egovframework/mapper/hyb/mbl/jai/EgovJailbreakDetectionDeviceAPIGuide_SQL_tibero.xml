@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jailbreakDetectionDeviceAPIDAO">
+
+	<resultMap id="JailbreakDetectionInfo" type="egovframework.hyb.mbl.jai.service.JailbreakDetectionDeviceAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="os" column="OS"/>
+		<result property="pgVer" column="PG_VER"/>
+		<result property="detection" column="DETECTION"/>						
+	</resultMap>
+	
+	<insert id="insertJailbreakDetectionDevcie">
+	    <selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (NVL(MAX(SN), 0)+1) sn from DETECTION
+		   
+		</selectKey>
+		
+		INSERT INTO DETECTION
+				(SN,
+					UUID,
+					OS,
+					PG_VER,
+					DETECTION)
+			VALUES ( #{sn}
+				  , #{uuid}
+				  , #{os}
+				  , #{pgVer}
+				  , #{detection})
+	
+		
+	</insert>
+	
+	<select id="selectJailbreakDetectionDevcieList" parameterType="egovframework.hyb.mbl.jai.service.JailbreakDetectionDeviceAPIVO" resultMap="JailbreakDetectionInfo">
+			SELECT
+				SN, UUID, OS, PG_VER, DETECTION
+			FROM DETECTION
+			ORDER BY SN DESC
+	</select>
+	
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="interfaceAndroidAPIDAO">
+
+	<resultMap id="interfaceAndroidInfo" type="egovframework.hyb.add.itf.service.InterfaceAndroidAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="emails" column="EMAILS"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="userPw" column="USER_PW"/>
+	</resultMap>
+	
+	<select id="selectInterfaceInfoListCnt" resultType="int">
+			
+	    	SELECT COUNT(*) cnt
+			FROM INTERFACE_EGOV
+			WHERE USER_ID = #{userId}
+			
+	</select>
+	
+	<insert id="insertInterfaceInfo">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (NVL(MAX(SN), 0)+1) sn from INTERFACE_EGOV		   
+		</selectKey>
+		
+			INSERT INTO INTERFACE_EGOV 
+				( SN
+				  , UUID
+				  , EMAILS
+				  , USER_ID 
+				  , USER_PW)
+			VALUES ( #{sn}
+				  , #{uuid}
+				  , #{emails}
+				  , #{userId}
+				  , #{userPw})
+		
+	</insert>
+	
+	<delete id="deleteInterfaceInfo">
+		
+			DELETE FROM INTERFACE_EGOV
+			WHERE USER_ID = #{userId}
+			AND USER_PW = #{userPw}
+		
+	</delete>
+	
+	<select id="selectInterfaceInfo" resultMap="interfaceAndroidInfo">
+		
+			SELECT
+				SN, UUID, EMAILS, 
+				USER_ID, USER_PW
+			FROM INTERFACE_EGOV 
+			WHERE USER_ID = #{userId} 
+			AND USER_PW = #{userPw}
+		
+	</select>
+</mapper>

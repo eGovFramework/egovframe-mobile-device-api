@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="contactsiOSAPIDAO">
+
+    <insert id="insertContactInfo">       
+        
+            INSERT INTO CONTACT_INFO
+                ( UUID
+                  , ID 
+                  , NAME
+                  , TELNO
+                  , EMAILS                
+                  , USEYN )
+            VALUES ( #{uuid}
+                  , #{contactId}
+                  , #{name}
+                  , #{telNo}
+                  , #{emails}                  
+                  , #{useYn})
+        
+    </insert>
+    
+    <update id="updateContactInfo">       
+        
+            UPDATE CONTACT_INFO 
+            SET ID=#{newId} 
+                , NAME=#{name}
+                , TELNO=#{telNo}
+                , EMAILS=#{emails}               
+                , USEYN=#{useYn}
+            WHERE UUID=#{uuid} AND ID=#{contactId}
+        
+    </update>
+    
+    <select id="selectContactInfoList" resultType="egovframework.hyb.ios.ctt.service.ContactsiOSAPIVO">
+
+            SELECT
+                UUID, 
+                ID contactId, 
+                NAME, 
+                TELNO, 
+                EMAILS, 
+                USEYN
+            FROM CONTACT_INFO
+            WHERE USEYN='Y' AND UUID=#{uuid}
+            ORDER BY ID DESC
+    </select>
+    
+    <select id="selectContactInfo" resultType="egovframework.hyb.ios.ctt.service.ContactsiOSAPIVO">
+
+            SELECT
+                UUID, 
+                ID contactId, 
+                NAME, 
+                TELNO, 
+                EMAILS, 
+                USEYN
+            FROM CONTACT_INFO
+            WHERE USEYN='Y' AND UUID=#{uuid} AND ID=#{contactId}
+            ORDER BY ID DESC
+    </select>
+    
+    <delete id="deleteContactInfo">
+        
+            DELETE FROM CONTACT_INFO
+            WHERE UUID=#{uuid} AND ID=#{contactId}
+        
+    </delete>
+    
+    <select id="selectContactInfoListTotCnt" parameterType="egovframework.hyb.ios.ctt.service.ContactsiOSAPIVO" resultType="int">
+            SELECT COUNT(*) totcnt
+            FROM CONTACT_INFO
+            WHERE UUID=#{uuid}
+    </select>   
+
+</mapper>

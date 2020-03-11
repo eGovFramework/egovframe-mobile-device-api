@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fileReaderWriterAndroidAPIDAO">
+
+	<resultMap id="FileAndroidInfo" type="egovframework.hyb.add.frw.service.FileReaderWriterAndroidAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="fileNm" column="FILE_NM"/>
+		<result property="fileStreCours" column="FILE_COURS"/>
+		<result property="fileType" column="FILE_TYPE"/>
+		<result property="updtDt" column="UPDT_DT"/>
+		<result property="fileSize" column="FILE_SIZE"/>
+		<result property="useYn" column="USEYN"/>
+		<result property="streFileNm" column="STRE_FILE_NM"/>
+		<result property="orignlFileNm" column="ORIGNL_FILE_NM"/>
+	</resultMap>
+	
+	<insert id="insertFileInfo">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (NVL(MAX(SN), 0)+1) SN FROM FILE_READER_WRITE
+		   
+		</selectKey>
+		
+			INSERT INTO FILE_READER_WRITE
+				( SN
+				  , UUID
+				  , FILE_SN
+				  , FILE_NM
+				  , FILE_COURS
+				  , FILE_TYPE
+				  , UPDT_DT
+				  , FILE_SIZE
+				  , USEYN )
+			VALUES ( #{sn}
+				  , #{uuid}
+				  , #{fileSn}
+				  , #{fileNm}
+				  , #{fileStreCours}
+				  , #{fileType}
+				  , SYSDATE
+				  , #{fileSize}
+				  , #{useYn})
+		
+	</insert>
+	
+	
+	<insert id="insertFileDetailInfo">
+		
+		
+			INSERT INTO FILE_DETAIL_INFO
+				( FILE_SN
+				  , FILE_STRE_COURS
+				  , STRE_FILE_NM
+				  , ORIGNL_FILE_NM
+				  , FILE_EXTSN
+				  , FILE_CN
+				  , FILE_SIZE )
+			VALUES ( #{fileSn}
+				  , #{fileStreCours}
+				  , #{streFileNm}
+				  , #{orignlFileNm}
+				  , #{fileExtsn}
+				  , #{fileCn}
+				  , #{fileSize})
+		
+	</insert>
+	<select id="selectFileInfoList" resultType="egovframework.hyb.add.frw.service.FileReaderWriterAndroidAPIVO">
+
+			SELECT
+				SN, UUID, FILE_SN fileSn, 
+				FILE_NM fileNm, FILE_COURS fileStreCours, FILE_TYPE fileType, 
+				UPDT_DT updtDt, FILE_SIZE fileSize, USEYN useYn
+			FROM FILE_READER_WRITE
+			WHERE USEYN='Y' AND UUID = #{uuid}
+			ORDER BY SN DESC
+	</select>
+	
+	<select id="selectFileInfo" resultMap="FileAndroidInfo">
+
+			SELECT
+				A.SN, A.UUID, A.FILE_SN, 
+				A.FILE_NM, A.FILE_COURS, A.FILE_TYPE, 
+				A.UPDT_DT, A.FILE_SIZE, A.USEYN,
+				B.STRE_FILE_NM, B.ORIGNL_FILE_NM
+			FROM FILE_READER_WRITE A JOIN FILE_DETAIL_INFO B ON (A.FILE_SN = B.FILE_SN)
+			WHERE USEYN='Y' AND UUID = #{uuid} AND A.FILE_SN = #{fileSn}
+			ORDER BY SN DESC
+	</select> 
+	
+	<delete id="deleteFileInfo">
+		
+			DELETE FROM FILE_READER_WRITE 
+			WHERE UUID = #{uuid} AND FILE_SN = #{fileSn}
+		
+	</delete>
+	
+	<delete id="deleteFileDetailInfo">
+		
+			DELETE FROM FILE_DETAIL_INFO 
+			WHERE FILE_SN = #{fileSn}
+		
+	</delete>
+	
+
+</mapper>

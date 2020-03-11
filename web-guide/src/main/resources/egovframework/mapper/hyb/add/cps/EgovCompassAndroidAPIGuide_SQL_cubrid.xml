@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="compassAndroidAPIDAO">
+
+	<resultMap id="compassAndroidInfo" type="egovframework.hyb.add.cps.service.CompassAndroidAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="drc" column="DRC"/>
+		<result property="accrcy" column="ACCRCY"/>
+		<result property="timestamp" column="TIMESTAMP"/>
+		<result property="useYn" column="USEYN"/>
+	</resultMap>
+
+	<insert id="insertCompassInfo">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (NVL(MAX(SN), 0)+1) sn from COMPASS
+		   
+		</selectKey>
+		
+			INSERT INTO COMPASS 
+				( SN
+				  , UUID
+				  , DRC
+				  , ACCRCY
+				  , "TIMESTAMP"
+				  , USEYN )
+			VALUES ( #{sn}
+				  , #{uuid}
+				  , #{drc}
+				  , #{accrcy}
+				  , #{timestamp}
+				  , #{useYn})
+		
+	</insert>
+	
+	<update id="updateCompassInfo">
+		
+			UPDATE COMPASS 
+			SET SN=#{sn}
+				, UUID=#{uuid}
+				, DRC=#{drc}
+				, ACCRCY=#{accrcy}
+				, "TIMESTAMP"=#{timestamp}
+				, USEYN=#{useYn}
+			WHERE SN=#{sn}
+		
+	</update>
+	
+	<delete id="deleteCompassInfo">
+		
+			UPDATE COMPASS 
+			SET USEYN='N'
+		
+	</delete>
+	
+	<select id="selectCompassInfo" resultMap="compassAndroidInfo">
+		
+			SELECT
+				SN, UUID, DRC, ACCRCY, "TIMESTAMP", USEYN
+			FROM COMPASS 
+			WHERE SN=#{sn}
+		
+	</select>
+	
+	<select id="selectCompassInfoList" parameterType="egovframework.hyb.add.cps.service.CompassAndroidAPIDefaultVO" resultType="egovframework.hyb.add.cps.service.CompassAndroidAPIVO">
+
+			SELECT
+				SN, UUID, DRC, ACCRCY, "TIMESTAMP", USEYN
+			FROM COMPASS WHERE USEYN='Y'
+				
+	</select>
+	
+	<select id="selectCompassInfoListTotCnt" parameterType="egovframework.hyb.add.cps.service.CompassAndroidAPIDefaultVO" resultType="int">
+
+			SELECT COUNT(*) totcnt
+			FROM COMPASS
+			WHERE 1=1
+			<if test="searchCondition == 0">AND
+				UUID = #{searchKeyword}
+			</if>
+			<if test="searchCondition == 1">AND
+				NTWRK_TYPE LIKE CONCAT('%',#{searchKeyword},'%')
+			</if>
+	</select>
+
+</mapper>

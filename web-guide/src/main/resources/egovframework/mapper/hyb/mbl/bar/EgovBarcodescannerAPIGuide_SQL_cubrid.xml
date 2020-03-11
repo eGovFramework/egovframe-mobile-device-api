@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="barcodescannerDeviceAPIDAO">
+
+	<resultMap id="BarcodescannerInfo" type="egovframework.hyb.mbl.bar.service.BarcodescannerAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="codeType" column="CODE_TYPE"/>
+		<result property="codeText" column="CODE_TEXT"/>
+		<result property="useYn" column="USEYN"/>
+		<result property="sndDt" column="CODE_DT"/>						
+	</resultMap>
+	
+	<insert id="insertBarcodescannerDevcie">
+	    <selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (NVL(MAX(SN), 0)+1) sn from BARCODE_INFO
+		   
+		</selectKey>
+		
+		INSERT INTO BARCODE_INFO
+				(SN,
+					CODE_TYPE,
+					CODE_TEXT,
+					USEYN,
+					CODE_DT)
+			VALUES ( #{sn}
+				  , #{codeType}
+				  , #{codeText}
+				  , #{useYn}
+				  , #{sndDt})
+	
+		
+	</insert>
+	
+	<select id="selectBarcodescannerDevcieList" parameterType="egovframework.hyb.mbl.bar.service.BarcodescannerAPIVO" resultMap="BarcodescannerInfo">
+			SELECT
+				SN, CODE_TYPE, CODE_TEXT, USEYN, CODE_DT
+			FROM BARCODE_INFO
+			ORDER BY SN DESC
+	</select>
+	
+</mapper>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Converted at: Mon May 20 20:17:01 KST 2019-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="networkiOSAPIDAO">
+
+	<resultMap id="networkiOSInfo" type="egovframework.hyb.ios.nwk.service.NetworkiOSAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="networktype" column="NTWRK_TYPE"/>
+		<result property="useYn" column="USEYN"/>
+	</resultMap>
+
+	<insert id="insertNetworkInfo">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from NETWORK
+		   
+		</selectKey>
+		
+			INSERT INTO NETWORK 
+				( SN
+				  , UUID
+				  , NTWRK_TYPE
+				  , USEYN )
+			VALUES ( #{sn}
+				  , #{uuid}
+				  , #{networktype}
+				  , #{useYn})
+		
+	</insert>
+	
+	<update id="updateNetworkInfo">
+		
+			UPDATE NETWORK 
+			SET SN=#{sn}
+				, UUID=#{uuid}
+				, NTWRK_TYPE=#{networktype}
+				, USEYN=#{useYn}
+			WHERE SN=#{sn}
+		
+	</update>
+	
+	<delete id="deleteNetworkInfo">
+		
+			DELETE FROM NETWORK 
+			WHERE SN=#{sn}
+		
+	</delete>
+	
+	<select id="selectNetworkInfo" resultMap="networkiOSInfo">
+		
+			SELECT
+				SN, UUID, NTWRK_TYPE, USEYN
+			FROM NETWORK 
+			WHERE SN=#{sn}
+		
+	</select>
+	
+	<select id="selectNetworkInfoList" parameterType="egovframework.hyb.ios.nwk.service.NetworkiOSAPIVO" resultMap="networkiOSInfo">
+
+			SELECT
+				SN, UUID, NTWRK_TYPE, USEYN
+			FROM NETWORK
+			WHERE USEYN='Y'
+			AND UUID = #{uuid}
+			AND NTWRK_TYPE = #{networktype}
+			ORDER BY SN DESC
+	</select>
+	
+	<select id="selectNetworkInfoListTotCnt" parameterType="egovframework.hyb.ios.nwk.service.NetworkiOSAPIVO" resultType="int">
+
+			SELECT COUNT(*) totcnt
+			FROM NETWORK
+			WHERE USEYN='Y'
+			AND UUID = #{uuid}
+			AND NTWRK_TYPE = #{networktype}
+	</select>
+
+</mapper>

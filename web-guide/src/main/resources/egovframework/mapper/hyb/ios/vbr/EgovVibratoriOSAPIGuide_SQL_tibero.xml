@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vibratoriOSAPIDAO">
+    
+	<resultMap id="vibratoriOSInfo" type="egovframework.hyb.ios.vbr.service.VibratoriOSAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="timeStamp" column="TIMESTAMP"/>
+	</resultMap>
+
+	<insert id="insertVibrator">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (NVL(MAX(SN), 0)+1) sn from Vibrator
+		   
+		</selectKey>
+		
+			INSERT INTO Vibrator 
+				( SN
+				  , UUID
+				  , TIMESTAMP )
+			VALUES ( #{sn}
+				  , #{uuid}
+				  , #{timeStamp})
+		
+	</insert>
+
+	<select id="selectVibratorList" parameterType="egovframework.hyb.ios.vbr.service.VibratoriOSAPIDefaultVO" resultType="egovMap">
+
+			SELECT
+				SN, UUID, TIMESTAMP
+			FROM VIBRATOR
+			ORDER BY SN DESC
+	</select>
+</mapper>

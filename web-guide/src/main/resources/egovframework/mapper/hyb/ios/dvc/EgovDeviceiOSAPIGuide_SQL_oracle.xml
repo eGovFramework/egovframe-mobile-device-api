@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="deviceiOSAPIDAO">
+
+	<resultMap id="deviceiOSInfo" type="egovframework.hyb.ios.dvc.service.DeviceiOSAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="os" column="OS"/>
+		<result property="telno" column="TELNO"/>
+		<result property="strgeInfo" column="STRGE_INFO"/>
+		<result property="ntwrkDeviceInfo" column="NTWRK_DEVICE_INFO"/>
+		<result property="pgVer" column="PG_VER"/>
+		<result property="deviceNm" column="DEVICE_NM"/>
+		<result property="useyn" column="USEYN"/>
+	</resultMap>
+
+	<insert id="insertDeviceInfo">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (NVL(MAX(SN), 0)+1) SN FROM DEVICE
+		   
+		</selectKey>
+		
+			INSERT INTO DEVICE 
+				( SN
+				  , UUID
+				  , OS
+				  , TELNO
+				  , STRGE_INFO
+				  , NTWRK_DEVICE_INFO
+				  , PG_VER
+				  , DEVICE_NM
+				  , USEYN )
+			VALUES ( #{sn}
+				  , #{uuid}
+				  , #{os}
+				  , #{telno}
+				  , #{strgeInfo}
+				  , #{ntwrkDeviceInfo}
+				  , #{pgVer}
+				  , #{deviceNm}
+				  , 'Y')
+		
+	</insert>
+	
+
+	
+	<delete id="deleteDeviceInfo">
+		
+			DELETE FROM DEVICE 
+			WHERE SN=#{sn}
+		
+	</delete>
+	
+	<select id="selectDeviceInfo" resultMap="deviceiOSInfo">
+		
+			SELECT
+				SN, UUID, OS, TELNO, STRGE_INFO, NTWRK_DEVICE_INFO, PG_VER, DEVICE_NM , USEYN 
+			FROM DEVICE 
+			WHERE SN=#{sn}
+		
+	</select>
+	
+	<select id="selectDeviceInfoList" resultMap="deviceiOSInfo">
+
+			SELECT
+				SN, UUID, OS, TELNO, STRGE_INFO, NTWRK_DEVICE_INFO, PG_VER, DEVICE_NM , USEYN
+			FROM DEVICE
+			WHERE USEYN='Y' AND UUID=#{uuid}
+			ORDER BY SN DESC
+	</select>
+	
+	<select id="selectDeviceInfoListTotCnt" parameterType="egovframework.hyb.ios.dvc.service.DeviceiOSAPIVO" resultType="int">
+
+			SELECT COUNT(*) totcnt
+			FROM DEVICE
+			WHERE UUID=#{uuid}
+			
+	</select>
+
+</mapper>

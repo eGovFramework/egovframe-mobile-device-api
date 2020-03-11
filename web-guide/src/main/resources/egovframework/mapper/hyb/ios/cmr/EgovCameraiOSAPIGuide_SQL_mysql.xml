@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cameraiOSAPIDAO">
+
+	<resultMap id="cameraiOSPhotoAlbum" type="egovframework.hyb.ios.cmr.service.CameraiOSAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="photoSj" column="PHOTO_SJ"/>
+		<result property="fileSn" column="FILE_SN"/>
+	</resultMap>
+	
+	<resultMap id="cameraiOSPhotoAlbumFile" type="egovframework.hyb.ios.cmr.service.CameraiOSAPIFileVO">
+		<result property="sn" column="SN"/>
+		<result property="photoSj" column="PHOTO_SJ"/>
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="fileStreCours" column="FILE_STRE_COURS"/>
+		<result property="streFileNm" column="STRE_FILE_NM"/>
+	</resultMap>
+	
+	<resultMap id="cameraiOSPhotoAlbumImageFile" type="egovframework.hyb.ios.cmr.service.CameraiOSAPIFileVO">
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="fileStreCours" column="FILE_STRE_COURS"/>
+		<result property="streFileNm" column="STRE_FILE_NM"/>
+		<result property="fileExtsn" column="FILE_EXTSN"/>
+	</resultMap>
+	
+	<resultMap id="cameraiOSPhotoAlbumSn" type="egovframework.hyb.ios.cmr.service.CameraiOSAPIFileVO">
+		<result property="sn" column="SN"/>
+	</resultMap>
+	
+	<insert id="insertCameraPhotoAlbum">
+	    <selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from CAMERA		   
+		</selectKey>
+			
+	    	INSERT INTO CAMERA 
+				( SN
+				  , UUID
+				  , PHOTO_SJ
+				  , FILE_SN 
+				  , USEYN)
+			VALUES ( #{sn}
+				  , #{uuid}
+				  , #{photoSj}
+				  , #{fileSn}
+				  , #{useyn})
+			
+	</insert>
+	
+	<insert id="insertCameraPhotoAlbumFile">
+	    <selectKey keyProperty="fileSn" resultType="int" order="BEFORE">
+		   SELECT (IFNULL(MAX(FILE_SN), 0)+1) fileSn from FILE_DETAIL_INFO		   
+		</selectKey>
+			
+	    	INSERT INTO FILE_DETAIL_INFO
+				( FILE_SN
+				  , FILE_STRE_COURS
+				  , STRE_FILE_NM
+				  , ORIGNL_FILE_NM
+				  , FILE_EXTSN
+				  , FILE_CN
+				  , FILE_SIZE )
+			VALUES ( #{fileSn}
+				  , #{fileStreCours}
+				  , #{streFileNm}
+				  , #{orignlFileNm}
+				  , #{fileExtsn}
+				  , #{fileCn}
+				  , #{fileSize})
+			
+	</insert>
+	
+	<update id="updateCameraPhotoAlbumFile">
+		
+			UPDATE	CAMERA SET
+				  FILE_SN = #{fileSn}
+ 			WHERE  SN = #{sn}
+		
+	</update>
+	
+	<delete id="deleteCameraPhotoAlbumInfo">
+		
+			DELETE FROM CAMERA
+			WHERE SN = #{sn}
+		
+	</delete>
+	
+	<delete id="deleteCameraPhotoAlbumInfoFile">
+		
+			DELETE FROM FILE_DETAIL_INFO
+			WHERE FILE_SN = #{fileSn}
+		
+	</delete>
+	
+	<select id="selectCameraPhotoAlbumInfo" resultMap="cameraiOSPhotoAlbum">
+		
+			SELECT
+				SN, FILE_SN, PHOTO_SJ
+			FROM CAMERA
+			WHERE SN = #{sn}
+		
+	</select>
+	
+	<select id="selectCameraPhotoAlbumInfoList" resultMap="cameraiOSPhotoAlbumFile">
+			
+	    	SELECT
+				A.SN, A.PHOTO_SJ, A.FILE_SN, B.FILE_STRE_COURS, B.STRE_FILE_NM
+			FROM CAMERA A JOIN FILE_DETAIL_INFO B USING(FILE_SN)
+			ORDER BY FILE_SN DESC
+			LIMIT  #{pageSize} OFFSET #{firstIndex}
+			
+	</select>
+	
+	<select id="selectImageFileInfo" resultMap="cameraiOSPhotoAlbumImageFile">
+			
+	    	SELECT
+				FILE_SN, FILE_STRE_COURS, STRE_FILE_NM, FILE_EXTSN
+			FROM FILE_DETAIL_INFO
+			WHERE FILE_SN = #{fileSn}
+			
+	</select>
+	
+	<select id="selectCameraPhotoAlbumPhotoSj" resultMap="cameraiOSPhotoAlbumSn">
+			
+	    	SELECT
+				SN
+			FROM CAMERA
+			WHERE PHOTO_SJ = #{photoSj}
+			
+	</select>
+</mapper>

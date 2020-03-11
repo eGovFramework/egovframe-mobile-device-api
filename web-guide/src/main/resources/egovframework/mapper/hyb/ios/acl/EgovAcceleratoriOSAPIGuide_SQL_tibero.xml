@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="acceleratoriOSAPIDAO">
+
+	<resultMap id="acceleratoriOSInfo" type="egovframework.hyb.ios.acl.service.AcceleratoriOSAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="xaxis" column="XAXIS"/>
+		<result property="yaxis" column="YAXIS"/>
+		<result property="zaxis" column="ZAXIS"/>
+		<result property="timestamp" column="TIMESTAMP"/>
+		<result property="useYn" column="USEYN"/>
+	</resultMap>
+
+	<insert id="insertAcceleratorInfo">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (NVL(MAX(SN), 0)+1) sn from ACCELERATOR
+		   
+		</selectKey>
+		
+			INSERT INTO ACCELERATOR 
+				( SN
+				  , UUID
+				  , XAXIS
+				  , YAXIS
+				  , ZAXIS
+				  , TIMESTAMP
+				  , USEYN )
+			VALUES ( #{sn}
+				  , #{uuid}
+				  , #{xaxis}
+				  , #{yaxis}
+				  , #{zaxis}
+				  , #{timestamp}
+				  , #{useYn})
+		
+	</insert>
+	
+	<update id="updateAcceleratorInfo">
+		
+			UPDATE ACCELERATOR 
+			SET SN=#{sn}
+				, UUID=#{uuid}
+				, XAXIS=#{xaxis}
+				, YAXIS=#{yaxis}
+				, ZAXIS=#{zaxis}
+				, TIMESTAMP=#{timestamp}
+				, USEYN=#{useYn}
+			WHERE SN=#{sn}
+		
+	</update>
+	
+	<delete id="deleteAcceleratorInfo">
+		
+			UPDATE ACCELERATOR 
+			SET USEYN='N'
+		
+	</delete>
+	
+	<select id="selectAcceleratorInfo" resultMap="acceleratoriOSInfo">
+		
+			SELECT
+				SN, UUID, XAXIS, YAXIS, ZAXIS, TIMESTAMP, USEYN
+			FROM ACCELERATOR 
+			WHERE SN=#{sn}
+		
+	</select>
+	
+	<select id="selectAcceleratorInfoList" parameterType="egovframework.hyb.ios.acl.service.AcceleratoriOSAPIDefaultVO" resultType="egovframework.hyb.ios.acl.service.AcceleratoriOSAPIVO">
+
+			SELECT
+				SN, UUID, XAXIS, YAXIS, ZAXIS, TIMESTAMP, USEYN
+			FROM ACCELERATOR WHERE USEYN='Y'
+				
+	</select>
+	
+	<select id="selectAcceleratorInfoListTotCnt" parameterType="egovframework.hyb.ios.acl.service.AcceleratoriOSAPIDefaultVO" resultType="int">
+
+			SELECT COUNT(*) totcnt
+			FROM ACCELERATOR
+			WHERE 1=1
+			<if test="searchCondition == 0">AND
+				UUID = #{searchKeyword}
+			</if>
+			<if test="searchCondition == 1">AND
+				NTWRK_TYPE LIKE CONCAT('%',#{searchKeyword},'%')
+			</if>
+	</select>
+
+</mapper>

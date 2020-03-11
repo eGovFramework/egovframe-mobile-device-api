@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mediaiOSAPIDAO">
+
+	<resultMap id="mediaiOSDetail" type="egovframework.hyb.ios.mda.service.MediaiOSAPIFileVO">
+		<result property="sn" column="SN"/>
+		<result property="mdSj" column="MD_SJ"/>
+		<result property="revivCo" column="REVIV_CO"/>
+		<result property="streFileNm" column="STRE_FILE_NM"/>
+	</resultMap>
+	
+	<resultMap id="mediaiOSList" type="egovframework.hyb.ios.mda.service.MediaiOSAPIFileVO">
+		<result property="sn" column="SN"/>
+		<result property="mdSj" column="MD_SJ"/>
+		<result property="revivCo" column="REVIV_CO"/>
+	</resultMap>
+	
+	<resultMap id="mediaiOSFile" type="egovframework.hyb.ios.mda.service.MediaiOSAPIFileVO">
+		<result property="mdCode" column="MD_CODE"/>
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="fileStreCours" column="FILE_STRE_COURS"/>
+		<result property="streFileNm" column="STRE_FILE_NM"/>
+		<result property="fileExtsn" column="FILE_EXTSN"/>
+	</resultMap>
+	
+	<insert id="insertMediaInfo">
+	    <selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from MEDIA		   
+		</selectKey>
+			
+	    	INSERT INTO MEDIA 
+				( SN
+				  , UUID
+				  , FILE_SN
+				  , MD_CODE
+				  , MD_SJ 
+				  , USEYN
+				  , REVIV_CO)
+			VALUES ( #{sn}
+				  , #{uuid}
+				  , #{fileSn}
+				  , #{mdCode}
+				  , #{mdSj}
+				  , #{useyn}
+				  , #{revivCo})
+			
+	</insert>
+	
+	<insert id="insertMediaRecordFile">
+	    <selectKey keyProperty="fileSn" resultType="int" order="BEFORE">
+		   SELECT (IFNULL(MAX(FILE_SN), 0)+1) fileSn from FILE_DETAIL_INFO		   
+		</selectKey>
+			
+	    	INSERT INTO FILE_DETAIL_INFO
+				( FILE_SN
+				  , FILE_STRE_COURS
+				  , STRE_FILE_NM
+				  , ORIGNL_FILE_NM
+				  , FILE_EXTSN
+				  , FILE_CN
+				  , FILE_SIZE )
+			VALUES ( #{fileSn}
+				  , #{fileStreCours}
+				  , #{streFileNm}
+				  , #{orignlFileNm}
+				  , #{fileExtsn}
+				  , #{fileCn}
+				  , #{fileSize})
+			
+	</insert>
+	
+	<update id="updateMediaInfoRevivCo">
+		
+			UPDATE	MEDIA
+			 SET REVIV_CO = REVIV_CO + 1
+ 			WHERE  SN = #{sn}
+		
+	</update>
+	
+	<select id="selectMediaInfoDetail" resultMap="mediaiOSDetail">
+			
+	    	SELECT
+				A.SN, A.MD_SJ, A.REVIV_CO, B.STRE_FILE_NM
+			FROM MEDIA A JOIN FILE_DETAIL_INFO B USING(FILE_SN)
+			WHERE SN = #{sn}
+			
+	</select>
+	
+	<select id="selectMediaInfoList" resultMap="mediaiOSList">
+			
+	    	SELECT
+				SN, MD_SJ, REVIV_CO
+			FROM MEDIA
+			WHERE USEYN = 'Y'
+			  AND MD_CODE IN ('MLT02', 'MLT03')
+			ORDER BY SN DESC
+			
+	</select>
+	
+	<select id="selectMediaFileInfo" resultMap="mediaiOSFile">
+			
+	    	SELECT
+				A.MD_CODE, B.FILE_SN, B.FILE_STRE_COURS, B.STRE_FILE_NM, B.FILE_EXTSN
+			FROM MEDIA A JOIN FILE_DETAIL_INFO B USING(FILE_SN)
+			WHERE A.SN = #{sn}
+			
+	</select>
+	
+</mapper>

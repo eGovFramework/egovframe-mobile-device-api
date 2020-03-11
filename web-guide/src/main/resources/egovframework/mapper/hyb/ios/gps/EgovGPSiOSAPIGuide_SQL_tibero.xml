@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gpsiOSAPIDAO">
+
+	<resultMap id="GPSiOSInfo" type="egovframework.hyb.ios.gps.service.GPSiOSAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="lat" column="LA"/>
+		<result property="lon" column="LO"/>
+		<result property="useYn" column="USEYN"/>
+	</resultMap>
+
+	<insert id="insertGPSInfo">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (NVL(MAX(SN), 0)+1) sn from GPS
+		   
+		</selectKey>
+		
+			INSERT INTO GPS 
+				( SN
+				  , UUID
+				  , LA
+				  , LO
+				  , ACCRCY
+				  , USEYN )
+			VALUES ( #{sn}
+				  , #{uuid}
+				  , #{lat}
+				  , #{lon}
+				  , ' '
+				  , #{useYn})
+		
+	</insert>
+	
+	<delete id="deleteGPSInfo">
+		
+			UPDATE GPS 
+			SET USEYN='N'
+			WHERE UUID = #{uuid}
+		
+	</delete>
+	
+	<select id="selectGPSInfoList" parameterType="egovframework.hyb.ios.gps.service.GPSiOSAPIVO" resultType="egovMap">
+
+			SELECT
+				SN, UUID, LA, LO, USEYN
+			FROM GPS
+			WHERE USEYN='Y'
+			AND UUID = #{uuid}
+			ORDER BY SN DESC
+	</select>
+	
+	<select id="selectGPSInfoListTotCnt" parameterType="egovframework.hyb.ios.gps.service.GPSiOSAPIDefaultVO" resultType="int">
+
+			SELECT COUNT(*) totcnt
+			FROM GPS
+	</select>
+
+</mapper>

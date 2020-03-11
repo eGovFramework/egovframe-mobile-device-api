@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pushDeviceAPIDAO">
+
+	<resultMap id="pushDeviceAPIInfo" type="egovframework.hyb.mbl.pus.service.PushDeviceAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="osType" column="OS_TYPE"/>
+		<result property="tokenId" column="TOKEN_ID"/>
+	</resultMap>
+	
+	<resultMap id="pushMessageInfo" type="egovframework.hyb.mbl.pus.service.PushDeviceAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="tokenId" column="TOKEN_ID"/>
+		<result property="message" column="MESSAGE"/>
+		<result property="sndDt" column="SND_DT"/>
+	</resultMap>
+
+	<insert id="insertPushDevice">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from PUSH_DEVICE
+		   
+		</selectKey>
+		
+			INSERT INTO PUSH_DEVICE
+				(SN,
+					UUID,
+					NTWRK_DEVICE_INFO,
+					OS_VER,
+					DEVICE_NM,
+					USEYN,
+					OS_TYPE,
+					TOKEN_ID)
+			VALUES ( #{sn}
+				  , #{uuid}
+				  , #{ntwrkDeviceInfo}
+				  , #{osVer}
+				  , #{deviceNm}
+				  , #{useYn}
+				  , #{osType}
+				  , #{tokenId})
+		
+	</insert>
+
+		<insert id="insertVibratorInfo">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from PUSH_MESSAGE
+		   
+		</selectKey>
+		
+			INSERT INTO PUSH_MESSAGE
+				(SN,
+					UUID,
+					MESSAGE,
+					SND_DT,
+					TOKEN_ID)
+			VALUES ( #{sn}
+				  , #{uuid}
+				  , #{message}
+				  , #{sndDt}
+				  , #{tokenId})
+		
+	</insert>
+	
+	<select id="selectPushDeviceList" parameterType="egovframework.hyb.mbl.pus.service.PushDeviceAPIDefaultVO" resultMap="pushDeviceAPIInfo">
+			SELECT
+				SN, UUID, OS_TYPE, TOKEN_ID
+			FROM PUSH_DEVICE
+			ORDER BY SN DESC
+	</select>
+	
+	<select id="selectPushDevice" parameterType="egovframework.hyb.mbl.pus.service.PushDeviceAPIVO" resultMap="pushDeviceAPIInfo">
+			SELECT
+				SN, UUID, OS_TYPE, TOKEN_ID
+			FROM PUSH_DEVICE
+			where SN = #{sn}
+			ORDER BY SN DESC
+	</select>
+	
+	<select id="selectPushMessageList" parameterType="egovframework.hyb.mbl.pus.service.PushDeviceAPIVO" resultMap="pushMessageInfo">
+			SELECT
+				SN, UUID, MESSAGE, SND_DT, TOKEN_ID
+			FROM PUSH_MESSAGE
+			ORDER BY SN DESC
+	</select>
+
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PKIAndroidAPIDAO">
+    
+	<resultMap id="PKIAndroidInfo" type="egovframework.hyb.add.pki.service.PKIAndroidAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="dn" column="DN"/>
+		<result property="crtfcDt" column="CRTFC_DT"/>		
+		<result property="entrprsSeCode" column="ENTRPRS_SE_CODE"/>
+	</resultMap>
+	
+	<insert id="insertPKIInfo">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (NVL(MAX(SN), 0)+1) sn from pki		   
+		</selectKey>
+		
+			INSERT INTO pki 
+				( SN
+				  , UUID
+				  , DN
+				  , CRTFC_DT
+				  , ENTRPRS_SE_CODE)
+			VALUES ( #{sn}
+				  , #{uuid}
+				  , #{dn}
+				  , SYSDATETIME
+				  , #{entrprsSeCode})
+		
+	</insert>
+	
+	<select id="selectPKIInfoList" parameterType="egovframework.hyb.add.pki.service.PKIAndroidAPIDefaultVO" resultType="egovframework.hyb.add.pki.service.PKIAndroidAPIVO">
+
+			SELECT
+				SN, UUID, DN, 
+				CRTFC_DT CRTFCDT, ENTRPRS_SE_CODE ENTRPRSSECODE
+			FROM pki
+			ORDER BY SN DESC				
+	</select>
+		
+	<select id="selectPKIInfoListTotCnt" parameterType="egovframework.hyb.add.pki.service.PKIAndroidAPIDefaultVO" resultType="int">
+
+			SELECT COUNT(*) totcnt
+			FROM pki
+	</select>
+		
+</mapper>
