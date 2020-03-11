@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html LANG="ko"> 
+<!-- 
+  /**
+  * @Class Name : index.html
+  * @Description : 가이드 프로그램 SampleTemplate index 화면
+  * @Modification Information
+  * 
+  *   수정일                    수정자              수정내용
+  *  -------    --------    ---------------------------
+  *  2012.07.11     이율경        최초 생성    
+  *
+  *  
+  * Copyright (C) 2009 by MOPAS  All right reserved.
+  */
+ -->
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>SampleTemplate Device API Guide</title>
+      
+    <!-- Phonegap.js import -->
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/cmm/cordova.js"></script>  
+    
+    <!-- eGovFrame Common import -->        
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.4.5.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/theme-1.1.1.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.4.5.css" />
+    
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery-2.1.4.min.js"></script>
+    <script>
+  	var deviceReadyDeferred = $.Deferred();
+	var jqmReadyDeferred = $.Deferred();
+	
+	document.addEventListener("deviceready", onDeviceReady, false);
+	function onDeviceReady() {
+		deviceReadyDeferred.resolve();
+
+		var permissions = cordova.plugins.permissions;
+        <!--Camera permission-->
+        permissions.requestPermission(permissions.CAMERA, permissionSuccess, permissionError);
+        <!--Contacts permission-->
+        permissions.requestPermission(permissions.READ_CONTACTS, permissionSuccess, permissionError);
+        <!--DeviceInfo API permission-->
+        permissions.requestPermission(permissions.READ_PHONE_STATE, permissionSuccess, permissionError);
+        permissions.requestPermission(permissions.READ_PHONE_NUMBERS, permissionSuccess, permissionError);
+        <!--Location permission-->
+        permissions.requestPermission(permissions.ACCESS_COARSE_LOCATION, permissionSuccess, permissionError);
+        <!--MEDIA READ STORAGE permission-->
+        permissions.requestPermission(permissions.READ_EXTERNAL_STORAGE, permissionSuccess, permissionError);
+        <!--VIBRATE STORAGE permission-->
+        permissions.requestPermission(permissions.VIBRATE, permissionSuccess, permissionError);
+	}
+	
+    $(document).on("pageinit", function(){
+                     $.mobile.defaultPageTransition = 'none';
+                     jqmReadyDeferred.resolve();
+                     
+                     });
+    </script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/modernizr-3.6.0.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.4.6.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovHybrid.js"></script>
+
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.validate.min.js"></script>
+    <!--<script type="text/javascript" src="js/egovframework/mbl/cmm/json2.js"></script>-->
+        
+    <!-- iScroll.js import -->
+    <script type="text/javascript" src="js/iscroll/iscroll.js"></script>
+    
+        
+    <!-- Custom CSS import -->
+    <link rel="stylesheet" href="css/egovframework/mbl/hyb/SampleTemplate.css" />
+    
+    <!-- Custom js import -->
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/hyb/messages_ko.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/hyb/SampleTemplate.js"></script>
+        
+    <script type="text/javascript">
+	$.when(deviceReadyDeferred, jqmReadyDeferred).then(DeviceAPIInit);
+        
+    </script>    
+   
+</head>
+
+<body>
+    <div id="list" data-role="page" data-iscroll=enable>
+        <!-- header start -->
+        <div id="header" data-role="header" data-position="fixed" data-theme="z">
+            <h1>디바이스API실행환경</h1>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html" data-ajax="false" data-theme="a">기능설명</a></li>
+                    <li><a href="SampleTemplate.html" data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- header end -->
+
+
+        <!-- contents start -->
+        <div data-role="content" id="content">
+            
+            <div id="detailView" class="DetailView">
+                <p id="infoDetail"></p>
+            </div>
+
+            <div id="wrapper">
+                <div class="mainList">
+                    <ul data-role="listview" data-split-icon="search" id="menu">
+                        <li>
+                            <a href="#" id="accelerator" onclick="javascript:fn_egov_operateDevice('accelerator');">Accelerator</a> 
+                            <a href="#" id="_accelerator" onclick="javascript:fn_egov_changePage('_accelerator');" data-icon="grid">상세</a></li>
+                        <li>
+                            <a href="#" id="gps" onclick="javascript:fn_egov_operateDevice('gps');">GPS</a> 
+                            <a href="#" id="_gps" onclick="javascript:fn_egov_changePage('_gps');" data-icon="grid">상세</a>
+                        </li>
+                        <li>
+                            <a href="#" id="vibrator" onclick="javascript:fn_egov_operateDevice('vibrator');">Vibrator</a> 
+                            <a href="#" id="_vibrator" onclick="javascript:fn_egov_changePage('_vibrator');" data-icon="grid">상세</a>
+                        </li>
+                        <li>
+                            <a href="#" id="camera" onclick="javascript:fn_egov_operateDevice('camera');">Camera</a> 
+                            <a href="#" id="_camera" onclick="javascript:fn_egov_changePage('_camera');"  data-icon="grid">상세</a>
+                            </li>
+                        <li> 
+                            <a href="#" id="media" onclick="javascript:fn_egov_operateDevice('media');">Media</a> 
+                            <a href="#" id="_media" onclick="javascript:fn_egov_changePage('_media');" data-icon="grid">상세</a>
+                        </li>
+                        <li>
+                            <a href="#" id="contacts" onclick="javascript:fn_egov_operateDevice('contacts');">Contacts</a> 
+                            <a href="#" id="_contacts" onclick="javascript:fn_egov_changePage('_contacts');" data-icon="grid">상세</a>
+                        </li>
+                        <li>
+                            <a href="#" id="compass" onclick="javascript:fn_egov_operateDevice('compass');">Compass</a> 
+                            <a href="#" id="_compass" onclick="javascript:fn_egov_changePage('_compass');" data-icon="grid">상세</a>
+                        </li>
+                        <li>
+                            <a href="#" id="file" onclick="javascript:fn_egov_operateDevice('file');">FileReaderWriter</a> 
+                            <a href="#" id="_file" onclick="javascript:fn_egov_changePage('_file');" data-icon="grid">상세</a>
+                        </li>
+                        <li>
+                            <a href="#" id="network" onclick="javascript:fn_egov_operateDevice('network');">Network Info</a> 
+                            <a href="#" id="_network" onclick="javascript:fn_egov_changePage('_network');" data-icon="grid">상세</a>
+                        </li>
+                        <li>
+                            <a href="#" id="device" onclick="javascript:fn_egov_operateDevice('device');">Device Info</a> 
+                            <a href="#" id="_device" onclick="javascript:fn_egov_changePage('_device');" data-icon="grid">상세</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <!-- contents end -->
+
+        <!-- footer start -->
+        <div id="footer" data-role="footer" data-theme="z" data-position="fixed">
+            <h4>Copyright 2008-2019 MOIS<br>(Ministry of the Interior and Safety)</h4>
+        </div>
+        <!-- footer end -->
+
+    </div>
+
+    <div id="apiListView" data-role="page" data-iscroll=enable>
+        <!-- header start -->
+        <div id="header" data-role="header" data-position="fixed" data-theme="z">
+            <h1 id="apiTitle">디바이스API실행환경</h1>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html" data-ajax="false" data-theme="a">기능설명</a></li>
+                    <li><a href="SampleTemplate.html" data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- header end -->
+
+        <!-- contents start -->
+        <div data-role="content" id="listInfoDetailContent">
+            <div id="detailView" class="DetailView">
+                <p id="listInfoDetail"></p>
+            </div>
+            <!--<div class="fields" id="commentBox" style="display: none;">-->
+                <!--<span class="commentImg"><img src="images/egovframework/mbl/hyb/ico_comm.png" alt="image" /></span>-->
+                <!--<form id="commentForm">-->
+                    <!--<label for="comment"></label>-->
+                    <!--<input name="comment" class="postcode" id="comment" type="text" data-inline="true" minlength="2" maxlength="20" />-->
+                <!--</form>-->
+                <!--<button class="btn_save" type="button" id="save" data-inline="true" data-theme="a">저장</button>-->
+            <!--</div>-->
+            <div id="wrapper_list">
+                <div class="mainList">
+                    <ol data-role="listview" data-inset="true" data-split-icon="delete" id="dataList">
+                    </ol>
+                </div>
+            </div>
+
+        </div>
+        <!-- contents end -->
+
+        <!-- footer start -->
+        <div id="footer" data-role="footer" data-theme="z" data-position="fixed">
+            <h4>Copyright 2008-2019 MOIS<br>(Ministry of the Interior and Safety)</h4>
+        </div>
+        <!-- footer end -->
+    </div>
+
+    <!-- explorer page --->
+    <div id="explorer" data-role="page">
+        <div id="header" data-role="header" data-position="fixed" data-theme="z">
+            <h1>File 탐색기</h1>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html" data-ajax="false" data-theme="a">기능설명</a></li>
+                    <li><a href="SampleTemplate.html" data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- contents start -->
+        <div id="wrapper_explorer">
+            <div id="content" data-role="content">
+                <div class="mainList">
+                    <ul data-role="listview" id="listView">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- contents end -->
+        
+        <!-- footer start -->
+        <div id="footer" data-role="footer" data-theme="z" data-position="fixed">
+            <h4>Copyright 2008-2019 MOIS<br>(Ministry of the Interior and Safety)</h4>
+        </div>
+        <!-- footer end -->
+    </div>
+
+</body>
+</html>
