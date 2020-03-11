@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html LANG="ko"> 
+<!-- 
+  /**
+  * @Class Name : ContactsAPI.html
+  * @Description : 디바이스 API 예제 프로그램 index 화면
+  * @Modification Information
+  * 
+  *   수정일      수정자                수정내용
+  *  -------    --------    ---------------------------
+  *  2012.08.14  나신일                최초작성
+  *
+  *  
+  * Copyright (C) 2009 by MOPAS  All right reserved.
+  */
+ -->
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Contacts API Guide</title>
+      
+    <!-- Phonegap.js import -->
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/cmm/cordova.js"></script>  
+    
+    <!-- eGovFrame Common import -->        
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.4.5.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/theme-1.1.1.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.4.5.css" />
+    
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery-2.1.4.min.js"></script>
+    <script>
+   	var deviceReadyDeferred = $.Deferred();
+	var jqmReadyDeferred = $.Deferred();
+	
+	document.addEventListener("deviceready", onDeviceReady, false);
+
+	function onDeviceReady() {
+	    document.addEventListener("backbutton", backKeyDown, false);
+		deviceReadyDeferred.resolve();
+        var permissions = cordova.plugins.permissions;
+        permissions.requestPermission(permissions.WRITE_CONTACTS, permissionSuccess, permissionError);
+	}
+
+    $(document).on("pageinit", function(){
+        $.mobile.defaultPageTransition = 'none';
+        jqmReadyDeferred.resolve();
+    });
+    </script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/modernizr-3.6.0.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.4.6.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovHybrid.js"></script>
+
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.validate.min.js"></script>
+    <!--<script type="text/javascript" src="js/egovframework/mbl/cmm/json2.js"></script>-->
+        
+    <!-- iScroll.js import -->
+    <script type="text/javascript" src="js/iscroll/iscroll.js"></script>    
+        
+    <!-- Customm CSS import -->
+
+    <link rel="stylesheet" href="css/egovframework/mbl/hyb/ContactsAPI.css" />
+
+    <!-- Customm js import -->     
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/hyb/ContactsAPI.js"></script>   
+        
+    <script type="text/javascript">
+
+        $.when(deviceReadyDeferred, jqmReadyDeferred).then(DeviceAPIInit);
+       
+        function DeviceAPIInit() {  
+            fn_egov_init_hrefLink(); 
+
+            $( document ).on( "pagehide", "#contactList", function( event ) {
+                $('#listView').empty();
+            });
+        }        
+              
+    </script>    
+   
+</head>
+	
+<body>
+	
+    <!-- main Page -->
+    <div id="main" data-role="page">
+        <div id="header" data-role="header" data-theme="z" data-position="fixed">
+            <h1>Contacts 디바이스 API 가이드 프로그램<br>(Android App)</h1>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html" data-ajax="false" data-theme="a">기능설명</a></li>
+                    <li><a href="ContactsAPI.html"  data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="content">
+        	<div class="indexInfomation">
+        		<p>Contacts API 기능을 이용하여 모바일 디바이스의 연락처를 조회하고 조회된 연락처를 서버로 백업하며 백업된 연락처를 모바일 디바이스로 복구하는 기능을 제공함</p>
+        	</div>
+        	<div id="mainWrapper">
+		    	<div>
+		            <ul data-role="listview" data-inset="true">
+		                <li><a id="btnMoveLocalConatact" href="#">
+		                    <h3>모바일 기기 연락처 조회</h3>
+		                </a></li>
+		                <li><a id="btnMoveContactBackup" href="#">
+		                    <h3>연락처를 서버로 백업하기</h3>
+		                </a></li>
+		                <li><a id="btnMoveContactRecovery" href="#">
+		                    <h3>연락처를  기기로 복구하기</h3>
+		                </a></li>
+		            </ul>
+		        </div>
+		    </div>
+        </div>
+        <div id="footer" data-role="footer" data-theme="b" data-position="fixed">
+            <h4>Copyright 2008-2019 MOIS<br>(Ministry of the Interior and Safety)</h4>
+        </div>
+    </div>
+    
+    <!-- contactList Page -->
+    <div id="contactList" data-role="page">
+        <div id="header" data-role="header" data-theme="z" data-position="fixed">            
+            <h1>Contacts 디바이스 API 가이드 프로그램<br>(Android App)</h1>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html" data-ajax="false" data-theme="a">기능설명</a></li>
+                    <li><a href="ContactsAPI.html"  data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="content">
+            <div class="indexInfomation">
+                <p>모바일 디바이스에 저장된 연락처 정보를 조회하는 기능을 제공 함</p>
+        	</div>
+     		<div id="subWrapper">
+		    	<div>
+		            <ul data-role="listview"  id="listView">
+		            </ul>
+		        </div>
+		    </div>
+        </div>
+        <div id="footer" data-role="footer" data-theme="b" data-position="fixed">
+            <div data-role="navbar">
+               <ul>
+               	   <li><a id="btnMore" href="#" data-icon="plus" data-theme="b">10개 더보기</a></li>                   
+               </ul>
+           </div><!-- /navbar -->
+        </div>
+    </div> 
+    
+    <!-- contactDetail Page -->
+    <div id="contactDetail" data-role="page">
+        <div id="header" data-role="header" data-theme="z" data-position="fixed">            
+            <h1>Contacts 디바이스 API 가이드 프로그램<br>(Android App)</h1>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html" data-ajax="false" data-theme="a">기능설명</a></li>
+                    <li><a href="ContactsAPI.html"  data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="content">
+       		<div class="indexInfomation">
+        		<p>모바일 디바이스에 저장된 연락처 정보를 상세조회 하고 삭제하는 기능을 제공 함</p>
+        	</div>
+	        <div class="indexContens">
+	        	<form id="detaileForm" action="#" method="get">
+	        		<input type=hidden name="detailIndex" id="detailIndex"/>
+					 <li data-role="fieldcontain">
+						<label for="detailName">이름</label>
+						<input type="text" id="detailName" name="detailName" class="required" maxlength="60" readonly/>
+					</li>
+					<li data-role="fieldcontain">
+						<label for="detailPhone">전화번호</label>
+						<input type="tel" id="detailPhone" name="detailPhone" maxlength="20" readonly/>
+					</li>
+					<li data-role="fieldcontain">
+						<label for="detailEmail">이메일</label>
+						<input type="email" id="detailEmail" name="detailEmail" maxlength="50" readonly/>								
+					</li>
+				</form>						
+            </div>
+        </div>
+        <div id="footer" data-role="footer" data-theme="b" data-position="fixed">
+            <div data-role="navbar">
+               <ul>
+               	   <li><a id="btnDelete" href="#" data-icon="delete" data-theme="b">삭제</a></li>                   
+               </ul>
+           </div><!-- /navbar -->
+        </div>
+    </div>
+    
+    <!-- contactBackup Page -->
+    <div id="contactBackup" data-role="page">
+        <div id="header" data-role="header" data-theme="z" data-position="fixed">            
+            <h1>Contacts 디바이스 API 가이드 프로그램<br>(Android App)</h1>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html" data-ajax="false" data-theme="a">기능설명</a></li>
+                    <li><a href="ContactsAPI.html"  data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="content">
+       		<div class="indexInfomation">
+        		<p>모바일 디바이스의 연락처 전체를 서버로 백업하는 기능을 제공 함</p>
+        	</div>
+	        <div class="indexContents">
+		        <div class="ui-grid-a">
+					<div class="ui-block-a"><h3 class="taC">스마트폰</h3></div>
+					<div class="ui-block-b"><h3 class="taC">서버</h3></div>
+				</div>
+				<div class="arrowInfo">
+	        		<img src="images/egovframework/mbl/hyb/rightarrow.png" alt="capture" /> 
+	        	</div>
+	        	<div id="deviceBackupCount" class="ui-grid-a">
+					
+				</div>
+				<a id="btnBackup" href="#" data-role="button" data-icon="gear">연락처 백업</a>
+            </div>
+        </div>
+        <div id="footer" data-role="footer" data-theme="b" data-position="fixed">
+            <h4>Copyright 2008-2019 MOIS<br>(Ministry of the Interior and Safety)</h4>
+        </div>
+    </div>
+    
+    <!-- contactRecovery Page -->
+    <div id="contactRecovery" data-role="page">
+        <div id="header" data-role="header" data-theme="z" data-position="fixed">            
+            <h1>Contacts 디바이스 API 가이드 프로그램<br>(Android App)</h1>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html" data-ajax="false" data-theme="a">기능설명</a></li>
+                    <li><a href="ContactsAPI.html"  data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="content">
+       		<div class="indexInfomation">
+        		<p>서버에 백업된 연락처를 모바일 디바이스로 복원하는 기능을 제공 함</p>
+        	</div>
+	        <div class="indexContents">
+		        <div class="ui-grid-a">
+					<div class="ui-block-a"><h3 class="taC">스마트폰</h3></div>
+					<div class="ui-block-b"><h3 class="taC">서버</h3></div>
+				</div>
+				<div class="arrowInfo">
+	        		<img src="images/egovframework/mbl/hyb/leftarrow.png" alt="capture" /> 
+	        	</div>
+	        	<div id="deviceRecoveryCount" class="ui-grid-a">
+					
+				</div>
+				<a id="btnRecovery" href="#" data-role="button" data-icon="gear">연락처 복원</a>
+            </div>
+        </div>
+        <div id="footer" data-role="footer" data-theme="b" data-position="fixed">
+            <h4>Copyright 2008-2019 MOIS<br>(Ministry of the Interior and Safety)</h4>
+        </div>
+    </div>
+</body>
+</html>

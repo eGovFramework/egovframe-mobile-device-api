@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html LANG="ko"> 
+<!-- 
+  /**
+  * @Class Name : intro.html
+  * @Description : 디바이스 API intro 화면
+  * @Modification Information
+  * 
+  *   수정일            수정자                수정내용
+  *
+  *  2012.08.07  나신일                최초작성
+  *
+  *  
+  * Copyright (C) 2009 by MOPAS  All right reserved.
+  */
+ -->
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>FileReaderWriter Device API Guide</title>
+    
+    <!-- Phonegap.js import -->
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/cmm/cordova.js"></script>  
+    
+    <!-- eGovFrame Common import -->        
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.4.5.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.4.5.css" />
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery-2.1.4.min.js"></script>
+    
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.4.6.js"></script>        
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovHybrid.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.validate.min.js"></script>
+    <!--<script type="text/javascript" src="js/egovframework/mbl/cmm/json2.js"></script>-->  
+        
+    <!-- iScroll.js import -->
+    <script type="text/javascript" src="js/iscroll/iscroll.js"></script>
+     
+    <!-- Customm CSS import --> 
+    <link rel="stylesheet" href="css/egovframework/mbl/hyb/FileReaderWriterAPI.css" />   
+        
+    <script type="text/javascript">
+        
+ 	// Wait for PhoneGap to load
+    // 
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    /**
+     * PhoneGap 초기화 이벤트에서 호출하는 function
+     * @returns Back 버튼 event 추가
+     * @type
+    */
+    function onDeviceReady() {        	
+    	document.addEventListener("backbutton", backKeyDown, false);
+    	sleep(4000);
+    	fn_Confirm3G('FileReaderWriterAPI.html');
+    }
+
+	</script>    
+</head>
+
+<body>
+	<!-- intro -->
+	<div id="intro" data-role="page">
+		<div class="intro">			
+			<a href="#"  data-ajax="false"><img src="images/egovframework/mbl/hyb/intro.png" alt="intro" width="100%" height="100%"/></a>
+		</div>
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

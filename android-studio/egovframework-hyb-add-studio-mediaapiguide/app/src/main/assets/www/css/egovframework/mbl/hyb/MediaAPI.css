@@ -1,0 +1,96 @@
+/* ----------------------------------------------------------------------------
+   EgovHybrid Style Sheet
+   Description :  가이드 프로그램 표준코드
+   Modification Information
+   수정일           수정자      수정내용
+   -------------    --------    ---------------------
+   2012.07.25       구지연     최초 생성
+ 
+---------------------------------------------------------------------------- */
+
+/* iscroll configuration */
+#header {
+    height:92px;
+}
+
+#listFooter {
+    height:54px;
+}
+
+#detailFooter {
+    height:54px;
+}
+
+#wrapper {
+    position:absolute; z-index:1;
+    top:220px; bottom:54px; left:0;
+    width:100%;
+    overflow:auto;
+}
+#wrapper-x {
+    position:relative; 
+    z-index:1;
+    width:100%;      
+    overflow:auto;
+}
+
+/******** 기능별 추가 작업분 2012.07.25 ********/
+.ui-body-c, .ui-overlay-c { text-shadow:none }
+.ui-page-theme-a { text-shadow:none }
+.ui-content { margin:10px 0 0; padding:0; }
+.ui-content .ui-listview { margin:0}
+.ui-header .ui-title { margin: .6em 0 .8em;}
+.ui-footer .ui-title { margin: .6em 0 .8em; font-size:13px; line-height:15px;}
+.ui-li .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li { padding:.8em 0.8em;}
+
+/* intro.html */
+.intro { margin:0; padding:0; border:0;}
+.intro img { border:0; margin:0; padding:0; max-width:100%;}
+
+/* index.html */
+.DetailView { background:#000; color:#fff; font-size:14px; line-height:18px; padding:10px 10px; margin:0px 10px 0; }
+.mediaIndex { padding:0 10px; text-align:center; }
+.mediaplay { padding:0 10px; text-align:center; }
+.playMdsj {  background : rgba(255, 255, 255, .8); border:2px solid #555; margin:10px 0}
+.playMdsj p { line-height:16px; }
+.playButon { display:block; background : rgba(0, 0, 0, .2); padding:5px 0; overflow:hidden}
+
+/* overview.html */
+.overcontents { clear:both; padding:10px 10px; overflow:hidden; }
+.botomLine { border-bottom:1px solid #ccc; overflow:hidden; padding:0 0 5px}
+.paddT5 { padding:5px 0 0; text-align:left; }
+
+.overViewInfo { clear:both; padding:0; margin:0; }
+.overViewInfo h3 { padding:6px 10px 8px; overflow:hidden; background:#d6dee0}
+
+.structure { list-style:none; margin:0; padding:0 0 0 10px;}
+.structure li { background:url(../../../../images/egovframework/mbl/hyb/ico_star.png) 0 3px no-repeat; padding:0 0 0 15px; line-height:18px; margin:0 0 10px; font-size:14px; }
+.structure ol { margin:0; padding:10px 0 0 20px; }
+.structure ol li { background:none; padding:0; margin:0 0 8px; line-height:18px;}
+
+.explanation { list-style:none; margin:0; padding:0 0 0 10px;}
+.explanation li { background:url(../../../../images/egovframework/mbl/hyb/ico_plus.png) 0 3px no-repeat; padding:0 0 0 15px; line-height:18px; margin:0 0 10px; font-size:14px; }
+
+.Screen {width:330px; text-align:left; margin:0;padding:0;}
+.Screen ul { list-style:none;margin:0;padding:0;}
+.Screen li { float:left; margin:0 5px; width:100px}
+.Screen li img { max-width:100%}
+
+/* license.html */
+.subcontents { clear:both; padding:15px 0; overflow:hidden; }
+
+.box1 { margin:5px 10px 0; border:5px solid #cccccc; background:#fff; font-size:14px; line-height:18px; padding:8px;overflow:hidden;  word-wrap:break-word; word-wrap:break-all;}
+.licenseContens h3 { background:#fff url(../../../../images/egovframework/mbl/hyb/ico_l.png) 5px center no-repeat; border-top:1px solid #d7d6cc; border-bottom:1px solid #d7d6cc; font-size:16px; padding:8px 10px 7px 30px; overflow:hidden; color:#494949 }
+
+.licenseContens { padding:0 15px 20px; margin:0;}
+.licenseContens p { font-size:14px; line-height:18px; }
+
+.license_contents_text_main { border:1px solid #d4d4d4; background:#f9f7ed; padding:5px 10px; overflow:hidden; }
+p.licensetop { font-size:16px; font-family:arial,helvetica,sans-serif; text-align:center; }
+
+p.fontFace1 { font-size: 14px; margin:5px; padding:5px;}
+.fontFace2 {border-top-width: 3px; border-left-width: 3px; font-size: 12px; border-left-color: rgb(170, 170, 170); border-bottom-width: 3px; border-bottom-color: rgb(170, 170, 170); border-top-color: rgb(170, 170, 170); border-right-width: 3px; border-right-color: rgb(170, 170, 170); margin:5px; padding:5px;}
+.jquerylist { list-style:none; margin:0; padding:0;}
+.jquerylist li { padding:5px 5px; overflow:hidden;}
+.ui-body-c .ui-link:visited { color:#000}
+.ui-body-c .ui-link { color:#000}

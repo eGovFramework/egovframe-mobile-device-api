@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>DeviceInfo Device API Guide</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	
+    <!-- Phonegap.js import -->
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/cmm/cordova.js"></script>
+    
+    <!-- eGovFrame Common import -->        
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.4.5.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/theme-1.1.1.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.4.5.css" />
+    
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/modernizr-3.6.0.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.4.6.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovHybrid.js"></script>
+
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.validate.min.js"></script>
+    <!--<script type="text/javascript" src="js/egovframework/mbl/cmm/json2.js"></script>-->
+        
+    <!-- iScroll.js import -->
+    <script type="text/javascript" src="js/iscroll/iscroll.js"></script>
+          
+    <!-- Customm CSS import --> 
+    <link rel="stylesheet" href="css/egovframework/mbl/hyb/DeviceInfoAPI.css" />
+   
+    <!-- Customm js import -->     
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/hyb/DeviceInfoAPI.js"></script>
+	
+	<script type="text/javascript" charset="utf-8">
+	       
+	   // Wait for PhoneGap to load
+	   // 
+	   document.addEventListener("deviceready", onDeviceReady, false);
+	   
+	   // PhoneGap is loaded and it is now safe to make calls PhoneGap methods
+	   //
+	   function onDeviceReady() { 
+	   	
+			sleep(4000);
+			fn_Confirm3G('DeviceInfoAPI.html');
+		   
+	   }
+
+	</script> 
+	
+</head>
+
+<body>
+	
+	<!-- intro -->
+	<div id="intro" data-role="page">
+		<div class="intro">
+			<a href="#"  data-ajax="false" id="introOut"><img src="images/egovframework/mbl/hyb/intro.png" alt="intro" width="100%" height="100%"/></a>
+
+		</div>
+	</div>
+	
+</body>
+</html>

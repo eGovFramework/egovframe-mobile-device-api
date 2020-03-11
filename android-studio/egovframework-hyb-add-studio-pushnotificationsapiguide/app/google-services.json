@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "908799935404",
+    "firebase_url": "https://egovdeviceapi.firebaseio.com",
+    "project_id": "egovdeviceapi",
+    "storage_bucket": "egovdeviceapi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908799935404:android:bd0abada6b870063ac7009",
+        "android_client_info": {
+          "package_name": "kr.go.egovframework.hyb.deviceapiapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "908799935404-tqqet4c0odqvlflrjtl4q0sor5g94hab.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9UnsO-ax2Eygt20fuMl_fekJpHBGsXMs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "908799935404-tqqet4c0odqvlflrjtl4q0sor5g94hab.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
