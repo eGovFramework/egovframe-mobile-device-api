@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>398105EA-4809-4452-B258-234247AAFBA0</string>
+	<key>IDESourceControlProjectName</key>
+	<string>EGovComModule</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>b12379f2-5ddc-0248-8e1a-ec8a0bc4d141++612</key>
+		<string>https://192.168.100.222/svn/egov/egovframework-deviceAPI/ios/trunk</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>EGovComModuleStaticLibrary/EGovComModule.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>b12379f2-5ddc-0248-8e1a-ec8a0bc4d141++612</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectRepositoryRootDictionary</key>
+	<dict>
+		<key>b12379f2-5ddc-0248-8e1a-ec8a0bc4d141++612</key>
+		<string>https://192.168.100.222/svn/egov</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://192.168.100.222/svn/egov/egovframework-deviceAPI/ios/trunk/EGovComModuleStaticLibrary/EGovComModule.xcodeproj</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>b12379f2-5ddc-0248-8e1a-ec8a0bc4d141++612</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.subversion</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>b12379f2-5ddc-0248-8e1a-ec8a0bc4d141++612</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ios</string>
+		</dict>
+	</array>
+</dict>
+</plist>

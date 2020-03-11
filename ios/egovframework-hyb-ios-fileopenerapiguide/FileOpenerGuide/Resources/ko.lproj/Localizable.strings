@@ -1,0 +1,32 @@
+/*
+ Localizable.strings
+ TestPermissionPlugin
+ 
+ Created by 신용호 on 19/09/2019.
+ 
+ */
+/* 권한 알림 화면 */
+"Hey, listen!" = "권한 사용 알림!";
+"We need a couple things\r\nbefore you get started." = "앱사용시 필요한 권한에\r\n승인하여 주세요.";
+"Close" = "닫기";
+"Allowed (prettyDescription)" = "%@ 허용";
+"Denied \(prettyDescription)" = "%@ 거부";
+"(prettyDescription) Disabled" = "%@ 기능꺼짐";
+"Enable (prettyDescription)" = "%@ 가능";
+"Allow (type)" = "%@ 허용";
+
+/* 이미 거절된 권한에 대한 요청 메시지 */
+"Permission for (prettyDescription) was denied." = "%@ 권한이 이미 거부되어 있습니다.";
+"Please enable access to (prettyDescription) in the Settings app" = "설정 앱에서 %@ 권한을 허용하여 주세요.";
+"OK" = "닫기";
+"Show me" = "설정하기";
+
+/* 하드웨어 기능이 꺼진경우 요청 메시지 */
+"(prettyDescription) is currently disabled." = "%@ 기능이 꺼져 있습니다.";
+"Please enable access to (prettyDescription) in Settings" = "설정 앱에서 %@ 기능을 활성화 해 주세요.";
+
+/* 권한 요청 초기화면에서 사용자 알림 메시지 */
+"We use this to send you\r\nspam and love notes" = "앱 사용시 필요한 알림 메시지를 \r\n발송합니다.";
+"We use this to track\r\nwhere you live" = "앱 사용시 필요한 위치정보를 \r\n수신하여 활용합니다.";
+"We use this to drain your battery" = "배터리가 좀더 소모될수 있습니다.";
+"We use this to steal\r\nyour friends" = "이 앱에서 연락처에 접근하는 기능을 \r\n사용합니다.";

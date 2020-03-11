@@ -1,0 +1,29 @@
+/*
+ Localizable.strings
+ TestPermissionPlugin
+ 
+ Created by shin yong-ho on 19/09/2019.
+ 
+ */
+"Hey, listen!" = "Hey, listen!";
+"We need a couple things\r\nbefore you get started." = "We need a couple things\r\nbefore you get started.";
+"Close" = "Close";
+"Allowed (prettyDescription)" = "Allowed %@";
+"Denied (prettyDescription)" = "Denied %@";
+"(prettyDescription) Disabled" = "%@ Disabled";
+"Enable (prettyDescription)" = "Enable %@";
+"Allow (type)" = "Allow %@";
+
+"Permission for (prettyDescription) was denied." = "Permission for %@ was denied.";
+"Please enable access to (prettyDescription) in the Settings app" = "Please enable access to %@ in the Settings app";
+"OK" = "OK";
+"Show me" = "Show me";
+
+"(prettyDescription) is currently disabled." = "%@ is currently disabled.";
+"Please enable access to (prettyDescription) in Settings" = "Please enable access to %@ in Settings";
+
+
+"We use this to send you\r\nspam and love notes" = "We use this to send you\r\nspam and love notes";
+"We use this to track\r\nwhere you live" = "We use this to track\r\nwhere you live";
+"We use this to drain your battery" = "We use this to drain your battery";
+"We use this to steal\r\nyour friends" = "We use this to steal\r\nyour friends";

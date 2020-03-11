@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Compass Device API Guide</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+	<!-- Phonegap.js import -->
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/cmm/cordova.js"></script>
+
+    <!-- eGovFrame Common import -->
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.4.5.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/theme-1.1.1.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.4.5.css" />
+
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery-2.1.4.min.js"></script>
+    <script>
+        $(document).bind("pageinit", function(){
+            $.mobile.defaultPageTransition = 'none';
+        });
+    </script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/modernizr-3.6.0.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.4.6.js"></script>
+        
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.validate.min.js"></script>
+    <!--<script type="text/javascript" src="js/egovframework/mbl/cmm/json2.js"></script>-->
+
+    <!-- Plugin.js import -->
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/cmm/EGovComModuleAPI.js"></script>
+        
+    <!-- iScroll.js import -->
+    <script type="text/javascript" src="js/iscroll/iscroll.js"></script>
+
+    <!-- Customm CSS import --> 
+    <link rel="stylesheet" href="css/egovframework/mbl/hyb/CompassAPI.css" />
+
+    <!-- Customm js import -->     
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/hyb/CompassAPI.js"></script>
+
+	<script type="text/javascript">
+
+		// Wait for PhoneGap to load
+		document.addEventListener("deviceready", onDeviceReady, false);
+
+		// PhoneGap is loaded and it is now safe to make calls PhoneGap methods
+		function onDeviceReady() {
+			fn_egov_get_compass();
+	    	fn_egov_loaded();
+            fn_egov_network_notification();
+		}
+	</script>
+</head>
+
+<body>
+
+	<!-- Compass Info Page -->
+	<div id="compassMain" data-role="page">
+
+		<div id="header" data-role="header" data-theme="z" data-position="fixed">
+			<h1>Compass API</h1>
+			<div data-role="navbar">
+				<ul>
+					<li><a href="overview.html" data-ajax="false" data-theme="a">기능설명</a>
+					</li>
+					<li><a href="CompassAPI.html" data-ajax="false"
+						data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a>
+					</li>
+					<li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div id="content" data-role="content">
+			<div class="contentsIndex">
+				<div id="detailView" class="DetailView">
+					<p id="infoDetail"></p>
+				</div>
+				<div class="compassView">
+					<img id="compass" src="images\egovframework\mbl\hyb\compass320.png" alt="compass_image"/>
+				</div>
+			</div>
+		</div>
+        <div id="footer" data-role="footer" data-theme="z"
+            data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li><a id="btnSaveCompassInfo" href="#" data-icon="gear"
+                        data-theme="b">방향 정보 저장 시작</a>
+                    </li>
+                    <li><a id="btnMoveCompassInfoList" href="#" data-icon="grid"
+                        data-theme="b">방향 정보 목록</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /navbar -->
+        </div>
+	</div>
+
+	<!-- Compass Info List Saved In Server -->
+	<div id="compassInfoList" data-role="page">
+        <div id="header" data-role="header" data-theme="z">
+           <h1>Compass API</h1>
+           <a href="#" data-icon="arrow-l" data-theme="d" data-rel="back">back</a>
+           <div data-role="navbar">
+                <ul>
+                    <li><a href="overview.html"  data-ajax="false" data-theme="a">기능설명</a></li>
+                    <li><a href="CompassAPI.html"  data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">주요기능</a></li>
+                    <li><a href="license.html" data-ajax="false" data-theme="a">라이선스</a></li>
+                </ul>
+            </div>
+        </div>
+		<div id="content" data-role="content">
+			<div id="wrapperList">
+				<ul id="theList" data-inset="true" data-role="listview">
+				</ul>
+			</div>
+		</div>
+		<div id="footer" data-role="footer" data-theme="z" data-position="fixed">
+		<div data-role="navbar">
+               <ul>
+                   <li><a id="btnInquirCompassInfo" href="#" data-icon="grid"  data-theme="b">방향 정보 조회</a></li>
+                   <li><a id="btnDelCompassInfo" href="#" data-icon="delete"  data-theme="b">리스트 삭제</a></li>
+               </ul>
+           </div><!-- /navbar -->
+       </div>
+	</div>
+
+
+
+</body>
+</html>
