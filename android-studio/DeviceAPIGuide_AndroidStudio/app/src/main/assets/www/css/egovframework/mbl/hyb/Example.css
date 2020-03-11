@@ -1,0 +1,31 @@
+/* ----------------------------------------------------------------------------
+   EgovHybrid Style Sheet
+   Description :  가이드 프로그램 표준코드
+   Modification Information
+   수정일           수정자      수정내용
+   -------------    --------    ---------------------
+   2012.02.14       서형주     최초 생성
+ 
+---------------------------------------------------------------------------- */
+
+
+/* iscroll configuration */
+#header {
+    height:45px;
+}
+
+
+#footer {
+    height:48px;
+}
+
+/* layout 
+#footer {	position:absolute; z-index:2;	bottom:0; left:0;	width:100%;	height:41px;}
+*/
+
+/* footer */
+.footerNavRight {float: right; margin-right:10px;margin-top:10px;}
+
+
+
+
