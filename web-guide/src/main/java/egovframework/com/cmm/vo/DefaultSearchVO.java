@@ -13,151 +13,144 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package egovframework.hyb.add.pki.service;
+package egovframework.com.cmm.vo;
 
 import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-/**  
- * @Class Name : PKIAndroidAPIDefaultVO.java
- * @Description : PKIAndroidAPIDefaultVO Class
- * @Modification Information  
+import io.swagger.annotations.ApiModelProperty;
+
+/**
+ * @Class Name : DefaultSearchVO.java
+ * @Description : DefaultSearchVO Class
+ * @Modification Information
  * @
- * @  수정일                 수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012.07.23    나신일                  최초생성
+ * @ 수정일               수정자              수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2020.08.11   신용호              최초생성
  * 
- * @author 모바일 디바이스 API 팀
+ * @author Device API 실행환경팀
  * @since 2012. 07. 23
  * @version 1.0
  * @see
  * 
- *  Copyright (C) by MOPAS All right reserved.
  */
-public class PKIAndroidAPIDefaultVO implements Serializable {
-
-	private static final long serialVersionUID = -3158856604563449847L;
+public class DefaultSearchVO implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	/** 검색조건 */
+	@ApiModelProperty(value="검색 조건")
     private String searchCondition = "";
-
-    /** 검색Keyword */
+    
+    /** 검색어 */
+	@ApiModelProperty(value="검색어")
     private String searchKeyword = "";
-
+    
     /** 검색사용여부 */
+	@ApiModelProperty(value="검색 사용여부")
     private String searchUseYn = "";
-
+    
     /** 현재페이지 */
+	@ApiModelProperty(value="현재 페이지")
     private int pageIndex = 1;
-
+    
     /** 페이지갯수 */
+	@ApiModelProperty(value="페이지 갯수")
     private int pageUnit = 10;
-
+    
     /** 페이지사이즈 */
+	@ApiModelProperty(value="페이지 사이즈")
     private int pageSize = 10;
 
     /** firstIndex */
+	@ApiModelProperty(value="firstIndex")
     private int firstIndex = 0;
 
     /** lastIndex */
+	@ApiModelProperty(value="lastIndex")
     private int lastIndex = 1;
 
     /** recordCountPerPage */
+	@ApiModelProperty(value="페이지당 게시물 갯수")
     private int recordCountPerPage = 10;
-
+    
     /** 첫번째 페이지를반환 한다. */
-    public int getFirstIndex() {
-        return firstIndex;
-    }
-
-    /** 첫번째 페이지를 설정한다. */
-    public void setFirstIndex(int firstIndex) {
-        this.firstIndex = firstIndex;
-    }
-
-    /** 마지막 페이지를 반환한다. */
-    public int getLastIndex() {
-        return lastIndex;
-    }
-
-    /** 마지막 페이지를 설정한다. */
-    public void setLastIndex(int lastIndex) {
-        this.lastIndex = lastIndex;
-    }
-
-    /** 페이지의 게시물 건수를 반환한다. */
-    public int getRecordCountPerPage() {
-        return recordCountPerPage;
-    }
-
-    /** 페이지의 게시물 건수를 설정한다. */
-    public void setRecordCountPerPage(int recordCountPerPage) {
-        this.recordCountPerPage = recordCountPerPage;
-    }
-
-    /** 검색조건을 반환한다. */
-    public String getSearchCondition() {
+	public int getFirstIndex() {
+		return firstIndex;
+	}
+	/** 첫번째 페이지를 설정한다. */
+	public void setFirstIndex(int firstIndex) {
+		this.firstIndex = firstIndex;
+	}
+	/** 마지막 페이지를 반환한다. */
+	public int getLastIndex() {
+		return lastIndex;
+	}
+	/** 마지막 페이지를 설정한다. */
+	public void setLastIndex(int lastIndex) {
+		this.lastIndex = lastIndex;
+	}
+	/** 페이지의 게시물 건수를 반환한다. */
+	public int getRecordCountPerPage() {
+		return recordCountPerPage;
+	}
+	/** 페이지의 게시물 건수를 설정한다. */
+	public void setRecordCountPerPage(int recordCountPerPage) {
+		this.recordCountPerPage = recordCountPerPage;
+	}
+	/** 검색조건을 반환한다. */
+	public String getSearchCondition() {
         return searchCondition;
     }
-
-    /** 검색조건 을 설정한다. */
+	/** 검색조건 을 설정한다.*/
     public void setSearchCondition(String searchCondition) {
         this.searchCondition = searchCondition;
     }
-
     /** 검색어를 반환한다. */
     public String getSearchKeyword() {
         return searchKeyword;
     }
-
     /** 검색어를 설정한다. */
     public void setSearchKeyword(String searchKeyword) {
         this.searchKeyword = searchKeyword;
     }
-
     /** 검색 사용여부를 반환한다. */
     public String getSearchUseYn() {
         return searchUseYn;
     }
-
     /** 검색 사용여부를 설정한다. */
     public void setSearchUseYn(String searchUseYn) {
         this.searchUseYn = searchUseYn;
     }
-
     /** 현재 페이지를 반환한다. */
     public int getPageIndex() {
         return pageIndex;
     }
-
     /** 현재 페이지를 설정한다. */
     public void setPageIndex(int pageIndex) {
         this.pageIndex = pageIndex;
     }
-
     /** 페이지 유닛을 반환한다. */
     public int getPageUnit() {
         return pageUnit;
     }
-
     /** 페이지 유닛을 설정한다. */
     public void setPageUnit(int pageUnit) {
         this.pageUnit = pageUnit;
     }
-
-    /** 페이지 사이즈를 반환한다. */
+    /** 페이지 사이즈를 반환한다.*/
     public int getPageSize() {
         return pageSize;
     }
-
     /** 페이지 사이즈를 설정한다. */
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
     }
-
     /** String 타입의 값을 반환한다. */
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
+
 }

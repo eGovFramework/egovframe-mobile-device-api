@@ -22,6 +22,9 @@ import egovframework.hyb.ios.vbr.service.VibratoriOSAPIDefaultVO;
 import egovframework.hyb.ios.vbr.service.VibratoriOSAPIVO;
 
 import egovframework.rte.fdl.property.EgovPropertyService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 import javax.annotation.Resource;
 
@@ -39,9 +42,10 @@ import org.springframework.web.servlet.ModelAndView;
  * @Description : EgovVibratorAPI Controller Class
  * @Modification Information  
  * @
- * @  수정일       수정자                  수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012.07.18    이해성                 최초 작성
+ * @ 수정일         수정자              수정내용
+ * @ ----------   ---------------   -------------------------------
+ *   2012.07.18   이해성              최초 작성
+ *   2020.09.07   신용호              Swagger 적용
  * 
  * @author 디바이스 API 실행환경 개발팀
  * @since 2012. 07. 18
@@ -52,7 +56,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 
 @Controller
-public class EgovVibratoriOSAPIController {
+public class EgovVibratorIosAPIController {
 	
 	/** EgovVibratorIOSAPIService */
     @Resource(name = "EgovVibratoriOSAPIService")
@@ -69,6 +73,7 @@ public class EgovVibratoriOSAPIController {
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Vibrator 알림설정 정보 목록조회", notes="[iOS] Vibrator 알림설정 정보 목록을 조회한다.", response=VibratoriOSAPIVO.class, responseContainer="List")
     @RequestMapping(value="/vbr/VibratoriOSInfoList.do")
     public ModelAndView selectVibratorInfoList(@ModelAttribute("searchVibratorVO") VibratoriOSAPIDefaultVO searchVO, 
     		ModelMap model)
@@ -90,9 +95,12 @@ public class EgovVibratoriOSAPIController {
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Vibrator 알림설정 정보 등록", notes="[iOS] Vibrator 알림설정 정보를 등록한다.\nresponseOK = {\"message\",\"OK\"}")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping("/vbr/addVibratoriOSInfo.do")
     public ModelAndView insertVibratorInfo(
-    		@ModelAttribute("searchVibratoriOSVO") VibratoriOSAPIDefaultVO searchVO,
        	 	VibratoriOSAPIVO sampleVO,
             BindingResult bindingResult, Model model, SessionStatus status) 
     throws Exception {

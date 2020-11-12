@@ -17,12 +17,6 @@ package egovframework.hyb.add.vbr.web;
 
 import java.util.List;
 
-import egovframework.hyb.add.vbr.service.EgovVibratorAndroidAPIService;
-import egovframework.hyb.add.vbr.service.VibratorAndroidAPIDefaultVO;
-import egovframework.hyb.add.vbr.service.VibratorAndroidAPIVO;
-import egovframework.hyb.add.vbr.service.VibratorAndroidAPIXmlVO;
-import egovframework.rte.fdl.property.EgovPropertyService;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
@@ -34,14 +28,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 
+import egovframework.hyb.add.vbr.service.EgovVibratorAndroidAPIService;
+import egovframework.hyb.add.vbr.service.VibratorAndroidAPIDefaultVO;
+import egovframework.hyb.add.vbr.service.VibratorAndroidAPIVO;
+import egovframework.hyb.add.vbr.service.VibratorAndroidAPIXmlVO;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 /**  
  * @Class Name : EgovVibratorAndroidAPIController.java
  * @Description : EgovVibratorAndroidAPIController Class
  * @Modification Information  
  * @
- * @  수정일            수정자        수정내용
- * @ ---------        ---------    -------------------------------
- * @ 2012. 8. 16.        이율경        최초생성
+ * @ 수정일         수정자              수정내용
+ * @ ----------   --------------    -------------------------------
+ *   2012.08.16   이율경              최초생성
+ *   2020.09.07   신용호              Swagger 적용
  * 
  * @author 디바이스 API 실행환경 팀
  * @since 2012. 8. 16.
@@ -67,6 +71,7 @@ public class EgovVibratorAndroidAPIController {
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Vibrator 알림설정 정보 목록조회", notes="[Android] Vibrator 알림설정 정보 목록을 조회한다.", response=VibratorAndroidAPIVO.class, responseContainer="List")
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/vbr/VibratorAndroidInfoList.do")
 	public @ResponseBody
@@ -87,9 +92,14 @@ public class EgovVibratorAndroidAPIController {
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Vibrator 알림설정 정보 등록", notes="[Android] Vibrator 알림설정 정보를 등록한다.\nresponseOK = {\"message\",\"OK\"}")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    })
 	@RequestMapping("/vbr/addVibratorAndroidInfo.do")
 	public @ResponseBody
-	VibratorAndroidAPIXmlVO insertVibratorInfo(@ModelAttribute("searchVibratorAndroidVO") VibratorAndroidAPIDefaultVO searchVO, VibratorAndroidAPIXmlVO vibratorVO,
+	VibratorAndroidAPIXmlVO insertVibratorInfo(
+			VibratorAndroidAPIXmlVO vibratorVO,
 			BindingResult bindingResult, Model model, SessionStatus status) throws Exception {
 
 		VibratorAndroidAPIXmlVO xmlVO = new VibratorAndroidAPIXmlVO();

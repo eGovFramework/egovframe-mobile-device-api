@@ -6,13 +6,17 @@ package egovframework.hyb.add.frw.service;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**  
  * @Class Name : FileReaderWriterAndroidAPIVO.java
  * @Description : FileReaderWriterAndroidAPIVO
  * @
- * @  수정일                 수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012. 8. 6.  나신일                   최초생성
+ * @ 수정일                수정자             수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.08.06   나신일             최초생성
+ *   2020.07.29   신용호             Swagger 적용
  * 
  * @author 디바이스 API 실행환경 개발팀
  * @since 2012. 8. 6
@@ -23,51 +27,67 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
+@ApiModel
 public class FileReaderWriterAndroidAPIVO {
 
-    /** 시리얼 넘버 */
+    /** 일련번호 */
+	@ApiModelProperty(value="일련번호")
     private int sn;
 
-    /** UUID */
+    /** UUID(기기식별코드) */
+	@ApiModelProperty(value="기기식별코드")
     private String uuid;
 
-    /** 파일 시리얼 넘버 */
+    /** 파일 일련번호 */
+	@ApiModelProperty(value="파일 일련번호")
     private int fileSn;
 
     /** 파일 이름 */
+	@ApiModelProperty(value="파일 이름")
     private String fileNm;
 
     /** 파일 타입 */
+	@ApiModelProperty(value="파일 타입")
     private String fileType;
 
     /** 수정일 */
+	@ApiModelProperty(value="수정일")
     private String updtDt;
 
     /** 사용 여부 */
+	@ApiModelProperty(value="사용 여부")
     private String useYn;
 
     /** 파일 저장 경로 */
+	@ApiModelProperty(value="파일 저장 경로")
     private String fileStreCours;
 
     /** 저장된 파일 이름 */
+	@ApiModelProperty(value="저장된 파일 이름")
     private String streFileNm;
 
     /** 원 파일 이름 */
+	@ApiModelProperty(value="원 파일 이름")
     private String orignlFileNm;
 
     /** 파일 확장자 명 */
+	@ApiModelProperty(value="파일 확장자 명")
     private String fileExtsn;
 
     /** 파일 내용 */
+	@ApiModelProperty(value="파일 내용")
     private String fileCn;
 
     /** 파일 사이즈 */
+	@ApiModelProperty(value="파일 사이즈")
     private String fileSize;
 
     /** resultState */
+	@ApiModelProperty(value="결과상태")
     private String resultState;
 
     /** resultMessage */
+	@ApiModelProperty(value="결과메시지")
     private String resultMessage;
 
     /**

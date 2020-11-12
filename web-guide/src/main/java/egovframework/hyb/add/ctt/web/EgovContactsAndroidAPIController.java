@@ -2,26 +2,30 @@ package egovframework.hyb.add.ctt.web;
 
 import java.util.List;
 
-import egovframework.hyb.add.ctt.service.ContactsAndroidAPIVO;
-import egovframework.hyb.add.ctt.service.ContactsAndroidAPIVOList;
-import egovframework.hyb.add.ctt.service.EgovContactsAndroidAPIService;
-
 import javax.annotation.Resource;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import egovframework.hyb.add.ctt.service.ContactsAndroidAPIVO;
+import egovframework.hyb.add.ctt.service.ContactsAndroidAPIVOList;
+import egovframework.hyb.add.ctt.service.EgovContactsAndroidAPIService;
+import egovframework.hyb.ios.dvc.service.DeviceiOSAPIVO;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 /**  
  * @Class Name : EgovContactsAndroidAPIController.java
  * @Description : EgovContactsAndroidAPIController
  * @
- * @  수정일                 수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012. 8. 13.  나신일                   최초생성
+ * @ 수정일               수정자              수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.08.13.  나신일              최초생성
+ *   2020.08.14   신용호              Swagger 적용
  * 
  * @author 디바이스 API 실행환경 개발팀
  * @since 2012. 8. 13
@@ -44,6 +48,10 @@ public class EgovContactsAndroidAPIController {
 	 * @return ContactsAndroidAPIVOList
 	 * @exception Exception
 	 */
+    @ApiOperation(value="연락처 정보 목록조회", notes="[Android] 연락처 정보 목록을 조회한다.", response=ContactsAndroidAPIVO.class, responseContainer="List")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    })
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/ctt/xml/contactsInfoList.do")
 	public @ResponseBody
@@ -66,6 +74,11 @@ public class EgovContactsAndroidAPIController {
 	 * @return ContactsAndroidAPIVO
 	 * @exception Exception
 	 */
+    @ApiOperation(value="연락처 정보 Backup 요청", notes="[Android] 연락처 정보 Backup을 요청한다.\nresponseOK = {\"resultState\",\"OK\"}")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+        @ApiImplicitParam(name = "contactsList", value = "연락처 리스트", required = true, dataType = "string", paramType = "query")
+    })
 	@RequestMapping("/ctt/xml/addContactsInfo.do")
 	public @ResponseBody
 	ContactsAndroidAPIVO addContactsInfoXml(ContactsAndroidAPIVO contactVO) throws Exception {
@@ -113,6 +126,11 @@ public class EgovContactsAndroidAPIController {
 	 * @return ContactsAndroidAPIVO
 	 * @exception Exception
 	 */
+    @ApiOperation(value="연락처 세부정보 수정", notes="[Android] 연락처 세부정보를 등록한다.\nresponseOK = {\"resultState\",\"OK\"}")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+        @ApiImplicitParam(name = "contactsList", value = "연락처 리스트", required = true, dataType = "string", paramType = "query")
+    })
 	@RequestMapping("/ctt/xml/updateContacts.do")
 	public @ResponseBody
 	ContactsAndroidAPIVO updateContactsXml(ContactsAndroidAPIVO contactVO) throws Exception {
@@ -156,7 +174,13 @@ public class EgovContactsAndroidAPIController {
 	 * @return ContactsAndroidAPIVO
 	 * @exception Exception
 	 */
-	@RequestMapping("/frw/xml/deleteContacts.do")
+    @ApiOperation(value="연락처 세부정보 삭제", notes="[Android] 연락처 세부정보를 삭제한다.\nresponseOK = {\"resultState\",\"OK\"}")
+    @ApiImplicitParams({
+    	 @ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+         @ApiImplicitParam(name = "name", value = "연락처 이름", required = true, dataType = "string", paramType = "query"),
+    	 @ApiImplicitParam(name = "telNo", value = "연락처 전화번호", required = true, dataType = "string", paramType = "query")
+    })
+	@RequestMapping("/ctt/xml/deleteContacts.do")
 	public @ResponseBody
 	ContactsAndroidAPIVO deleteContactsXml(ContactsAndroidAPIVO contactVO) throws Exception {
 
@@ -183,6 +207,10 @@ public class EgovContactsAndroidAPIController {
 	 * @return ContactsAndroidAPIVOList
 	 * @exception Exception
 	 */
+    @ApiOperation(value="백업된 연락처 총 개수 조회", notes="[Android] 백업된 연락처 총 개수를 조회한다.", response=ContactsAndroidAPIVO.class)
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    })
 	@RequestMapping("/ctt/xml/selectBackupCount.do")
 	public @ResponseBody
 	ContactsAndroidAPIVO selectContactsCountXml(ContactsAndroidAPIVO fileVO) throws Exception {

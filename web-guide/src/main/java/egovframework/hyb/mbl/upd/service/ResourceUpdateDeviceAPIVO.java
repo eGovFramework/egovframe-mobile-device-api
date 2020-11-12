@@ -15,14 +15,20 @@
  */
 package egovframework.hyb.mbl.upd.service;
 
+import java.io.Serializable;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**  
  * @Class Name : VibratorAPIVO.java
  * @Description : VibratorAPIVO Class
  * @Modification Information  
  * @
- * @  수정일      수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012.07.18   이해성                최초생성
+ * @ 수정일               수정자              수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.07.18   이해성             최초생성
+ *   2020.07.29   신용호             Swagger 적용
  * 
  * @author 디바이스 API 실행환경 개발팀
  * @since 2012. 07. 18
@@ -31,12 +37,44 @@ package egovframework.hyb.mbl.upd.service;
  * 
  *  Copyright (C) by MOPAS All right reserved.
  */
-public class ResourceUpdateDeviceAPIVO extends ResourceUpdateDeviceAPIDefaultVO {
+
+@ApiModel
+public class ResourceUpdateDeviceAPIVO implements Serializable {
 	
     private static final long serialVersionUID = 1L;
 
 	/** 일련번호 */
+    @ApiModelProperty(value="일련번호")
     private int sn;
+
+	/** 리소스 버전  */
+    @ApiModelProperty(value="리소스 버전")
+    private String resVersion;
+
+    @ApiModelProperty(value="앱ID")
+	private String appId = "";
+    
+    @ApiModelProperty(value="업데이트 상세내용")
+    private String updateContent = "";
+
+    @ApiModelProperty(value="업데이트 날짜")
+    private String updDt = "";
+    
+	/** 저장된 파일 이름 */
+    @ApiModelProperty(value="저장된 파일 이름")
+	private String streFileNm;
+	
+	/** 원 파일 이름  */
+    @ApiModelProperty(value="원 파일 이름")
+	private String orignlFileNm;
+    
+    /** 기기식별 */
+    @ApiModelProperty(value="기기식별코드")
+    private String uuid;
+    
+    /** OS 구분  */
+    @ApiModelProperty(value="OS 구분")
+    private String osType;
     
     public String getResVersion() {
 		return resVersion;
@@ -45,9 +83,6 @@ public class ResourceUpdateDeviceAPIVO extends ResourceUpdateDeviceAPIDefaultVO 
 	public void setResVersion(String resVersion) {
 		this.resVersion = resVersion;
 	}
-
-	/** 리소스 버전  */
-    private String resVersion;
 
     public String getAppId() {
 		return appId;
@@ -73,58 +108,22 @@ public class ResourceUpdateDeviceAPIVO extends ResourceUpdateDeviceAPIDefaultVO 
 		this.updDt = updDt;
 	}
 
-	private String appId = "";
-    
-    private String updateContent = "";
-
-    private String updDt = "";
-
 	public String getStreFileNm() {
 		return streFileNm;
 	}
+	
 	public void setStreFileNm(String streFileNm) {
 		this.streFileNm = streFileNm;
 	}
+	
 	public String getOrignlFileNm() {
 		return orignlFileNm;
 	}
+	
 	public void setOrignlFileNm(String orignlFileNm) {
 		this.orignlFileNm = orignlFileNm;
 	}
 	
-	/** 저장된 파일 이름 */
-	private String streFileNm;
-	
-	/** 원 파일 이름  */
-	private String orignlFileNm;
-    
-    /** 기기식별 */
-    private String uuid;
-    
-	/** 네트워크 디바이스 정보  */
-    private String ntwrkDeviceInfo;
-    
-    /** 디바이스 명  */
-    private String deviceNm;
-
-    /** OS 버전  */
-    private String osVer;
-    
-    /** 사용여부  */
-    private String useYn;
-    
-    /** OS 구분  */
-    private String osType;
-    
-    /** 디바이스 토큰 ID  */
-    private String tokenId;
-    
-    /** Push 발송 메시지  */
-    private String message;
-
-	/** Push 발송 일시  */
-    private String sndDt;
-    
 	/**
 	 * @return  sn을 반환한다
 	 */
@@ -153,70 +152,12 @@ public class ResourceUpdateDeviceAPIVO extends ResourceUpdateDeviceAPIDefaultVO 
 		this.uuid = uuid;
 	}
 
-
-    public String getNtwrkDeviceInfo() {
-		return ntwrkDeviceInfo;
-	}
-
-	public void setNtwrkDeviceInfo(String ntwrkDeviceInfo) {
-		this.ntwrkDeviceInfo = ntwrkDeviceInfo;
-	}
-
-	public String getDeviceNm() {
-		return deviceNm;
-	}
-
-	public void setDeviceNm(String deviceNm) {
-		this.deviceNm = deviceNm;
-	}
-
-	public String getOsVer() {
-		return osVer;
-	}
-
-	public void setOsVer(String osVer) {
-		this.osVer = osVer;
-	}
-
-	public String getUseYn() {
-		return useYn;
-	}
-
-	public void setUseYn(String useYn) {
-		this.useYn = useYn;
-	}
-
 	public String getOsType() {
 		return osType;
 	}
 
 	public void setOsType(String osType) {
 		this.osType = osType;
-	}
-
-	public String getTokenId() {
-		return tokenId;
-	}
-
-	public void setTokenId(String tokenId) {
-		this.tokenId = tokenId;
-	}
-
-
-    public String getSndDt() {
-		return sndDt;
-	}
-
-	public void setSndDt(String sndDt) {
-		this.sndDt = sndDt;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
 	}
 
 }

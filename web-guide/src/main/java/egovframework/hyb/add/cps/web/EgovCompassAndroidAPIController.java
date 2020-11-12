@@ -22,6 +22,9 @@ import egovframework.hyb.add.cps.service.CompassAndroidAPIVO;
 import egovframework.hyb.add.cps.service.CompassAndroidAPIVOList;
 import egovframework.hyb.add.cps.service.EgovCompassAndroidAPIService;
 import egovframework.rte.fdl.property.EgovPropertyService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 import javax.annotation.Resource;
 
@@ -39,9 +42,10 @@ import org.springframework.web.bind.support.SessionStatus;
  * @Description : EgovCompassAPIController Class
  * @Modification Information  
  * @
- * @  수정일                 수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012.07.23    서형주                  최초생성
+ * @ 수정일                수정자             수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.07.23   서형주              최초생성
+ *   2020.08.12   신용호              Swagger 적용
  * 
  * @author Device API 실행환경팀
  * @since 2012. 07. 30
@@ -68,6 +72,7 @@ public class EgovCompassAndroidAPIController {
      * @return "/cps/xml/compassInfoList.do"
      * @exception Exception
      */
+    @ApiOperation(value="디바이스 정보 목록조회", notes="[Android] 디바이스 정보 목록을 조회한다.")
     @SuppressWarnings("unchecked")
 	@RequestMapping(value="/cps/xml/compassInfoList.do")
     public @ResponseBody CompassAndroidAPIVOList selectCompassInfoXMLList(@ModelAttribute("searchVO") CompassAndroidAPIDefaultVO searchVO, 
@@ -91,9 +96,12 @@ public class EgovCompassAndroidAPIController {
      * @return "forward:/cps/xml/addCompassInfo.do"
      * @exception Exception
      */
+    @ApiOperation(value="Compass 세부정보 등록", notes="[Android] Compass 세부정보를 등록한다.\nresponseOK = {\"useYn\",\"OK\"}")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping("/cps/xml/addCompassInfo.do")
     public @ResponseBody CompassAndroidAPIVO addCompassInfoXml(
-            @ModelAttribute("searchVO") CompassAndroidAPIDefaultVO searchVO,
                 CompassAndroidAPIVO compassVO,
             BindingResult bindingResult, Model model, SessionStatus status) 
             throws Exception {
@@ -119,9 +127,9 @@ public class EgovCompassAndroidAPIController {
      * @return "forward:/cps/xml/withdrawal.do"
      * @exception Exception
      */
+    @ApiOperation(value="Compass 세부정보 삭제", notes="[Android] Compass 세부정보를 삭제한다.\nresponseOK = {\"useYn\",\"OK\"}")
     @RequestMapping("/cps/xml/withdrawal.do")
     public @ResponseBody CompassAndroidAPIVO withdrawalXml(
-            @ModelAttribute("searchVO") CompassAndroidAPIDefaultVO searchVO,
                 CompassAndroidAPIVO compassVO,
             BindingResult bindingResult, Model model, SessionStatus status) 
     throws Exception {        

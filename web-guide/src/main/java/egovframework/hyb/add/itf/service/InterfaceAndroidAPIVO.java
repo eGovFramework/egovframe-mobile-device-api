@@ -15,17 +15,23 @@
  */
 package egovframework.hyb.add.itf.service;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**  
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+/**
  * @Class Name : InterfaceAndroidAPIVO.java
  * @Description : InterfaceAndroidAPIVO Class
  * @Modification Information  
  * @
- * @  수정일                 수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012.07.09    나신일                  최초생성
+ * @ 수정일                수정자             수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.07.09   나신일             최초생성
+ *   2020.07.29   신용호             Swagger 적용
  * 
  * @author 모바일 디바이스 API 팀
  * @since 2012. 07. 09
@@ -36,29 +42,37 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class InterfaceAndroidAPIVO extends InterfaceAndroidAPIDefaultVO {
+@ApiModel
+public class InterfaceAndroidAPIVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /** 일련번호 */
+    @ApiModelProperty(value="일련번호")
     private int sn;
 
-    /** 기기식별 */
+    /** 기기식별코드 */
+    @ApiModelProperty(value="기기식별코드")
     private String uuid;
 
     /** 아이디 */
+    @ApiModelProperty(value="아이디")
     private String userId;
 
     /** 비밀번호 */
+    @ApiModelProperty(value="비밀번호")
     private String userPw;
 
     /** E-mail */
+    @ApiModelProperty(value="이메일")
     private String emails;
 
     /** resultState */
+    @ApiModelProperty(value="결과 코드")
     private String resultState;
 
     /** resultMessage */
+    @ApiModelProperty(value="결과 메시지")
     private String resultMessage;
 
     /**

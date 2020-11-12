@@ -29,9 +29,10 @@ import org.springframework.stereotype.Repository;
  * @Description : GPSAndroidAPIDAO Class
  * @Modification Information  
  * @
- * @  수정일              수정자                   수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012.08.27    나신일                   최초생성
+ * @ 수정일         수정자        수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.08.27   나신일        최초생성
+ *   2020.08.24   신용호        Swagger 적용
  * 
  * @author 디바이스 API 실행환경 개발팀
  * @since 2012. 08.27
@@ -76,7 +77,7 @@ public class GPSAndroidAPIDAO extends EgovComAbstractDAO {
      * @return gps 정보 목록
      * @exception Exception
      */
-    public List<?> selectGPSInfoList(GPSAndroidAPIVO searchVO) throws Exception {
+    public List<?> selectGPSInfoList(GPSAndroidAPIDefaultVO searchVO) throws Exception {
         return selectList("gpsAndroidAPIDAO.selectGPSInfoList", searchVO);
     }
 

@@ -15,15 +15,21 @@
  */
 package egovframework.hyb.ios.mda.service;
 
+import java.io.Serializable;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**  
- * @Class Name : MediaAndroidAPIVO.java
- * @Description : MediaAndroidAPIVO Class
+ * @Class Name : MediaiOSAPIVO.java
+ * @Description : MediaiOSAPIVO Class
  * @Modification Information  
  * @
- * @  수정일			수정자		수정내용
- * @ ---------		---------	-------------------------------
- * @ 2012. 7. 30.		이율경		최초생성
- * @ 2012. 8. 14.		이해성       커스터마이징
+ * @ 수정일               수정자              수정내용
+ * @ ----------	  ---------   -------------------------------
+ *   2012.07.30   이율경             최초생성
+ *   2012.08.14   이해성             커스터마이징
+ *   2020.07.29   신용호             Swagger 적용
  * 
  * @author 디바이스 API 실행환경 팀
  * @since 2012. 7. 30.
@@ -31,29 +37,38 @@ package egovframework.hyb.ios.mda.service;
  * @see
  * 
  */
-public class MediaiOSAPIVO extends MediaiOSAPIDefaultVO {
+
+@ApiModel
+public class MediaiOSAPIVO implements Serializable {
 
 	private static final long serialVersionUID = -3847992567289110139L;
 
 	/** 일련번호 */
+	@ApiModelProperty(value="일련번호")
 	private String sn;
 	
-	/** 기기식별ID */
+	/** 기기식별코드 */
+	@ApiModelProperty(value="기기식별코드")
 	private String uuid;
 	
 	/** 파일 일련번호 */
+	@ApiModelProperty(value="파일 일련번호")
 	private String fileSn;
 	
 	/** 미디어구분코드 */
+	@ApiModelProperty(value="미디어 구분코드")
 	private String mdCode;
 	
 	/** 미디어 제목 */
+	@ApiModelProperty(value="미디어 제목")
 	private String mdSj;
 	
 	/** 사용여부 */
+	@ApiModelProperty(value="사용 여부")
 	private String useyn;
 	
 	/** 재생횟수 */
+	@ApiModelProperty(value="재생 횟수")
 	private String revivCo;
 
 	/**

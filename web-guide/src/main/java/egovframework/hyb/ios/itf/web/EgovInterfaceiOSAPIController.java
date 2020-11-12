@@ -15,30 +15,32 @@
  */
 package egovframework.hyb.ios.itf.web;
 
-import egovframework.hyb.ios.itf.service.EgovInterfaceiOSAPIService;
-import egovframework.hyb.ios.itf.service.InterfaceiOSAPIDefaultVO;
-import egovframework.hyb.ios.itf.service.InterfaceiOSAPIVO;
-
-import egovframework.rte.fdl.property.EgovPropertyService;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
+
+import egovframework.hyb.ios.itf.service.EgovInterfaceiOSAPIService;
+import egovframework.hyb.ios.itf.service.InterfaceiOSAPIVO;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**  
  * @Class Name : EgovInterfaceiOSAPIController
  * @Description : EgovInterfaceiOSAPIController Controller Class
  * @Modification Information  
  * @
- * @  수정일                 수정자                 수정내용
- * @ 
- * @ 2012.07.11    이한철                  최초생성
+ * @ 수정일               수정자              수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.07.11   이한철             최초생성
+ *   2020.09.02   신용호             Swagger 적용
+ * 
  * 
  * @author 모바일 디바이스 API 팀
  * @since 2012. 07. 11
@@ -49,7 +51,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 
 @Controller
-public class EgovInterfaceiOSAPIController {
+public class EgovInterfaceIosAPIController {
 
     /** EgovInterfaceAPIService */
     @Resource(name = "EgovInterfaceiOSAPIService")
@@ -68,9 +70,13 @@ public class EgovInterfaceiOSAPIController {
      * @return "forward:/itf/addInterfaceInfo.do"
      * @exception Exception
      */
+    @ApiOperation(value="Interface 회원가입 정보 등록", notes="[iOS] 회원가입 정보를 등록한다", response=InterfaceiOSAPIVO.class)
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "sn", value = "일련번호", required = true, dataType = "int", paramType = "query"),
+    	@ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping("/itf/addInterfaceiOSInfo.do")
     public ModelAndView addInterfaceInfo(
-            @ModelAttribute("searchInterfaceVO") InterfaceiOSAPIDefaultVO searchVO,
             InterfaceiOSAPIVO interfaceVO, BindingResult bindingResult,
             Model model, SessionStatus status) throws Exception {
 
@@ -106,9 +112,13 @@ public class EgovInterfaceiOSAPIController {
      * @return "forward:/itf/logIn.do"
      * @exception Exception
      */
+    @ApiOperation(value="Interface 로그인 조회", notes="[iOS] 로그인을 한다.", response=InterfaceiOSAPIVO.class)
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "userId", value = "아이디", required = true, dataType = "string", paramType = "query"),
+    	@ApiImplicitParam(name = "userPw", value = "비밀번호", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping("/itf/logIniOS.do")
     public ModelAndView logIn(
-            @ModelAttribute("searchInterfaceVO") InterfaceiOSAPIDefaultVO searchVO,
             InterfaceiOSAPIVO interfaceVO, BindingResult bindingResult,
             Model model, SessionStatus status) throws Exception {
 
@@ -138,9 +148,13 @@ public class EgovInterfaceiOSAPIController {
      * @return "forward:/itf/withdrawal.do"
      * @exception Exception
      */
+    @ApiOperation(value="Interface 회원탈퇴", notes="[iOS] 회원탈퇴 한다.", response=InterfaceiOSAPIVO.class)
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "userId", value = "아이디", required = true, dataType = "string", paramType = "query"),
+    	@ApiImplicitParam(name = "userPw", value = "비밀번호", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping("/itf/withdrawaliOS.do")
     public ModelAndView withdrawal(
-            @ModelAttribute("searchInterfaceVO") InterfaceiOSAPIDefaultVO searchVO,
             InterfaceiOSAPIVO interfaceVO, BindingResult bindingResult,
             Model model, SessionStatus status) throws Exception {
 

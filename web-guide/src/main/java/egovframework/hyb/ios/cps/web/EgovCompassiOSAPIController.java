@@ -17,11 +17,6 @@ package egovframework.hyb.ios.cps.web;
 
 import java.util.List;
 
-import egovframework.hyb.ios.cps.service.CompassiOSAPIDefaultVO;
-import egovframework.hyb.ios.cps.service.CompassiOSAPIVO;
-import egovframework.hyb.ios.cps.service.EgovCompassiOSAPIService;
-import egovframework.rte.fdl.property.EgovPropertyService;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
@@ -33,15 +28,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import egovframework.hyb.ios.cps.service.CompassiOSAPIDefaultVO;
+import egovframework.hyb.ios.cps.service.CompassiOSAPIVO;
+import egovframework.hyb.ios.cps.service.EgovCompassiOSAPIService;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 /**  
  * @Class Name : EgovCompassiOSAPIController
  * @Description : EgovCompassiOSAPIController Class
  * @Modification Information  
  * @
- * @  수정일         수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012.07.23    서형주                  최초생성
- *   2012.08.27    서준식              json 형태로 변경 
+ * @ 수정일                수정자             수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.07.23   서형주              최초생성
+ *   2012.08.27   서준식              json 형태로 변경
+ *   2020.08.12   신용호              Swagger 적용
  * 
  * @author Device API 실행환경팀
  * @since 2012. 07. 30
@@ -51,7 +55,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 
 @Controller
-public class EgovCompassiOSAPIController {
+public class EgovCompassIosAPIController {
 	
 	/** EgovCompassAPIService */
     @Resource(name = "EgovCompassiOSAPIService")
@@ -68,6 +72,7 @@ public class EgovCompassiOSAPIController {
 	 * @return "/cps/compassInfoList.do"
 	 * @exception Exception
 	 */
+    @ApiOperation(value="디바이스 정보 목록조회", notes="[iOS] 디바이스 정보 목록을 조회한다.", response=CompassiOSAPIVO.class, responseContainer="List")
     @SuppressWarnings("unchecked")
 	@RequestMapping(value="/cps/compassInfoList.do")
     public ModelAndView selectCompassInfoXMLList(@ModelAttribute("searchVO") CompassiOSAPIDefaultVO searchVO, 
@@ -91,9 +96,12 @@ public class EgovCompassiOSAPIController {
 	 * @return "forward:/cps/addCompassInfo.do"
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Compass 세부정보 등록", notes="[iOS] Compass 세부정보를 등록한다.\nresponseOK = {\"resultState\",\"OK\"}")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping("/cps/addCompassInfo.do")
     public ModelAndView addCompassInfoXml(
-    		@ModelAttribute("searchVO") CompassiOSAPIDefaultVO searchVO,
        	 	CompassiOSAPIVO compassVO,
             BindingResult bindingResult, Model model, SessionStatus status) 
     		throws Exception {
@@ -119,9 +127,9 @@ public class EgovCompassiOSAPIController {
 	 * @return "forward:/cps/withdrawal.do"
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Compass 세부정보 삭제", notes="[iOS] Compass 세부정보를 삭제한다.\nresponseOK = {\"resultState\",\"OK\"}")
     @RequestMapping("/cps/withdrawal.do")
     public ModelAndView withdrawalXml(
-    		@ModelAttribute("searchVO") CompassiOSAPIDefaultVO searchVO,
        	 	CompassiOSAPIVO compassVO,
             BindingResult bindingResult, Model model, SessionStatus status) 
     throws Exception {
@@ -130,7 +138,6 @@ public class EgovCompassiOSAPIController {
     	  	
     	int cnt = egovCompassAPIService.deleteCompassInfo(compassVO);
     	    	
-    	
     	if (cnt > 0) {
 			jsonView.addObject("resultState","OK");
 		} else {

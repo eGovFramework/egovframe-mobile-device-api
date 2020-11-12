@@ -107,7 +107,7 @@
 				A.SN, A.PHOTO_SJ, A.FILE_SN, B.FILE_STRE_COURS, B.STRE_FILE_NM
 			FROM CAMERA A JOIN FILE_DETAIL_INFO B USING(FILE_SN)
 			ORDER BY FILE_SN DESC
-			LIMIT #{pageIndex}, #{recordCountPerPage}
+			LIMIT #{firstIndex}, #{recordCountPerPage}
 			
 	</select>
 	

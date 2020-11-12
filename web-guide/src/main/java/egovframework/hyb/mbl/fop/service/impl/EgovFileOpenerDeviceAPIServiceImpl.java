@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import egovframework.hyb.mbl.fop.service.EgovFileOpenerDeviceAPIService;
-import egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIVO;
+import egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIDefaultVO;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 
@@ -60,7 +60,7 @@ public class EgovFileOpenerDeviceAPIServiceImpl extends EgovAbstractServiceImpl 
 	 * @return 문서 조회 목록 
 	 * @exception Exception
 	 */
-    public List<?> selectFileOpenerDocumentListInfo(FileOpenerDeviceAPIVO searchVO) throws Exception {
+    public List<?> selectFileOpenerDocumentListInfo(FileOpenerDeviceAPIDefaultVO searchVO) throws Exception {
 		// TODO Auto-generated method stub
 		return fileOpenerDeviceAPIDAO.selectFileOpenerDocumentList(searchVO);
 	}

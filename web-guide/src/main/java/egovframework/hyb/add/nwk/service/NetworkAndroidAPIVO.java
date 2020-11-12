@@ -15,14 +15,20 @@
  */
 package egovframework.hyb.add.nwk.service;
 
+import java.io.Serializable;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**  
  * @Class Name : NetworkAndroidAPIVO.java
  * @Description : NetworkAndroidAPIVO Class
  * @Modification Information  
  * @
- * @  수정일            수정자        수정내용
- * @ ---------        ---------    -------------------------------
- * @ 2012. 8. 20.        이율경        최초생성
+ * @ 수정일               수정자              수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.08.20   이율경             최초생성
+ *   2020.07.29   신용호             Swagger 적용
  * 
  * @author 디바이스 API 실행환경 팀
  * @since 2012. 8. 20.
@@ -30,20 +36,26 @@ package egovframework.hyb.add.nwk.service;
  * @see
  * 
  */
-public class NetworkAndroidAPIVO extends NetworkAndroidAPIDefaultVO {
+
+@ApiModel
+public class NetworkAndroidAPIVO implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
     /** 일련번호 */
+    @ApiModelProperty(value="일련번호")
     private int sn;
     
     /** 기기식별 */
+    @ApiModelProperty(value="기기식별코드")
     private String uuid;
     
     /** 네트워크 유형 */
+    @ApiModelProperty(value="네트워크 유형")
     private String networktype;
     
     /** 사용여부 */
+    @ApiModelProperty(value="사용여부")
     private String useYn;
 
     /**

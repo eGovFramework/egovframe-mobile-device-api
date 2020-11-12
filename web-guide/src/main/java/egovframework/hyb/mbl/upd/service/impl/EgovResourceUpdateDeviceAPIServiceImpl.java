@@ -15,21 +15,15 @@
  */
 package egovframework.hyb.mbl.upd.service.impl;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import egovframework.hyb.mbl.upd.service.EgovResourceUpdateDeviceAPIService;
-import egovframework.hyb.mbl.upd.service.ResourceUpdateDeviceAPIDefaultVO;
-import egovframework.hyb.mbl.upd.service.ResourceUpdateDeviceAPIVO;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
-
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import egovframework.hyb.mbl.upd.service.EgovResourceUpdateDeviceAPIService;
+import egovframework.hyb.mbl.upd.service.ResourceUpdateDeviceAPIVO;
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 
 /**  
@@ -64,7 +58,7 @@ public class EgovResourceUpdateDeviceAPIServiceImpl extends EgovAbstractServiceI
 	 * @return 알림 설정 정보 목록
 	 * @exception Exception
 	 */
-    public ResourceUpdateDeviceAPIVO selectResourceUpdateVersionInfo(ResourceUpdateDeviceAPIDefaultVO searchVO) throws Exception {
+    public ResourceUpdateDeviceAPIVO selectResourceUpdateVersionInfo(ResourceUpdateDeviceAPIVO searchVO) throws Exception {
         return resourceUpdateDeviceAPIDAO.selectResourceUpdateVersionInfo(searchVO);
     }
     

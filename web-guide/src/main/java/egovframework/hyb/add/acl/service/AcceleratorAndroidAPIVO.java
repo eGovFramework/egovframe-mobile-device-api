@@ -15,17 +15,23 @@
  */
 package egovframework.hyb.add.acl.service;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**  
  * @Class Name : AcceleratorAPIVO.java
  * @Description : AcceleratorAPIVO Class
  * @Modification Information  
  * @
- * @  수정일                 수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012.07.23    서형주                  최초생성
+ * @ 수정일               수정자              수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.07.23   서형주              최초생성
+ *   2020.08.11   신용호              Swagger 적용
  * 
  * @author Device API 실행환경팀
  * @since 2012. 07. 23
@@ -34,29 +40,37 @@ import javax.xml.bind.annotation.XmlRootElement;
  * 
  */
 @XmlRootElement
-public class AcceleratorAndroidAPIVO extends AcceleratorAndroidAPIDefaultVO {
+@ApiModel
+public class AcceleratorAndroidAPIVO implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
     /** 일련번호 */
+    @ApiModelProperty(value="일련번호")
     private int sn;
     
     /** 기기식별 */
+    @ApiModelProperty(value="기기식별")
     private String uuid;
     
     /** x */
+    @ApiModelProperty(value="x축 값")
     private String xaxis;
     
     /** y */
+    @ApiModelProperty(value="y축 값")
     private String yaxis;
     
     /** z */
+    @ApiModelProperty(value="z축 값")
     private String zaxis;
     
     /** timestamp */
+    @ApiModelProperty(value="Timestamp")
     private String timestamp;
     
     /** 사용여부 */
+    @ApiModelProperty(value="사용여부")
     private String useYn;
     
     /**

@@ -15,36 +15,35 @@
  */
 package egovframework.hyb.mbl.upd.web;
 
-import java.util.List;
-
-import egovframework.hyb.ios.frw.service.FileReaderWriteriOSAPIVO;
-import egovframework.hyb.ios.frw.service.impl.EgovFileMngiOSUtil;
-import egovframework.hyb.mbl.upd.service.EgovResourceUpdateDeviceAPIService;
-import egovframework.hyb.mbl.upd.service.ResourceUpdateDeviceAPIDefaultVO;
-import egovframework.hyb.mbl.upd.service.ResourceUpdateDeviceAPIVO;
-import egovframework.rte.fdl.property.EgovPropertyService;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
+
+import egovframework.hyb.ios.frw.service.impl.EgovFileMngiOSUtil;
+import egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIVO;
+import egovframework.hyb.mbl.upd.service.EgovResourceUpdateDeviceAPIService;
+import egovframework.hyb.mbl.upd.service.ResourceUpdateDeviceAPIVO;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**  
  * @Class Name : EgovResUpdateAPIController
  * @Description : EgovResUpdateAPI Controller Class
  * @Modification Information  
  * @
- * @  수정일       수정자                  수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2016.06.24    신용호                최초 작성
+ * @ 수정일         수정자             수정내용
+ * @ ----------   --------------   -------------------------------
+ *   2016.06.24   신용호             최초 작성
+ *   2020.09.18   신용호             Swagger 적용
  * 
  * @author 디바이스 API 실행환경 개발팀
  * @since 2016. 06. 24
@@ -56,6 +55,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class EgovResourceUpdateDeviceAPIController {
+	
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	/** EgovResUpdateDeviceAPIService */
     @Resource(name = "EgovResourceUpdateDeviceAPIService")
@@ -73,8 +74,13 @@ public class EgovResourceUpdateDeviceAPIController {
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="WebResourceUpdate 정보 목록조회", notes="WebResourceUpdate 정보 목록을 조회한다.", response=ResourceUpdateDeviceAPIVO.class, responseContainer="List")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "appId", value = "앱ID", required = true, dataType = "string", paramType = "query"),
+        @ApiImplicitParam(name = "osType", value = "OS 구분", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping(value="/upd/ResourceUpdateVersionInfo.do")
-    public ModelAndView selectVibratorInfoList(@ModelAttribute("resourceUpdateDeviceAPIDefaultVO") ResourceUpdateDeviceAPIDefaultVO searchVO, 
+    public ModelAndView selectVibratorInfoList(@ModelAttribute("resourceUpdateDeviceAPIDefaultVO") ResourceUpdateDeviceAPIVO searchVO, 
     		ModelMap model)
             throws Exception {
  
@@ -95,14 +101,17 @@ public class EgovResourceUpdateDeviceAPIController {
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="WebResourceUpdate 파일 다운로드", notes="WebResourceUpdate 파일을 다운로드한다.", response=FileOpenerDeviceAPIVO.class)
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "orignlFileNm", value = "원파일명", required = true, dataType = "string", paramType = "query"),
+        @ApiImplicitParam(name = "streFileNm", value = "저장파일명", required = true, dataType = "string", paramType = "query"),
+    })
 	@RequestMapping("/upd/ResourceUpdatefileDownload.do")
 	public void fileDownload(HttpServletRequest request, HttpServletResponse response, ResourceUpdateDeviceAPIVO fileVO) throws Exception{
-		System.out.println(">>> fileVO.getOrignlFileNm() = "+fileVO.getOrignlFileNm());
-		System.out.println(">>> fileVO.getStreFileNm() = "+fileVO.getStreFileNm());
+		log.debug(">>> fileVO.getOrignlFileNm() = "+fileVO.getOrignlFileNm());
+		log.debug(">>> fileVO.getStreFileNm() = "+fileVO.getStreFileNm());
 		egovFileMngUtil.fileDownload(request, response, fileVO.getOrignlFileNm(), fileVO.getStreFileNm());
 		
 	}
 
-
 }
-

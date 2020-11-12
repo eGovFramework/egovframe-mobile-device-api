@@ -15,31 +15,33 @@
  */
 package egovframework.hyb.add.itf.web;
 
-import egovframework.hyb.add.itf.service.EgovInterfaceAndroidAPIService;
-import egovframework.hyb.add.itf.service.InterfaceAndroidAPIDefaultVO;
-import egovframework.hyb.add.itf.service.InterfaceAndroidAPIVO;
-
-import egovframework.rte.fdl.property.EgovPropertyService;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
+
+import egovframework.hyb.add.itf.service.EgovInterfaceAndroidAPIService;
+import egovframework.hyb.add.itf.service.InterfaceAndroidAPIVO;
+import egovframework.hyb.ios.itf.service.InterfaceiOSAPIVO;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**  
  * @Class Name : EgovInterfaceAndroidAPIController
  * @Description : EgovInterfaceAndroidAPIController Controller Class
  * @Modification Information  
  * @
- * @  수정일                 수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012.07.09    나신일                  최초생성
+ * @ 수정일                수정자             수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.07.09   나신일             최초생성
+ *   2020.09.02   신용호             Swagger 적용
  * 
  * @author 모바일 디바이스 API 팀
  * @since 2012. 07. 09
@@ -69,9 +71,13 @@ public class EgovInterfaceAndroidAPIController {
      * @return MedelAndView(Json)
      * @exception Exception
      */
+    @ApiOperation(value="Interface 회원가입 정보 등록", notes="[Android] 회원가입 정보를 등록한다", response=InterfaceiOSAPIVO.class)
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "sn", value = "일련번호", required = true, dataType = "int", paramType = "query"),
+    	@ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping("/itf/addInterfaceInfo.do")
     public ModelAndView addInterfaceInfo(
-            @ModelAttribute("searchVO") InterfaceAndroidAPIDefaultVO searchVO,
             InterfaceAndroidAPIVO interfaceVO, BindingResult bindingResult,
             Model model, SessionStatus status) throws Exception {
 
@@ -107,10 +113,14 @@ public class EgovInterfaceAndroidAPIController {
      * @return InterfaceAndroidAPIVO (XML)
      * @exception Exception
      */
+    @ApiOperation(value="Interface 회원가입 정보 등록", notes="[Android] 회원가입 정보를 등록한다", response=InterfaceAndroidAPIVO.class)
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "sn", value = "일련번호", required = true, dataType = "int", paramType = "query"),
+    	@ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping("/itf/xml/addInterfaceInfo.do")
     public @ResponseBody
     InterfaceAndroidAPIVO addInterfaceInfoXml(
-            @ModelAttribute("searchVO") InterfaceAndroidAPIDefaultVO searchVO,
             InterfaceAndroidAPIVO interfaceVO, BindingResult bindingResult,
             Model model, SessionStatus status) throws Exception {
 
@@ -146,9 +156,13 @@ public class EgovInterfaceAndroidAPIController {
      * @return MedelAndView(Json)
      * @exception Exception
      */
+    @ApiOperation(value="Interface 로그인 조회", notes="[Android] 로그인을 한다.", response=InterfaceAndroidAPIVO.class)
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "userId", value = "아이디", required = true, dataType = "string", paramType = "query"),
+    	@ApiImplicitParam(name = "userPw", value = "비밀번호", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping("/itf/logIn.do")
     public ModelAndView logIn(
-            @ModelAttribute("searchVO") InterfaceAndroidAPIDefaultVO searchVO,
             InterfaceAndroidAPIVO interfaceVO, BindingResult bindingResult,
             Model model, SessionStatus status) throws Exception {
 
@@ -185,10 +199,14 @@ public class EgovInterfaceAndroidAPIController {
      * @return InterfaceAndroidAPIVO (XML)
      * @exception Exception
      */
+    @ApiOperation(value="Interface 로그인 조회", notes="[Android] 로그인을 한다.", response=InterfaceAndroidAPIVO.class)
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "userId", value = "아이디", required = true, dataType = "string", paramType = "query"),
+    	@ApiImplicitParam(name = "userPw", value = "비밀번호", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping("/itf/xml/logIn.do")
     public @ResponseBody
     InterfaceAndroidAPIVO logInXml(
-            @ModelAttribute("searchVO") InterfaceAndroidAPIDefaultVO searchVO,
             InterfaceAndroidAPIVO interfaceVO, BindingResult bindingResult,
             Model model, SessionStatus status) throws Exception {
 
@@ -225,9 +243,13 @@ public class EgovInterfaceAndroidAPIController {
      * @return MedelAndView(Json)
      * @exception Exception
      */
+    @ApiOperation(value="Interface 회원탈퇴", notes="[Android] 회원탈퇴 한다.", response=InterfaceAndroidAPIVO.class)
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "userId", value = "아이디", required = true, dataType = "string", paramType = "query"),
+    	@ApiImplicitParam(name = "userPw", value = "비밀번호", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping("/itf/withdrawal.do")
     public ModelAndView withdrawal(
-            @ModelAttribute("searchVO") InterfaceAndroidAPIDefaultVO searchVO,
             InterfaceAndroidAPIVO interfaceVO, BindingResult bindingResult,
             Model model, SessionStatus status) throws Exception {
 
@@ -255,10 +277,14 @@ public class EgovInterfaceAndroidAPIController {
      * @return InterfaceAndroidAPIVO (XML)
      * @exception Exception
      */
+    @ApiOperation(value="Interface 회원탈퇴", notes="[Android] 회원탈퇴 한다.", response=InterfaceAndroidAPIVO.class)
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "userId", value = "아이디", required = true, dataType = "string", paramType = "query"),
+    	@ApiImplicitParam(name = "userPw", value = "비밀번호", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping("/itf/xml/withdrawal.do")
     public @ResponseBody
     InterfaceAndroidAPIVO withdrawalXml(
-            @ModelAttribute("searchVO") InterfaceAndroidAPIDefaultVO searchVO,
             InterfaceAndroidAPIVO interfaceVO, BindingResult bindingResult,
             Model model, SessionStatus status) throws Exception {
 

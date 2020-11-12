@@ -20,7 +20,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import egovframework.com.cmm.mapper.EgovComAbstractDAO;
-import egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIVO;
+import egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIDefaultVO;
 
 
 /**  
@@ -49,7 +49,7 @@ public class FileOpenerDeviceAPIDAO extends EgovComAbstractDAO {
 	 * @return Push Device 정보 목록
 	 * @exception Exception
 	 */
-    public List<?> selectFileOpenerDocumentList(FileOpenerDeviceAPIVO searchVO) throws Exception {
+    public List<?> selectFileOpenerDocumentList(FileOpenerDeviceAPIDefaultVO searchVO) throws Exception {
         return selectList("fileOpenerDeviceAPIDAO.selectDocumentListInfo", searchVO);
     }
 

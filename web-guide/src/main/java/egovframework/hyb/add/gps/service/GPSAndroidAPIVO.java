@@ -15,17 +15,23 @@
  */
 package egovframework.hyb.add.gps.service;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**  
  * @Class Name : GPSAndroidAPIVO.java
  * @Description : GPSAndroidAPIVO Class
  * @Modification Information  
  * @
- * @  수정일              수정자                   수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012.08.27    나신일                   최초생성
+ * @ 수정일                수정자            수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.08.27   나신일             최초생성
+ *   2020.07.29   신용호             Swagger 적용
  * 
  * @author 디바이스 API 실행환경 개발팀
  * @since 2012. 08.27
@@ -35,32 +41,41 @@ import javax.xml.bind.annotation.XmlRootElement;
  *  Copyright (C) by MOPAS All right reserved.
  */
 @XmlRootElement
-public class GPSAndroidAPIVO extends GPSAndroidAPIDefaultVO {
+@ApiModel
+public class GPSAndroidAPIVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /** 일련번호 */
+    @ApiModelProperty(value="일련번호")
     private int sn;
 
-    /** 기기식별 */
+    /** 기기식별코드 */
+    @ApiModelProperty(value="기기식별코드")
     private String uuid;
 
-    /** latitude */
+    /** latitude(위도) */
+    @ApiModelProperty(value="위도")
     private String lat;
 
-    /** longtitude */
+    /** longtitude(경도) */
+    @ApiModelProperty(value="경도")
     private String lon;
 
-    /** accuracy */
+    /** 정확도 */
+    @ApiModelProperty(value="정확도")
     private String accrcy;
 
     /** 사용여부 */
+    @ApiModelProperty(value="사용여부")
     private String useYn;
 
     /** resultState */
+    @ApiModelProperty(value="결과 상태")
     private String resultState;
 
     /** resultMessage */
+    @ApiModelProperty(value="결과 메시지")
     private String resultMessage;
 
     /**

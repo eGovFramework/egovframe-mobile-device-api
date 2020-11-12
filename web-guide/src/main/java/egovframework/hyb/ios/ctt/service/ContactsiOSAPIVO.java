@@ -3,17 +3,23 @@
  */
 package egovframework.hyb.ios.ctt.service;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**  
- * @Class Name : ContactsAndroidAPIVO.java
- * @Description : ContactsAndroidAPIVO
+ * @Class Name : ContactsiOSAPIVO.java
+ * @Description : ContactsiOSAPIVO
  * @
- * @  수정일                 수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012. 8. 13.  나신일                   최초생성
- * @ 2012. 8. 23.  이해성                   커스터마이징
+ * @ 수정일                수정자             수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.08.13   나신일              최초생성
+ *   2012.08.23   이해성              커스터마이징
+ *   2020.07.29   신용호              Swagger 적용
  * 
  * @author 디바이스 API 실행환경 개발팀
  * @since 2012. 8. 13
@@ -22,41 +28,53 @@ import javax.xml.bind.annotation.XmlRootElement;
  * 
  */
 @XmlRootElement
-public class ContactsiOSAPIVO extends ContactsiOSAPIDefalutVO{
+@ApiModel
+public class ContactsiOSAPIVO implements Serializable {
 	
 	private static final long serialVersionUID = 470320758002954619L;
 
-	/** UUID  */
+	/** UUID(기기식별코드)  */
+	@ApiModelProperty(value="기기식별코드")
 	private String uuid;
 	
 	/** 연락처 ID  */
+	@ApiModelProperty(value="연락처 ID")
 	private int contactId;
 	
 	/** 새연락처 ID  */
+	@ApiModelProperty(value="새연락처 ID")
 	private int newId;
 	
 	/** 연락처 이름  */
+	@ApiModelProperty(value="연락처 이름")
 	private String name;
 	
 	/** 연락처 전화번호  */
+	@ApiModelProperty(value="연락처 전화번호")
 	private String telNo;
 	
 	/** 연락처 이메일  */
+	@ApiModelProperty(value="연락처 이메일")
 	private String emails;
 	
 	/** 사용 여부  */
+	@ApiModelProperty(value="사용 여부")
 	private String useYn;
 	
 	/** 연락처 총 개수  */
+	@ApiModelProperty(value="연락처 총 개수")
 	private int totCount;
 	
 	/** 연락처 리스트  */
+	@ApiModelProperty(value="연락처 리스트")
 	private String contactsList;
 	
 	/** resultState */
+	@ApiModelProperty(value="결과상태코드")
     private String resultState;
     
     /** resultMessage */
+	@ApiModelProperty(value="결과메시지")
     private String resultMessage;
 
 	/**

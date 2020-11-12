@@ -17,14 +17,6 @@ package egovframework.hyb.ios.cmr.web;
 
 import java.util.List;
 
-import egovframework.hyb.ios.cmr.service.CameraiOSAPIDefaultVO;
-import egovframework.hyb.ios.cmr.service.CameraiOSAPIFileVO;
-import egovframework.hyb.ios.cmr.service.CameraiOSAPIVO;
-import egovframework.hyb.ios.cmr.service.CameraiOSAPIXmlVO;
-import egovframework.hyb.ios.cmr.service.EgovCameraiOSAPIService;
-import egovframework.hyb.ios.cmr.service.impl.EgovCameraiOSMngUtil;
-import egovframework.rte.fdl.property.EgovPropertyService;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,21 +25,34 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
+
+import egovframework.hyb.ios.cmr.service.CameraiOSAPIDefaultVO;
+import egovframework.hyb.ios.cmr.service.CameraiOSAPIFileVO;
+import egovframework.hyb.ios.cmr.service.CameraiOSAPIVO;
+import egovframework.hyb.ios.cmr.service.CameraiOSAPIXmlVO;
+import egovframework.hyb.ios.cmr.service.EgovCameraiOSAPIService;
+import egovframework.hyb.ios.cmr.service.impl.EgovCameraiOSMngUtil;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**  
  * @Class Name : EgovCameraIOSAPIController.java
  * @Description : EgovCameraIOSAPIController Class
  * @Modification Information  
  * @
- * @  수정일			수정자		수정내용
- * @ ---------		---------	-------------------------------
- * @ 2012. 7. 23.		이율경		최초생성
- * @ 2012. 8. 03.  		이해성      커스터마이징
- * @ 2012. 8. 13.  		이해성      인코딩 관련 소스 추가
+ * @ 수정일               수정자              수정내용
+ * @ ----------	  ---------   -------------------------------
+ *   2012.07.23   이율경              최초생성
+ *   2012.08.03   이해성              커스터마이징
+ *   2012.08.13   이해성              인코딩 관련 소스 추가
+ *   2020.08.11   신용호              Swagger 적용
  * 
  * @author 디바이스 API 개발환경 팀
  * @since 2012. 8. 3.
@@ -56,7 +61,7 @@ import org.springframework.web.multipart.MultipartFile;
  * 
  */
 @Controller
-public class EgovCameraiOSAPIController {
+public class EgovCameraIosAPIController {
 
 	/** EgovCameraIOSAPIService */
     @Resource(name = "EgovCameraiOSAPIService")
@@ -71,31 +76,17 @@ public class EgovCameraiOSAPIController {
 	private EgovCameraiOSMngUtil egovCameraiOSMngUtil;
     
     /**
-	 * 어플리케이션 실행 시, 서버 설정
-	 * @return boolean
-	 * @exception Exception
-	 */
-    @RequestMapping("/cmr/htmlLoadiOS.do")
-	public @ResponseBody CameraiOSAPIXmlVO htmlLoad(SessionStatus status) 
-    throws Exception{
-		
-    	CameraiOSAPIXmlVO cameraiOSAPIXmlVO = new CameraiOSAPIXmlVO();
-    	
-    	cameraiOSAPIXmlVO.setResultState("OK");
-    	cameraiOSAPIXmlVO.setServerContext(propertiesService.getString("serverContext"));
-    	cameraiOSAPIXmlVO.setDownloadContext(propertiesService.getString("downloadContext"));
-		
-		return cameraiOSAPIXmlVO;
-	}
-    
-    /**
 	 * 이미지 파일을 등록한다. (업로드)
 	 * @param file - 이미지 파일 정보가 담긴 MultipartFile
 	 * @param fileVO - 목록 조회조건 정보가 담긴 CameraIOSAPIVO
 	 * @return boolean
 	 * @exception Exception
 	 */
-    @RequestMapping("/cmr/photoAlbumImageUploadiOS.do")
+    @ApiOperation(value="Camera 이미지파일 등록", notes="[iOS] Camera 이미지파일 등록한다.")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "file", value = "이미지파일", required = true, dataType = "__file", paramType = "form"),
+    })
+    @RequestMapping(value="/cmr/photoAlbumImageUploadiOS.do", method=RequestMethod.POST)
 	public @ResponseBody boolean fileUpload(@RequestParam("file") MultipartFile file, CameraiOSAPIVO vo, 
 			HttpServletRequest request) throws Exception{
 		
@@ -121,7 +112,11 @@ public class EgovCameraiOSAPIController {
 	 * @return boolean
 	 * @exception Exception
 	 */
-    @RequestMapping("/cmr/photoAlbumImageUpdateiOS.do")
+    @ApiOperation(value="Camera 이미지파일 수정", notes="[iOS] Camera 이미지파일 수정한다.")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "file", value = "이미지파일", required = true, dataType = "__file", paramType = "form"),
+    })
+    @RequestMapping(value="/cmr/photoAlbumImageUpdateiOS.do", method=RequestMethod.POST)
 	public @ResponseBody boolean fileUpdate(@RequestParam("file") MultipartFile file, CameraiOSAPIVO vo, 
 			HttpServletRequest request) throws Exception{
 		
@@ -143,6 +138,10 @@ public class EgovCameraiOSAPIController {
 	 * @return jsonView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Camera 이미지 목록조회", notes="[iOS] Camera 이미지 목록을 조회한다.")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "pageIndex", value = "현재 페이지", required = true, dataType = "int", paramType = "query"),
+    })
     @SuppressWarnings("unchecked")
 	@RequestMapping(value="/cmr/cameraPhotoAlbumListiOS.do")
     public @ResponseBody CameraiOSAPIXmlVO selectCameraPhotoAlbumList(
@@ -168,6 +167,10 @@ public class EgovCameraiOSAPIController {
 	 * @return jsonView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Camera 이미지 세부정보 조회", notes="[iOS] Camera 이미지 세부정보를 조회한다.")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "sn", value = "일련번호", required = true, dataType = "int", paramType = "query"),
+    })
     @RequestMapping(value="/cmr/cameraPhotoAlbumDetailiOS.do")
     public @ResponseBody CameraiOSAPIXmlVO selectPhotoAlbum( CameraiOSAPIVO vo,
     		SessionStatus status)
@@ -189,6 +192,10 @@ public class EgovCameraiOSAPIController {
 	 * @return jsonView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Camera 이미지 다운로드", notes="[iOS] Camera 이미지 다운로드 한다.")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "fileSn", value = "파일연번", required = true, dataType = "int", paramType = "query"),
+    })
     @RequestMapping("/cmr/getImageiOS.do")
     public void getImageInf(@RequestParam("fileSn") String fileSn, ModelMap model,
     		HttpServletResponse response) throws Exception {
@@ -208,6 +215,10 @@ public class EgovCameraiOSAPIController {
 	 * @return jsonView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Camera 이미지정보 삭제", notes="[iOS] Camera 이미지정보를 삭제한다.")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "sn", value = "일련번호", required = true, dataType = "int", paramType = "query"),
+    })
     @RequestMapping(value="/cmr/deleteCameraPhotoAlbumiOS.do")
     public @ResponseBody CameraiOSAPIXmlVO deleteCameraPhotoAlbum( CameraiOSAPIVO vo,
     		SessionStatus status)
@@ -244,6 +255,10 @@ public class EgovCameraiOSAPIController {
 	 * @return jsonView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Camera 이미지 제목 중복 조회", notes="[iOS] Camera 이미지 제목 중복을 조회한다.")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "photoSj", value = "사진제목", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping(value="/cmr/cameraPhotoAlbumCheckiOS.do")
     public @ResponseBody CameraiOSAPIXmlVO selectPhotoAlbumPhoSj( CameraiOSAPIVO vo,
     		SessionStatus status)
@@ -259,4 +274,24 @@ public class EgovCameraiOSAPIController {
     	
     	return cameraiOSAPIXmlVO;
     }
+    
+    /**
+	 * 어플리케이션 실행 시, 서버 설정
+	 * @return boolean
+	 * @exception Exception
+	 */
+    @ApiOperation(value="Camera 서버 ContextPath 조회", notes="[iOS] 서버 ContextPath 조회한다.")
+    @RequestMapping("/cmr/htmlLoadiOS.do")
+	public @ResponseBody CameraiOSAPIXmlVO htmlLoad(SessionStatus status) 
+    throws Exception{
+		
+    	CameraiOSAPIXmlVO cameraiOSAPIXmlVO = new CameraiOSAPIXmlVO();
+    	
+    	cameraiOSAPIXmlVO.setResultState("OK");
+    	cameraiOSAPIXmlVO.setServerContext(propertiesService.getString("serverContext"));
+    	cameraiOSAPIXmlVO.setDownloadContext(propertiesService.getString("downloadContext"));
+		
+		return cameraiOSAPIXmlVO;
+	}
+
 }

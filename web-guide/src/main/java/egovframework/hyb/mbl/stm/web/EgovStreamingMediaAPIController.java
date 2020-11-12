@@ -20,19 +20,25 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.AbstractView;
 
+import egovframework.hyb.ios.dvc.service.DeviceiOSAPIVO;
 import egovframework.hyb.mbl.stm.service.EgovStreamingMediaAPIService;
+import egovframework.hyb.mbl.stm.service.StreamingMediaAPIDefaultVO;
 import egovframework.hyb.mbl.stm.service.StreamingMediaAPIFileVO;
 import egovframework.hyb.mbl.stm.service.StreamingMediaAPIVO;
 import egovframework.rte.fdl.property.EgovPropertyService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**  
  * @Class Name : EgovStreamingMediaAPIController.java
  * @Description : EgovStreamingMediaAPIController Class
  * @Modification Information  
  * @
- * @  수정일            수정자        수정내용
- * @ ---------        ---------    -------------------------------
- * @ 2016. 7. 14.     장성호        최초생성
+ * @ 수정일               수정자              수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2016.07.14   장성호              최초생성
+ *   2020.09.16   신용호              Swagger 적용
  * 
  * @author 디바이스 API 실행환경 팀
  * @since 2016. 7. 14.
@@ -61,9 +67,10 @@ public class EgovStreamingMediaAPIController {
 	 * @return 조회 목록
 	 * @exception Exception
 	 */
+    @ApiOperation(value="StreamingMedia 정보 목록조회", notes="StreamingMedia 정보 목록을 조회한다.", response=StreamingMediaAPIVO.class, responseContainer="List")
 	@RequestMapping("/stm/mediaInfoList.do")
 	public @ResponseBody
-	ModelAndView selectMediaInfoList(StreamingMediaAPIVO vo) throws Exception {
+	ModelAndView selectMediaInfoList(StreamingMediaAPIDefaultVO vo) throws Exception {
 		
 		ModelAndView jsonView = new ModelAndView("jsonView");
 		
@@ -75,6 +82,10 @@ public class EgovStreamingMediaAPIController {
 		return jsonView;
 	}
 
+    @ApiOperation(value="StreamingMedia 재생횟수 증가", notes="StreamingMedia 재생횟수를 증가한다.", response=DeviceiOSAPIVO.class)
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "sn", value = "일련번호", required = true, dataType = "int", paramType = "query"),
+    })
 	@RequestMapping("/stm/updateMediaInfoRevivCo.do")
 	public ModelAndView updateMediaInfoRevivCo(@RequestParam("sn") String sn) throws Exception {
 
@@ -93,7 +104,10 @@ public class EgovStreamingMediaAPIController {
 		return jsonView;
 	}
 
-	
+    @ApiOperation(value="StreamingMedia 파일 수신", notes="StreamingMedia 파일을 수신한다.", response=DeviceiOSAPIVO.class)
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "sn", value = "일련번호", required = true, dataType = "int", paramType = "query"),
+    })
 	@RequestMapping("/stm/getMediaStreaming.do")
 	public ModelAndView getMediaStreaming(@RequestParam("sn") final String sn, HttpServletResponse response) throws Exception {
 
@@ -108,7 +122,7 @@ public class EgovStreamingMediaAPIController {
 	    			vo.setSn(Integer.parseInt(sn));	    			
 	    			resultVO = egovStreamingMediaAPIService.selectMediaFileURL(vo);	    			
 	    		}
-	    			    		
+	    		
 	    		RandomAccessFile rf = new RandomAccessFile(new File(resultVO.getFileStreCours().toString() + resultVO.getStreFileNm().toString()), "r");
 	    		
 	    		long rangeStart = 0;
@@ -138,8 +152,10 @@ public class EgovStreamingMediaAPIController {
 	    			long partSize = rangeEnd - rangeStart +1;
 	    			
 	    			response.reset();	    			
-	    			response.setStatus(isPart ? 206 : 200);	    			
-	    			response.setContentType("video/"+ resultVO.getFileExtsn());	    			
+	    			response.setStatus(isPart ? 206 : 200);	
+	    			response.setContentType("video/"+ resultVO.getFileExtsn());
+	    			response.setHeader("Content-Disposition:", "attachment; filename=" + new String(resultVO.getOrignlFileNm().getBytes(), "UTF-8"));
+	    			response.setHeader("Content-Transfer-Encoding", "binary");
 	    			response.setHeader("Content-Range", "bytes"+rangeStart+"-"+rangeEnd+"/"+movieSize);
 	    			response.setHeader("Accept-Range", "bytes");
 	    			response.setHeader("Content-Length", ""+partSize);

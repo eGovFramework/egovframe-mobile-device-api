@@ -1,13 +1,18 @@
 package egovframework.hyb.mbl.stm.service;
 
+import java.io.Serializable;
+
+import io.swagger.annotations.ApiModelProperty;
+
 /**  
  * @Class Name : StreamingMediaAPIFileVO.java
  * @Description : StreamingMediaAPIFileVO Class
  * @Modification Information  
  * @
- * @  수정일            수정자        수정내용
- * @ ---------        ---------    -------------------------------
- * @ 2016. 7. 14.     장성호        최초생성
+ * @ 수정일               수정자              수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2016.07.14   장성호             최초생성
+ *   2020.09.16   신용호             Swagger 적용
  * 
  * @author 디바이스 API 실행환경 팀
  * @since 2016. 7. 14.
@@ -15,45 +20,60 @@ package egovframework.hyb.mbl.stm.service;
  * @see
  * 
  */
-public class StreamingMediaAPIFileVO {
+public class StreamingMediaAPIFileVO implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
     /** 미디어 일련번호 */
+	@ApiModelProperty(value="미디어 일련번호")
     private int sn;
     
     /** 파일연번 */
+	@ApiModelProperty(value="파일연번")
     private int fileSn;
     
     /** 파일저장경로 */
+	@ApiModelProperty(value="파일저장경로")
     private String fileStreCours;
     
     /** 저장파일명 */
+	@ApiModelProperty(value="저장파일명")
     private String streFileNm;
     
     /** 원파일명 */
+	@ApiModelProperty(value="원파일명")
     private String orignlFileNm;
     
     /** 파일확장자 */
+	@ApiModelProperty(value="파일확장자")
     private String fileExtsn;
     
     /** 파일내용 */
+	@ApiModelProperty(value="파일내용")
     private String fileCn;
     
     /** 파일크기 */
+	@ApiModelProperty(value="파일크기")
     private String fileSize;
     
     /** 미디어 구분 코드 */
+	@ApiModelProperty(value="미디어 구분 코드")
     private String mdCode;
     
     /** 미디어 제목 */
+	@ApiModelProperty(value="미디어 제목")
     private String mdSj;
     
     /** 디바이스 식별 */
+	@ApiModelProperty(value="디바이스 식별")
     private String uuid;
     
     /** 활성화여부 */
+	@ApiModelProperty(value="활성화여부")
     private String useyn;
     
     /** 재생 횟수 */
+	@ApiModelProperty(value="재생 횟수")
     private String revivCo;
 
     /**

@@ -32,15 +32,19 @@ import egovframework.hyb.mbl.pus.service.EgovPushDeviceAPIService;
 import egovframework.hyb.mbl.pus.service.PushDeviceAPIDefaultVO;
 import egovframework.hyb.mbl.pus.service.PushDeviceAPIVO;
 import egovframework.rte.fdl.property.EgovPropertyService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**  
  * @Class Name : EgovPushDeviceAPIController
  * @Description : EgovPushDeviceAPIController Class
  * @Modification Information  
  * @
- * @  수정일       수정자                  수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2016.06.20    신성학                최초 작성
+ * @ 수정일                수정자             수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2016.06.20   신성학              최초 작성
+ *   2020.09.16   신용호              Swagger 적용
  * 
  * @author 디바이스 API 실행환경 개발팀
  * @since 2016. 06. 20
@@ -68,8 +72,12 @@ public class EgovPushDeviceAPIController {
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Push Notification 정보 목록조회", notes="Push Notification 정보 목록을 조회한다.", response=PushDeviceAPIVO.class, responseContainer="List")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping(value="/pus/pushDeviceInfoList.do")
-    public ModelAndView selectVibratorInfoList(@ModelAttribute("searchVibratorVO") PushDeviceAPIVO searchVO, 
+    public ModelAndView selectVibratorInfoList(@ModelAttribute("searchVO") PushDeviceAPIDefaultVO searchVO, 
     		ModelMap model)
             throws Exception {
  
@@ -80,18 +88,21 @@ public class EgovPushDeviceAPIController {
 		jsonView.addObject("resultState","OK");
 		
 		return jsonView;
-    } 
+    }
 
     /**
 	 * Push Notification을 위하여 Device정보를 등록한다.
-	 * @param searchVO - 등록할 정보가 담긴 PushAPIDefaultVO
+	 * @param searchVO - 등록할 정보가 담긴 PushDeviceAPIVO
 	 * @param status
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Push Notification 세부정보 등록", notes="Push Notification 세부정보를 등록한다.\nresponseOK = {\"resultState\",\"OK\"}")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping("/pus/addPushDeviceInfo.do")
     public ModelAndView insertDeviceInfo(
-    		@ModelAttribute("searchPushVO") PushDeviceAPIDefaultVO searchVO,
     		PushDeviceAPIVO sampleVO,
             BindingResult bindingResult, Model model, SessionStatus status) 
     throws Exception {
@@ -113,14 +124,18 @@ public class EgovPushDeviceAPIController {
 
     /**
 	 * Push Notification을 서버에 요청한다.
-	 * @param searchVO - 등록할 정보가 담긴 PushAPIDefaultVO
+	 * @param searchVO - 등록할 정보가 담긴 PushDeviceAPIVO
 	 * @param status
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Push Notification 발송메시지정보 등록", notes="Push Notification 발송메시지정보를 등록한다.\nresponseOK = {\"resultState\",\"OK\"}")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+        @ApiImplicitParam(name = "osType", value = "OS 구분", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping("/pus/requestPushInfo.do")
     public ModelAndView insertVibratorInfo(
-    		@ModelAttribute("searchPushVO") PushDeviceAPIDefaultVO searchVO,
     		PushDeviceAPIVO sampleVO,
             BindingResult bindingResult, Model model, SessionStatus status) 
     throws Exception {
@@ -140,14 +155,18 @@ public class EgovPushDeviceAPIController {
     }
 
     /**
-	 * Push Device 목록을 조회한다.
+	 * Push Notification 세부정보를 조회한다.
 	 * @param searchVO - 조회할 정보가 담긴 PushDeviceAPIDefaultVO
 	 * @param model
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Push Notification 세부정보 조회", notes="Push Notification 세부정보를 조회한다.", response=PushDeviceAPIVO.class)
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "sn", value = "일련번호", required = true, dataType = "int", paramType = "query"),
+    })
     @RequestMapping(value="/pus/pushDeviceInfo.do")
-    public ModelAndView selectVibratorInfo(@ModelAttribute("searchVibratorVO") PushDeviceAPIVO searchVO, 
+    public ModelAndView selectVibratorInfo(@ModelAttribute("searchVO") PushDeviceAPIVO searchVO, 
     		ModelMap model)
             throws Exception {
  
@@ -167,8 +186,12 @@ public class EgovPushDeviceAPIController {
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Push Notification 송신메시지 세부정보 조회", notes="Push Notification 송신메시지 세부정보를 조회한다.", response=PushDeviceAPIVO.class)
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "sn", value = "일련번호", required = true, dataType = "int", paramType = "query"),
+    })
     @RequestMapping(value="/pus/PushMessageList.do")
-    public ModelAndView selectPushMessageList(@ModelAttribute("searchVibratorVO") PushDeviceAPIVO searchVO, 
+    public ModelAndView selectPushMessageList(@ModelAttribute("searchVO") PushDeviceAPIVO searchVO, 
     		ModelMap model)
             throws Exception {
  

@@ -38,10 +38,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import egovframework.hyb.add.nwk.service.NetworkAndroidAPIXmlVO;
 import egovframework.hyb.ios.nwk.service.EgovNetworkiOSAPIService;
 import egovframework.hyb.ios.nwk.service.NetworkiOSAPIDefaultVO;
 import egovframework.hyb.ios.nwk.service.NetworkiOSAPIVO;
 import egovframework.rte.fdl.property.EgovPropertyService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**  
  * @Class Name : EgovNetworkAPIController
@@ -50,10 +54,11 @@ import egovframework.rte.fdl.property.EgovPropertyService;
  * @
  * @ 수정일              수정자               수정내용
  * @ ----------   ---------   -------------------------------
- * @ 2012.06.18   서준식              최초 작성
- * @ 2012.08.01   이해성              DeviceAPIGuide Network Info
- * @ 2017.02.27   최두영              시큐어코딩(ES)-36. 부적절한 예외 처리[CWE253, CWE-440, CWE-754]
- * @ 2019.10.14   신용호              iOS에서 확장자를 mp3로 인식하도록 contentDisposition값을 설정(getMp3File)
+ *   2012.06.18   서준식              최초 작성
+ *   2012.08.01   이해성              DeviceAPIGuide Network Info
+ *   2017.02.27   최두영              시큐어코딩(ES)-36. 부적절한 예외 처리[CWE253, CWE-440, CWE-754]
+ *   2019.10.14   신용호              iOS에서 확장자를 mp3로 인식하도록 contentDisposition값을 설정(getMp3File)
+ *   2020.09.07   신용호              Swagger 적용
  * 
  * @author 디바이스 API 실행환경 개발팀
  * @since 2012. 06. 18
@@ -64,7 +69,7 @@ import egovframework.rte.fdl.property.EgovPropertyService;
  */
 
 @Controller
-public class EgovNetworkiOSAPIController {
+public class EgovNetworkIosAPIController {
 	
 	/** EgovNetworkiOSAPIService */
     @Resource(name = "EgovNetworkiOSAPIService")
@@ -74,7 +79,7 @@ public class EgovNetworkiOSAPIController {
     @Resource(name = "propertiesService")
     protected EgovPropertyService propertiesService;
  
-    private static final Logger LOGGER = LoggerFactory.getLogger(EgovNetworkiOSAPIController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EgovNetworkIosAPIController.class);
     
     /**
 	 * 어플리케이션 실행 시, 서버 설정
@@ -82,8 +87,7 @@ public class EgovNetworkiOSAPIController {
 	 * @exception Exception
 	 */
     @RequestMapping("/nwk/htmlLoadiOS.do")
-    public ModelAndView htmlLoad(@ModelAttribute("searchNetworkiOSVO") NetworkiOSAPIDefaultVO searchNetworkVO, 
-    		ModelMap model)
+    public ModelAndView htmlLoad(ModelMap model)
             throws Exception {
 		ModelAndView jsonView = new ModelAndView("jsonView");
 		
@@ -100,6 +104,7 @@ public class EgovNetworkiOSAPIController {
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Network 정보 목록조회", notes="[iOS] Network 정보 목록을 조회한다.", response=NetworkAndroidAPIXmlVO.class, responseContainer="List")
     @RequestMapping(value="/nwk/networkiOSInfoList.do")
     public ModelAndView selectNetworkInfoList(@ModelAttribute("searchNetworkiOSVO") NetworkiOSAPIDefaultVO searchNetworkVO,
     		NetworkiOSAPIVO sampleNetworkVO,
@@ -122,8 +127,12 @@ public class EgovNetworkiOSAPIController {
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Network 세부정보 조회", notes="[iOS] Network 세부정보를 조회한다.", response=NetworkiOSAPIVO.class)
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "sn", value = "일련번호", required = true, dataType = "int", paramType = "query"),
+    })
     @RequestMapping(value="/nwk/networkiOSInfo.do")
-    public ModelAndView selectNetworkInfo(@ModelAttribute("searchNetworkiOSVO") NetworkiOSAPIDefaultVO searchNetworkVO, 
+    public ModelAndView selectNetworkInfo(
     		NetworkiOSAPIVO sampleNetworkVO,
             BindingResult bindingResult, Model model, SessionStatus status)
             throws Exception {
@@ -144,9 +153,13 @@ public class EgovNetworkiOSAPIController {
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Network 세부정보 등록", notes="[iOS] Network 세부정보를 등록한다.\nresponseOK = {\"resultState\",\"OK\"}")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+        @ApiImplicitParam(name = "sn", value = "일련번호", required = true, dataType = "int", paramType = "query"),
+    })
     @RequestMapping("/nwk/addNetworkiOSInfo.do")
     public ModelAndView insertNetworkInfo(
-    		@ModelAttribute("searchNetworkiOSVO") NetworkiOSAPIDefaultVO searchNetworkVO,
        	 	NetworkiOSAPIVO sampleNetworkVO,
             BindingResult bindingResult, Model model, SessionStatus status) 
     throws Exception {
@@ -177,14 +190,15 @@ public class EgovNetworkiOSAPIController {
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Network 세부정보 삭제", notes="[iOS] Network 세부정보를 삭제한다.\nresponseOK = {\"resultState\",\"OK\"}")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "sn", value = "일련번호", required = true, dataType = "int", paramType = "query"),
+    })
     @RequestMapping("/nwk/deleteNetworkiOSInfo.do")
     public ModelAndView deleteNetworkInfo(
-            NetworkiOSAPIVO sampleVO,
-            @ModelAttribute("searchNetworkiOSVO") NetworkiOSAPIDefaultVO searchVO, SessionStatus status)
+            NetworkiOSAPIVO sampleVO, SessionStatus status)
             throws Exception {
     	
-    	
-        
         ModelAndView jsonView = new ModelAndView("jsonView");
         
     	int success = egovNetworkiOSAPIService.deleteNetworkInfo(sampleVO);
@@ -207,6 +221,7 @@ public class EgovNetworkiOSAPIController {
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="Network MP3파일 다운로드", notes="[iOS] MP3파일을 다운로드 받는다.\nglobals.properties설정파일에 \"fileStorePath\"로 정의한 설정경로에서 \"owlband.mp3\"파일을 다운로드 한다.")
     @RequestMapping("/nwk/getMp3FileiOS.do")
     public void getMp3File( HttpServletResponse response) throws Exception {
     	
@@ -219,7 +234,7 @@ public class EgovNetworkiOSAPIController {
 		
 		String filename = "owlband.mp3";
 		String charSet = "UTF-8";
-		String contentDisposition = "attachment; filename*="+charSet+"''"+URLEncoder.encode(filename, charSet);
+		//String contentDisposition = "attachment; filename*="+charSet+"''"+URLEncoder.encode(filename, charSet);
 		
 		try {
 		    
@@ -234,9 +249,9 @@ public class EgovNetworkiOSAPIController {
 		    	bStream.write(imgByte);
 		    }
 	
-			response.setHeader("Content-Type", "mp3");
+			response.setHeader("Content-Type", "audio/mp3");
 			response.setContentLength(bStream.size());
-			response.setHeader("Content-Disposition", contentDisposition);
+			//response.setHeader("Content-Disposition", contentDisposition);
 		
 			bStream.writeTo(response.getOutputStream());
 		

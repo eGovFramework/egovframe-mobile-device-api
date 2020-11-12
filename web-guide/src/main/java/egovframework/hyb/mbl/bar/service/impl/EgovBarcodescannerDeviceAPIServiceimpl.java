@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import egovframework.hyb.mbl.bar.service.BarcodescannerAPIDefaultVO;
 import egovframework.hyb.mbl.bar.service.BarcodescannerAPIVO;
 import egovframework.hyb.mbl.bar.service.EgovBarcodescannerAPIService;
-import egovframework.hyb.mbl.pus.service.PushDeviceAPIVO;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 /**  
@@ -59,7 +59,7 @@ public class EgovBarcodescannerDeviceAPIServiceimpl extends EgovAbstractServiceI
 	 * @return 알림 설정 정보 목록
 	 * @exception Exception
 	 */
-    public List<?> selectBarcodescannerList(BarcodescannerAPIVO searchVO) throws Exception {
+    public List<?> selectBarcodescannerList(BarcodescannerAPIDefaultVO searchVO) throws Exception {
         return barcodescannerDeviceAPIDAO.selectBarcodescannerDevcieList(searchVO);
     }
 

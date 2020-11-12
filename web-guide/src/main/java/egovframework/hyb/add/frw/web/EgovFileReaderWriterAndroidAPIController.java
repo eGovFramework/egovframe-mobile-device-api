@@ -2,28 +2,33 @@ package egovframework.hyb.add.frw.web;
 
 import java.util.List;
 
-import egovframework.hyb.add.frw.service.EgovFileReaderWriterAndroidAPIService;
-import egovframework.hyb.add.frw.service.FileReaderWriterAndroidAPIVO;
-import egovframework.hyb.add.frw.service.FileReaderWriterAndroidAPIVOList;
-import egovframework.hyb.add.frw.service.impl.EgovFileMngAndroidUtil;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import egovframework.hyb.add.frw.service.EgovFileReaderWriterAndroidAPIService;
+import egovframework.hyb.add.frw.service.FileReaderWriterAndroidAPIVO;
+import egovframework.hyb.add.frw.service.FileReaderWriterAndroidAPIVOList;
+import egovframework.hyb.add.frw.service.impl.EgovFileMngAndroidUtil;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**  
  * @Class Name : EgovFileReaderWriterAndroidAPIController.java
  * @Description : EgovFileReaderWriterAndroidAPIController
  * @
- * @  수정일                 수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012. 8. 6.  나신일                   최초생성
+ * @ 수정일         수정자        수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.08.06   나신일        최초생성
+ *   2020.08.24   신용호        Swagger 적용
  * 
  * @author 디바이스 API 실행환경 개발팀
  * @since 2012. 8. 6
@@ -51,6 +56,10 @@ public class EgovFileReaderWriterAndroidAPIController {
 	 * @return FileReaderWriterAndroidAPIVOList
 	 * @exception Exception
 	 */
+    @ApiOperation(value="파일 정보 목록조회", notes="[Android] 파일 정보 목록을 조회한다.", response=FileReaderWriterAndroidAPIVO.class, responseContainer="List")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    })
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/frw/xml/fileInfoList.do")
 	public @ResponseBody
@@ -73,6 +82,11 @@ public class EgovFileReaderWriterAndroidAPIController {
 	 * @return FileReaderWriterAndroidAPIVO
 	 * @exception Exception
 	 */
+    @ApiOperation(value="파일 정보 삭제", notes="[Android] 파일 정보를 삭제한다.responseOK = {\"resultState\",\"OK\"}")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    	@ApiImplicitParam(name = "fileSn", value = "파일연번", required = true, dataType = "int", paramType = "query"),
+    })
 	@RequestMapping("/frw/xml/deleteFile.do")
 	public @ResponseBody
 	FileReaderWriterAndroidAPIVO deleteFile(FileReaderWriterAndroidAPIVO fileVO) throws Exception {
@@ -107,7 +121,12 @@ public class EgovFileReaderWriterAndroidAPIController {
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
-	@RequestMapping("/frw/xml/fileUpload.do")
+    @ApiOperation(value="파일 서버로 전송하여 등록", notes="[Android] 파일 서버로 전송하여 등록한다.\nresponseOK = \"ok\"")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+        @ApiImplicitParam(name = "file", value = "이미지파일", required = true, dataType = "__file", paramType = "form"),
+    })
+	@RequestMapping(value="/frw/xml/fileUpload.do", method=RequestMethod.POST)
 	public @ResponseBody
 	String fileUpload(@RequestParam("file") MultipartFile file, FileReaderWriterAndroidAPIVO fileVO, HttpServletRequest request) throws Exception {
 
@@ -143,6 +162,11 @@ public class EgovFileReaderWriterAndroidAPIController {
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
+    @ApiOperation(value="파일 다운로드", notes="[Android] 파일 다운로드 한다.")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    	@ApiImplicitParam(name = "fileSn", value = "파일연번", required = true, dataType = "int", paramType = "query"),
+    })
 	@RequestMapping("/frw/xml/fileDownload.do")
 	public void fileDownload(HttpServletRequest request, HttpServletResponse response, FileReaderWriterAndroidAPIVO fileVO) throws Exception {
 

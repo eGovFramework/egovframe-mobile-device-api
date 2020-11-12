@@ -15,6 +15,9 @@
  */
 package egovframework.hyb.ios.dvc.service;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**  
  * @Class Name : DeviceiOSAPIVO.java
  * @Description : DeviceiOSAPIVO Class
@@ -35,9 +38,10 @@ package egovframework.hyb.ios.dvc.service;
  * @Class Name : DeviceiOSAPIVO.java
  * @Description : DeviceiOSAPIVO
  * @
- * @  수정일                 수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012. 8. 6.                     최초생성
+ * @ 수정일                수정자             수정내용
+ * @ ----------   ---------   -------------------------------
+ * @ 2012.08.06               최초생성
+ * @ 2020.07.29   신용호             Swagger 적용
  * 
  * @author 디바이스 API 실행환경 개발팀
  * @since 2012. 8. 6.
@@ -46,33 +50,43 @@ package egovframework.hyb.ios.dvc.service;
  * 
  *  Copyright (C) by MOPAS All right reserved.
  */
+@ApiModel
 public class DeviceiOSAPIVO{
 	
 	/** 일련번호 */
+	@ApiModelProperty(value="일련번호",example = "122") //required = true,
     private int sn;
     
     /** 기기식별 */
+	@ApiModelProperty(value="기기식별코드",example = "기기식별코드") //required = true,
     private String uuid;
     
     /** OS */
+	@ApiModelProperty(value="OS명")
     private String os;
     
     /** 전화번호 */
+	@ApiModelProperty(value="전화번호")
     private String telno;
     
-    /** 스토리지 정  */
+    /** 스토리지 정보  */
+	@ApiModelProperty(value="스토리지 정보")
     private String strgeInfo;
     
     /** 네트워크 디바이스 정보  */
+	@ApiModelProperty(value="네트워크 디바이스 정보")
     private String ntwrkDeviceInfo;
     
     /** 폰갭 버전 */
+	@ApiModelProperty(value="코도바(폰갭) 버전")
     private String pgVer;
     
     /** 디바이스 명  */
+	@ApiModelProperty(value="디바이스 명")
     private String deviceNm;
     
     /** 활성화 여부  */
+	@ApiModelProperty(value="활성화 여부")
     private String useyn;
 
 	/**

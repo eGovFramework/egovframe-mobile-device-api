@@ -15,14 +15,20 @@
  */
 package egovframework.hyb.mbl.pus.service;
 
+import java.io.Serializable;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**  
  * @Class Name : PushDeviceAPIVO.java
  * @Description : PushDeviceAPIVO Class
  * @Modification Information  
  * @
- * @  수정일      수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2016.06.20   신성학                최초생성
+ * @ 수정일               수정자              수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2016.06.20   신성학             최초생성
+ *   2020.07.29   신용호             Swagger 적용
  * 
  * @author 디바이스 API 실행환경 개발팀
  * @since 2016. 06. 20
@@ -31,38 +37,50 @@ package egovframework.hyb.mbl.pus.service;
  * 
  *  Copyright (C) by MOPAS All right reserved.
  */
-public class PushDeviceAPIVO extends PushDeviceAPIDefaultVO {
+
+@ApiModel
+public class PushDeviceAPIVO implements Serializable {
 	
     private static final long serialVersionUID = 1L;
 
 	/** 일련번호 */
+    @ApiModelProperty(value="일련번호")
     private int sn;
     
     /** 기기식별 */
+    @ApiModelProperty(value="기기식별코드")
     private String uuid;
     
 	/** 네트워크 디바이스 정보  */
+    @ApiModelProperty(value="네트워크 디바이스 정보")
     private String ntwrkDeviceInfo;
     
     /** 디바이스 명  */
+    @ApiModelProperty(value="디바이스 명")
     private String deviceNm;
 
     /** OS 버전  */
+    @ApiModelProperty(value="OS 버전")
     private String osVer;
     
     /** 사용여부  */
+    @ApiModelProperty(value="사용여부")
     private String useYn;
     
     /** OS 구분  */
+    @ApiModelProperty(value="OS 구분")
     private String osType;
     
     /** 디바이스 토큰 ID  */
+    @ApiModelProperty(value="디바이스 토큰 ID")
     private String tokenId;
     
     /** Push 발송 메시지  */
+    @ApiModelProperty(value="Push 발송 메시지")
     private String message;
 
 	/** Push 발송 일시  */
+    @ApiModelProperty(value="Push 발송 일시")
     private String sndDt;
     
 	/**

@@ -17,12 +17,6 @@ package egovframework.hyb.add.dvc.web;
 
 import java.util.List;
 
-import egovframework.hyb.add.dvc.service.DeviceAndroidAPIDefaultVO;
-import egovframework.hyb.add.dvc.service.DeviceAndroidAPIVO;
-import egovframework.hyb.add.dvc.service.DeviceAndroidAPIVOList;
-import egovframework.hyb.add.dvc.service.EgovDeviceAndroidAPIService;
-import egovframework.rte.fdl.property.EgovPropertyService;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
@@ -34,14 +28,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 
+import egovframework.hyb.add.dvc.service.DeviceAndroidAPIDefaultVO;
+import egovframework.hyb.add.dvc.service.DeviceAndroidAPIVO;
+import egovframework.hyb.add.dvc.service.DeviceAndroidAPIVOList;
+import egovframework.hyb.add.dvc.service.EgovDeviceAndroidAPIService;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 /**  
  * @Class Name : EgovDeviceAPIController
  * @Description : EgovDeviceAPIController Class
  * @Modification Information  
  * @
- * @  수정일                 수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012.07.23    서형주                  최초생성
+ * @ 수정일               수정자              수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.07.23   서형주              최초생성
+ *   2020.08.10   신용호              Swagger 적용
  * 
  * @author Device API 실행환경팀
  * @since 2012. 07. 23
@@ -68,6 +72,10 @@ public class EgovDeviceAndroidAPIController {
      * @return "/dvc/xml/deviceInfoList.do"
      * @exception Exception
      */
+    @ApiOperation(value="Device 세부정보 조회", notes="[Android] Device 세부정보를 조회한다.", response=DeviceAndroidAPIVO.class)
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "sn", value = "일련번호", required = true, dataType = "int", paramType = "query"),
+    })
     @RequestMapping(value="/dvc/xml/deviceInfo.do")
     public @ResponseBody DeviceAndroidAPIVO selectDeviceInfoXML(@ModelAttribute("searchVO") DeviceAndroidAPIVO searchVO, 
             ModelMap model)
@@ -85,12 +93,16 @@ public class EgovDeviceAndroidAPIController {
      * @return "/dvc/xml/deviceInfoList.do"
      * @exception Exception
      */
+    @ApiOperation(value="Device 정보 목록조회", notes="[Android] Device 정보 목록을 조회한다.", response=DeviceAndroidAPIVO.class, responseContainer="List")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    })
     @SuppressWarnings("unchecked")
 	@RequestMapping(value="/dvc/xml/deviceInfoList.do")
-    public @ResponseBody DeviceAndroidAPIVOList selectDeviceInfoXMLList(@ModelAttribute("searchVO") DeviceAndroidAPIVO searchVO, 
+    public @ResponseBody DeviceAndroidAPIVOList selectDeviceInfoXMLList(@ModelAttribute("searchVO") DeviceAndroidAPIDefaultVO searchVO, 
             ModelMap model)
             throws Exception {
-         
+        
         List<DeviceAndroidAPIVO> deviceInfoList = (List<DeviceAndroidAPIVO>) egovDeviceAndroidAPIService.selectDeviceInfoList(searchVO);
         
         DeviceAndroidAPIVOList deviceAndroidAPIVOList = new DeviceAndroidAPIVOList();
@@ -108,9 +120,12 @@ public class EgovDeviceAndroidAPIController {
      * @return "forward:/dvc/xml/addDeviceInfo.do"
      * @exception Exception
      */
+    @ApiOperation(value="Device 세부정보 등록", notes="[Android] Device 세부정보를 등록한다.\nresponseOK = {\"resultState\",\"OK\"}")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    })
     @RequestMapping("/dvc/xml/addDeviceInfo.do")
     public @ResponseBody DeviceAndroidAPIVO addDeviceInfoXml(
-            @ModelAttribute("searchVO") DeviceAndroidAPIDefaultVO searchVO,
                 DeviceAndroidAPIVO deviceVO,
             BindingResult bindingResult, Model model, SessionStatus status) 
             throws Exception {
@@ -136,9 +151,12 @@ public class EgovDeviceAndroidAPIController {
      * @return "forward:/dvc/xml/withdrawal.do"
      * @exception Exception
      */
+    @ApiOperation(value="Device 세부정보 삭제", notes="[Android] Device 세부정보를 삭제한다.\nresponseOK = {\"resultState\",\"OK\"}")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "sn", value = "일련번호", required = true, dataType = "int", paramType = "query"),
+    })
     @RequestMapping("/dvc/xml/withdrawal.do")
     public @ResponseBody DeviceAndroidAPIVO withdrawalXml(
-            @ModelAttribute("searchVO") DeviceAndroidAPIDefaultVO searchVO,
                 DeviceAndroidAPIVO deviceVO,
             BindingResult bindingResult, Model model, SessionStatus status) 
     throws Exception {

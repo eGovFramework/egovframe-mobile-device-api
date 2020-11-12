@@ -15,18 +15,25 @@
  */
 package egovframework.hyb.ios.cps.service;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**  
  * @Class Name : CompassiOSAPIVO.java
  * @Description : CompassiOSAPIVO Class
  * @Modification Information  
  * @
- * @  수정일         수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012.07.23    서형주                  최초생성
- *   2012.08.27    서준식             iOS용 패키지로 변경 
+ * @ 수정일               수정자              수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.07.23   서형주             최초생성
+ *   2012.08.27   서준식             iOS용 패키지로 변경
+ *   2020.07.29   신용호             Swagger 적용
+ * 
  * @author Device API 실행환경팀
  * @since 2012. 07. 30
  * @version 1.0
@@ -34,26 +41,33 @@ import javax.xml.bind.annotation.XmlRootElement;
  * 
  */
 @XmlRootElement
-public class CompassiOSAPIVO extends CompassiOSAPIDefaultVO {
+@ApiModel
+public class CompassiOSAPIVO implements Serializable {
 	
     private static final long serialVersionUID = 1L;
 
 	/** 일련번호 */
+    @ApiModelProperty(value="일련번호")
     private int sn;
     
     /** 기기식별 */
+    @ApiModelProperty(value="기기식별코드")
     private String uuid;
     
     /** 기기방향 */
+    @ApiModelProperty(value="기기방향")
     private String drc;
     
     /** 정확도 */
+    @ApiModelProperty(value="정확도")
     private String accrcy;
     
     /** timestamp */
+    @ApiModelProperty(value="Timestamp")
     private String timestamp;
     
     /** 사용여부 */
+    @ApiModelProperty(value="사용여부")
     private String useYn;
     
 	/**

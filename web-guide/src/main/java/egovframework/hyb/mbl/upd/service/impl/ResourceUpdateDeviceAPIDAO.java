@@ -15,13 +15,10 @@
  */
 package egovframework.hyb.mbl.upd.service.impl;
 
-import java.util.List;
+import org.springframework.stereotype.Repository;
 
 import egovframework.com.cmm.mapper.EgovComAbstractDAO;
-import egovframework.hyb.mbl.upd.service.ResourceUpdateDeviceAPIDefaultVO;
 import egovframework.hyb.mbl.upd.service.ResourceUpdateDeviceAPIVO;
-
-import org.springframework.stereotype.Repository;
 
 
 /**  
@@ -50,9 +47,8 @@ public class ResourceUpdateDeviceAPIDAO extends EgovComAbstractDAO {
 	 * @return Push Device 정보 목록
 	 * @exception Exception
 	 */
-    public ResourceUpdateDeviceAPIVO selectResourceUpdateVersionInfo(ResourceUpdateDeviceAPIDefaultVO searchVO) throws Exception {
+    public ResourceUpdateDeviceAPIVO selectResourceUpdateVersionInfo(ResourceUpdateDeviceAPIVO searchVO) throws Exception {
         return (ResourceUpdateDeviceAPIVO) selectOne("resourceUpdateDeviceAPIDAO.selectResourceUpdateVersionInfo", searchVO);
     }
-
 
 }

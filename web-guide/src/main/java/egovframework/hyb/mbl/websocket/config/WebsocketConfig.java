@@ -14,8 +14,8 @@ import egovframework.hyb.mbl.websocket.ws.HandshakeInterceptor;
 
 @Configuration
 @EnableWebSocket
-//@EnableWebMvc
-public class WsConfig implements WebSocketConfigurer {
+@EnableWebMvc
+public class WebsocketConfig implements WebSocketConfigurer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(HandshakeInterceptor.class);
 	

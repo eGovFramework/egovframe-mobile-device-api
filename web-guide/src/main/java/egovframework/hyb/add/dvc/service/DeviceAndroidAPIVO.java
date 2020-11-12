@@ -15,17 +15,23 @@
  */
 package egovframework.hyb.add.dvc.service;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**  
  * @Class Name : DeviceAPIVO.java
  * @Description : DeviceAPIVO Class
  * @Modification Information  
  * @
- * @  수정일                 수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012.07.23    서형주                  최초생성
+ * @ 수정일                수정자             수정내용
+ * @ ----------   ---------   -------------------------------
+ * @ 2012.07.23   서형주             최초생성
+ * @ 2020.07.29   신용호             Swagger 적용
  * 
  * @author Device API 실행환경팀
  * @since 2012. 07. 23
@@ -33,36 +39,45 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @see
  * 
  */
-@XmlRootElement
-public class DeviceAndroidAPIVO extends DeviceAndroidAPIDefaultVO {
+@ApiModel
+public class DeviceAndroidAPIVO implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
     /** 일련번호 */
+    @ApiModelProperty(value="일련번호")
     private int sn;
     
     /** 기기식별 */
+    @ApiModelProperty(value="기기식별코드")
     private String uuid;
     
     /** OS */
+    @ApiModelProperty(value="OS명")
     private String os;
     
     /** 전화번호 */
+    @ApiModelProperty(value="전화번호")
     private String telno;
     
-    /** 스토리지 정  */
+    /** 스토리지 정보  */
+    @ApiModelProperty(value="스토리지 정보")
     private String strgeInfo;
     
     /** 네트워크 디바이스 정보  */
+    @ApiModelProperty(value="네트워크 디바이스 정보")
     private String ntwrkDeviceInfo;
     
     /** 폰갭 버전 */
+    @ApiModelProperty(value="코도바(폰갭) 버전")
     private String pgVer;
     
     /** 디바이스 명  */
+    @ApiModelProperty(value="디바이스 명")
     private String deviceNm;
     
     /** 활성화 여부  */
+    @ApiModelProperty(value="활성화 여부")
     private String useYn;
 
     /**
@@ -75,7 +90,6 @@ public class DeviceAndroidAPIVO extends DeviceAndroidAPIDefaultVO {
     /**
      * @param 파라미터 sn를 변수 sn에 설정한다.
      */
-    @XmlElement
     public void setSn(int sn) {
         this.sn = sn;
     }
@@ -90,7 +104,6 @@ public class DeviceAndroidAPIVO extends DeviceAndroidAPIDefaultVO {
     /**
      * @param 파라미터 uuid를 변수 uuid에 설정한다.
      */
-    @XmlElement
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
@@ -105,7 +118,6 @@ public class DeviceAndroidAPIVO extends DeviceAndroidAPIDefaultVO {
     /**
      * @param 파라미터 os를 변수 os에 설정한다.
      */
-    @XmlElement
     public void setOs(String os) {
         this.os = os;
     }
@@ -120,7 +132,6 @@ public class DeviceAndroidAPIVO extends DeviceAndroidAPIDefaultVO {
     /**
      * @param 파라미터 telno를 변수 telno에 설정한다.
      */
-    @XmlElement
     public void setTelno(String telno) {
         this.telno = telno;
     }
@@ -135,7 +146,6 @@ public class DeviceAndroidAPIVO extends DeviceAndroidAPIDefaultVO {
     /**
      * @param 파라미터 strgeInfo를 변수 strgeInfo에 설정한다.
      */
-    @XmlElement
     public void setStrgeInfo(String strgeInfo) {
         this.strgeInfo = strgeInfo;
     }
@@ -150,7 +160,6 @@ public class DeviceAndroidAPIVO extends DeviceAndroidAPIDefaultVO {
     /**
      * @param 파라미터 ntwrkDeviceInfo를 변수 ntwrkDeviceInfo에 설정한다.
      */
-    @XmlElement
     public void setNtwrkDeviceInfo(String ntwrkDeviceInfo) {
         this.ntwrkDeviceInfo = ntwrkDeviceInfo;
     }
@@ -165,7 +174,6 @@ public class DeviceAndroidAPIVO extends DeviceAndroidAPIDefaultVO {
     /**
      * @param 파라미터 pgVer를 변수 pgVer에 설정한다.
      */
-    @XmlElement
     public void setPgVer(String pgVer) {
         this.pgVer = pgVer;
     }
@@ -180,7 +188,6 @@ public class DeviceAndroidAPIVO extends DeviceAndroidAPIDefaultVO {
     /**
      * @param 파라미터 deviceNm를 변수 deviceNm에 설정한다.
      */
-    @XmlElement
     public void setDeviceNm(String deviceNm) {
         this.deviceNm = deviceNm;
     }
@@ -195,7 +202,6 @@ public class DeviceAndroidAPIVO extends DeviceAndroidAPIDefaultVO {
     /**
      * @param 파라미터 useYn를 변수 useYn에 설정한다.
      */
-    @XmlElement
     public void setUseYn(String useYn) {
         this.useYn = useYn;
     }

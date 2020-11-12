@@ -5,14 +5,17 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**  
  * @Class Name : VibratorAndroidAPIXMLVO.java
  * @Description : VibratorAndroidAPIXMLVO Class
  * @Modification Information  
  * @
- * @  수정일            수정자        수정내용
- * @ ---------        ---------    -------------------------------
- * @ 2012. 8. 16.        이율경        최초생성
+ * @ 수정일         수정자              수정내용
+ * @ ----------   ---------------   -------------------------------
+ *   2012.08.16   이율경              최초생성
+ *   2020.09.07   신용호              Swagger 적용
  * 
  * @author 디바이스 API 실행환경 팀
  * @since 2012. 8. 16.
@@ -24,15 +27,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class VibratorAndroidAPIXmlVO {
 
     /** 기기식별 */
+	@ApiModelProperty(value="기기식별코드")
     private String uuid;
     
     /** 사용여부 */
+    @ApiModelProperty(value="사용여부")
     private String timeStamp;
     
     /** 등록 성공 여부 */
+    @ApiModelProperty(value="등록 성공 여부")
     private String message;
     
     /** 알림설정 정보 */
+    @ApiModelProperty(value="알림설정 정보")
     private List<VibratorAndroidAPIVO> vibratorAndroidAPIList;
 
     /**

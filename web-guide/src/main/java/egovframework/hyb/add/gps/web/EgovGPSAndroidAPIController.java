@@ -17,25 +17,30 @@ package egovframework.hyb.add.gps.web;
 
 import java.util.List;
 
-import egovframework.hyb.add.gps.service.EgovGPSAndroidAPIService;
-import egovframework.hyb.add.gps.service.GPSAndroidAPIVO;
-import egovframework.hyb.add.gps.service.GPSAndroidAPIVOList;
-import egovframework.rte.fdl.property.EgovPropertyService;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import egovframework.hyb.add.gps.service.EgovGPSAndroidAPIService;
+import egovframework.hyb.add.gps.service.GPSAndroidAPIDefaultVO;
+import egovframework.hyb.add.gps.service.GPSAndroidAPIVO;
+import egovframework.hyb.add.gps.service.GPSAndroidAPIVOList;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 /**  
  * @Class Name : EgovGPSAndroidAPIController
  * @Description : EgovGPSAndroidAPIController Class
  * @Modification Information  
  * @
- * @  수정일              수정자                   수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2012.08.27    나신일                   최초생성
+ * @ 수정일         수정자        수정내용
+ * @ ----------   ---------   -------------------------------
+ *   2012.08.27   나신일        최초생성
+ *   2020.08.24   신용호        Swagger 적용
  * 
  * @author 디바이스 API 실행환경 개발팀
  * @since 2012. 08.27
@@ -64,10 +69,11 @@ public class EgovGPSAndroidAPIController {
 	 * @return GPSAndroidAPIVOList
 	 * @exception Exception
 	 */
+    @ApiOperation(value="GPS 정보 목록조회", notes="[Android] GPS 정보 목록을 조회한다.", response=GPSAndroidAPIDefaultVO.class, responseContainer="List")
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/gps/xml/gpsInfoList.do")
 	public @ResponseBody
-	GPSAndroidAPIVOList selectGPSInfoListXml(GPSAndroidAPIVO searchVO) throws Exception {
+	GPSAndroidAPIVOList selectGPSInfoListXml(GPSAndroidAPIDefaultVO searchVO) throws Exception {
 
 		List<GPSAndroidAPIVO> gpsInfoList = (List<GPSAndroidAPIVO>) egovGPSAPIService.selectGPSInfoList(searchVO);
 		GPSAndroidAPIVOList gpsAndroidAPIVOList = new GPSAndroidAPIVOList();
@@ -84,7 +90,12 @@ public class EgovGPSAndroidAPIController {
 	 * @return GPSAndroidAPIVO
 	 * @exception Exception
 	 */
+    
 	@RequestMapping("/gps/xml/addGPSInfo.do")
+    @ApiOperation(value="GPS 세부정보 등록", notes="[Android] GPS 세부정보를 등록한다.\nresponseOK = {\"resultState\",\"OK\"}")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    })
 	public @ResponseBody
 	GPSAndroidAPIVO insertGPSInfo(GPSAndroidAPIVO insertVO) throws Exception {
 		egovGPSAPIService.insertGPSInfo(insertVO);
@@ -103,6 +114,10 @@ public class EgovGPSAndroidAPIController {
 	 * @return GPSAndroidAPIVO
 	 * @exception Exception
 	 */
+    @ApiOperation(value="GPS 세부정보 삭제", notes="[Android] GPS 세부정보를 삭제한다.\nresponseOK = {\"resultState\",\"OK\"}")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(name = "uuid", value = "기기식별코드", required = true, dataType = "string", paramType = "query"),
+    })
 	@RequestMapping("/gps/xml/deleteGPSInfo.do")
 	public @ResponseBody
 	GPSAndroidAPIVO deleteGPSInfo(GPSAndroidAPIVO deleteVO) throws Exception {

@@ -109,7 +109,7 @@
 						FROM CAMERA A JOIN FILE_DETAIL_INFO B ON A.FILE_SN = B.FILE_SN
 						ORDER BY FILE_SN DESC
 						) TBL
-			WHERE ROWNUM BETWEEN #{pageIndex} AND #{pageIndex} + #{recordCountPerPage}
+			WHERE ROWNUM BETWEEN #{firstIndex} AND #{firstIndex} + #{recordCountPerPage}
 			
 	</select>
 	
