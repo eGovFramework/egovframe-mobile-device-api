@@ -15,10 +15,10 @@
  */
 package egovframework.hyb.ios.itf.service.impl;
 
+import org.springframework.stereotype.Repository;
+
 import egovframework.com.cmm.mapper.EgovComAbstractDAO;
 import egovframework.hyb.ios.itf.service.InterfaceiOSAPIVO;
-
-import org.springframework.stereotype.Repository;
 
 
 /**  

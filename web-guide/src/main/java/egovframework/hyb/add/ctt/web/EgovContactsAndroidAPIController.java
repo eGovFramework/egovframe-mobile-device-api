@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import egovframework.hyb.add.ctt.service.ContactsAndroidAPIVO;
 import egovframework.hyb.add.ctt.service.ContactsAndroidAPIVOList;
 import egovframework.hyb.add.ctt.service.EgovContactsAndroidAPIService;
-import egovframework.hyb.ios.dvc.service.DeviceiOSAPIVO;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;

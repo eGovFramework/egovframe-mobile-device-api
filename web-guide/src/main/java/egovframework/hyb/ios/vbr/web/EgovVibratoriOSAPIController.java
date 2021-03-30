@@ -17,15 +17,6 @@ package egovframework.hyb.ios.vbr.web;
 
 import java.util.List;
 
-import egovframework.hyb.ios.vbr.service.EgovVibratoriOSAPIService;
-import egovframework.hyb.ios.vbr.service.VibratoriOSAPIDefaultVO;
-import egovframework.hyb.ios.vbr.service.VibratoriOSAPIVO;
-
-import egovframework.rte.fdl.property.EgovPropertyService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
@@ -36,6 +27,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
+
+import egovframework.hyb.ios.vbr.service.EgovVibratoriOSAPIService;
+import egovframework.hyb.ios.vbr.service.VibratoriOSAPIDefaultVO;
+import egovframework.hyb.ios.vbr.service.VibratoriOSAPIVO;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**  
  * @Class Name : EgovVibratorAPIController

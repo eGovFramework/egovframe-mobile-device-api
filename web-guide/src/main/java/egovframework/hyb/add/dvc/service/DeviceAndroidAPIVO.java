@@ -40,6 +40,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  */
 @ApiModel
+@XmlRootElement
 public class DeviceAndroidAPIVO implements Serializable {
     
     private static final long serialVersionUID = 1L;
