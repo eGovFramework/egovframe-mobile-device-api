@@ -165,7 +165,7 @@ task cdvPrintProps {
 }
 
 android {
-
+    namespace 'kr.go.egovframework.hyb.acceleratorapp'
     packagingOptions {
         exclude 'META-INF/license.txt'
         exclude 'META-INF/notice.txt'
