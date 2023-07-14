@@ -163,6 +163,7 @@ task cdvPrintProps {
 }
 
 android {
+    namespace 'kr.go.egovframework.hyb.cameraapp'
 
     packagingOptions {
         exclude 'META-INF/license.txt'
