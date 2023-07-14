@@ -74,7 +74,7 @@ android {
     }
 }
 
-install {
+/*install {
     repositories.mavenInstaller {
         pom {
             project {
@@ -102,7 +102,7 @@ install {
             }
         }
     }
-}
+}*/
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
