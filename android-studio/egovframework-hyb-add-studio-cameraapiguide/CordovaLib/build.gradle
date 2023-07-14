@@ -45,6 +45,7 @@ group = 'org.apache.cordova'
 version = '7.1.4'
 
 android {
+    namespace 'org.apache.cordova'
     compileSdkVersion cdvCompileSdkVersion
     buildToolsVersion cdvBuildToolsVersion
     publishNonDefault true
