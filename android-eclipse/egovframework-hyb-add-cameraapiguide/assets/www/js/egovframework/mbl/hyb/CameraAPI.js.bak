@@ -7,7 +7,6 @@
  * @  수정일			수정자		수정내용
  * @ ---------		---------	-------------------------------
  * @ 2015. 4. 20.   신용호 		iscroll5 적용 
- * @ 2024. 5. 02.   우시재		NSR 보안조치 ( 사진 제목에 XSS 방지 구현 추가 )
  */
 
 /*********************************************************
@@ -92,18 +91,10 @@ function fn_egov_displayList(xmldata) {
     
     $(xmldata).find("cameraAndroidAPIVOList").each(function(){
         
-            var fileSn = $(this).find("fileSn").text();
+                    var fileSn = $(this).find("fileSn").text();
                     var sn = $(this).find("sn").text();
-            // 20240502 NSR 보안조치 ( 사진 제목에 XSS 방지 구현 추가 )
-				    var photoSj = $(this).find("photoSj").text()
-				                                            .replaceAll("&", "&amp;")
-				                                            .replaceAll("<", "&lt;")
-				                                            .replaceAll(">", "&gt;")
-				                                            .replaceAll("\"", "&#34;")
-				                                            .replaceAll("\'", "&#39;")
-				                                            .replaceAll("\\.", "&#46;")
-				                                            .replaceAll("%2E", "&#46;")
-				                                            .replaceAll("%2F", "&#47;");
+                    var photoSj = $(this).find("photoSj").text();
+                    
                     html += '<li>';
                     html += '     <a href="#" onclick="javascript:fn_egov_detailPhotoAlbum(\'' + sn + '\', \'' + fileSn + '\');">';
                     html += '         <img src="' + context + '/cmr/getImage.do?fileSn=' + fileSn + '" style="max-width: 100;" />';
