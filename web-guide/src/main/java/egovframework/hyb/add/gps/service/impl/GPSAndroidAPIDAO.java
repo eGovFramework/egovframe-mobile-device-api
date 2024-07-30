@@ -17,11 +17,11 @@ package egovframework.hyb.add.gps.service.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import egovframework.com.cmm.mapper.EgovComAbstractDAO;
 import egovframework.hyb.add.gps.service.GPSAndroidAPIDefaultVO;
 import egovframework.hyb.add.gps.service.GPSAndroidAPIVO;
-
-import org.springframework.stereotype.Repository;
 
 
 /**  
