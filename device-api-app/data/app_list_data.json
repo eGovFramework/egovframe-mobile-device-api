@@ -1,0 +1,67 @@
+{
+  "apps": [
+    {
+      "title": "가속기 (Accelerator)",
+      "description": "효율적인 가속도 정보 변화의 조회를 위해 상단의 알림 창 이외에 3D 형태의 도형의 움직임을 통해 정보를 조회할 수 있으며, 3D 형태의 도형은 오픈 소스인 Three.js 를 활용하여 구현 된 것으로서, 디바이스의 가속도 정보의 변화에 따라 해당 방향으로 회전한다.",
+      "hasIcon": true,
+      "iconUrl": "assets/images/icons/accelerator.png",
+      "targetPage": "accelerator_info_page"
+    },
+    {
+      "title": "파일 관리 (DeviceFileMgmt)",
+      "description": "디바이스의 파일 시스템에 접근하여 파일을 관리할 수 있는 기능입니다. 파일 생성, 삭제, 이동, 복사 등의 작업을 수행할 수 있습니다.",
+      "hasIcon": true,
+      "iconUrl": "assets/images/icons/file_manager.png",
+      "targetPage": "device_file_mgmt"
+    },
+    {
+      "title": "기기 정보 (DeviceInfo)",
+      "description": "디바이스의 하드웨어 및 소프트웨어 정보를 조회할 수 있는 기능입니다. 디바이스 모델, OS 버전, 메모리 사용량 등을 확인할 수 있습니다.",
+      "hasIcon": true,
+      "iconUrl": "assets/images/icons/device.png",
+      "targetPage": "device_info_page"
+    },
+    {
+      "title": "문서 뷰어 (File Opener)",
+      "description": "다양한 형식의 문서 파일을 열어서 볼 수 있는 기능입니다. PDF, Word, Excel, PowerPoint 등의 파일을 지원하며, 웹서버에서 파일을 다운로드할 수 있습니다.",
+      "hasIcon": true,
+      "iconUrl": "assets/images/icons/file_opener.png",
+      "targetPage": "file_opener"
+    },
+    {
+      "title": "파일 읽기 쓰기(File Reader Writer)",
+      "description": "디바이스의 파일을 읽고 쓸 수 있는 기능입니다. 텍스트 파일, JSON 파일, 설정 파일 등을 읽고 수정할 수 있습니다.",
+      "hasIcon": true,
+      "iconUrl": "assets/images/icons/file_readWrite.png",
+      "targetPage": "file_readWrite"
+    },
+    {
+      "title": "위치 서비스 (GPS)",
+      "description": "GPS를 활용하여 현재 위치 정보를 조회하고 위치 기반 서비스를 제공하는 기능입니다. 실시간 위치 추적이 가능합니다.",
+      "hasIcon": true,
+      "iconUrl": "assets/images/icons/gps.png",
+      "targetPage": "gps"
+    },
+    {
+      "title": "인터페이스 (Interface)",
+      "description": "사용자 인터페이스를 구성하고 관리하는 기능입니다. UI 컴포넌트의 생성, 수정, 이벤트 처리 등을 담당합니다.",
+      "hasIcon": true,
+      "iconUrl": "assets/images/icons/interface.png",
+      "targetPage": "interface"
+    },
+    {
+      "title": "미디어 (Media)",
+      "description": "카메라, 마이크, 스피커 등의 미디어 장치를 제어하는 기능입니다. 사진 촬영, 동영상 녹화, 오디오 재생 등을 지원합니다.",
+      "hasIcon": true,
+      "iconUrl": "assets/images/icons/media.png",
+      "targetPage": "media"
+    },
+    {
+      "title": "네트워크 (Network)",
+      "description": "네트워크 연결 상태를 확인하고 인터넷 통신을 관리하는 기능입니다. Wi-Fi, 모바일 데이터 연결 상태를 모니터링합니다.",
+      "hasIcon": true,
+      "iconUrl": "assets/images/icons/network.png",
+      "targetPage": "network"
+    }
+  ]
+} 

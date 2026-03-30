@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <title>Ajax Demo</title>
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javaScript">
+
+        var objErr;
+        var objData;
+
+        function callAjax() {
+            var serverUrl = $("#serverUrl").val();
+            alert("START CALL! => " + serverUrl);
+            $.ajax({
+                url: serverUrl, //request 보낼 서버의 경로
+                type:'get', // 메소드(get, post, put 등)
+                data:{'uuid':'87df716d6dda2e47', 'useYn':'Y'}, //보낼 데이터
+                success: function(data) {
+                    //서버로부터 정상적으로 응답이 왔을 때 실행
+                    const deviceList = data.deviceInfoList;
+                    if(deviceList.length === 0) {
+                    	alert("CALL SUCCESS : No data available");
+                    } else {
+                    	alert("CALL SUCCESS : Data Count => " + deviceList.length);
+					}
+                },
+                error: function(error) {
+                    //서버로부터 응답이 정상적으로 처리되지 못햇을 때 실행
+                    alert("CALL ERROR => " + error);
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            $('#callAjaxBtn').click(function() { callAjax(); });
+        });
+    </script>
+</head>
+
+<body>
+
+	<h1>AJAX Service Test</h1>
+
+	<br />
+	<br />
+
+	URL : <input type="text" id="serverUrl" value="/dvc/selectDeviceInfoList.do" style="width: 300px;">
+
+	<br />
+	<br />
+
+	<input type="button" id="callAjaxBtn" value="Call Ajax">
+
+</body>
+</html>

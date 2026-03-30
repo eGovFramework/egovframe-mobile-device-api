@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="acceleratorAPIDAO">
+
+	<resultMap id="acceleratorInfo" type="egovframework.hyb.mbl.acl.service.AcceleratorAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="useYn" column="USEYN"/>
+	</resultMap>
+
+	<insert id="insertAcceleratorInfo">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from ACCELERATOR
+		</selectKey>
+		
+		INSERT INTO ACCELERATOR 
+			( SN
+			  , UUID
+			  , USEYN )
+		VALUES ( #{sn}
+			  , #{uuid}
+			  , #{useYn})
+	</insert>
+	
+	<select id="selectAcceleratorInfoList" parameterType="egovframework.hyb.mbl.acl.service.AcceleratorAPIVO" resultMap="acceleratorInfo">
+		SELECT
+			SN, UUID, USEYN
+		FROM ACCELERATOR
+		WHERE USEYN='Y'
+		ORDER BY SN DESC
+	</select>
+
+</mapper>

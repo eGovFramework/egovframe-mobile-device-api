@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Device API</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>egovframe_mobile_deviceapi_app</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<!-- iPhone 화면 회전을 세로 모드로 고정 -->
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<!-- iPad 화면 회전을 세로 모드로 고정 -->
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>NSContactsUsageDescription</key>
+	<string>이 앱은 연락처 개수를 확인하기 위해 연락처에 접근합니다.</string>
+	
+	<!-- 위치 접근 권한 -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>위치 정보를 수집하기 위해 위치 접근이 필요합니다.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>위치 정보를 수집하기 위해 위치 접근이 필요합니다.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>백그라운드에서도 위치 정보를 수집하기 위해 위치 접근이 필요합니다.</string>
+	
+	<!-- 카메라/마이크 권한 -->
+	<key>NSCameraUsageDescription</key>
+	<string>사진 촬영을 위해 카메라 접근이 필요합니다.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>오디오 녹음을 위해 마이크 접근이 필요합니다.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>갤러리에서 사진을 선택하기 위해 접근이 필요합니다.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>촬영한 사진을 갤러리에 저장하기 위해 접근이 필요합니다.</string>
+	
+	<!-- 파일 접근 권한 -->
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>파일 관리를 위해 문서 폴더에 접근이 필요합니다.</string>
+	<key>NSFileProviderDomainUsageDescription</key>
+	<string>파일 공유를 위해 파일 제공자 도메인에 접근이 필요합니다.</string>
+	
+	<!-- Google Maps API 키 -->
+	<key>GMSApiKey</key>
+	<string>GOOGLE_MAP_IOS_KEY</string>
+	
+	<!-- 커스텀 폰트 등록 -->
+	<key>UIAppFonts</key>
+	<array>
+		<string>PretendardGOV-Regular.otf</string>
+		<string>PretendardGOV-Medium.otf</string>
+		<string>PretendardGOV-Bold.otf</string>
+	</array>
+	
+	<!-- 네트워크 보안 설정 -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<false/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+			<key>127.0.0.1</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+</dict>
+</plist>

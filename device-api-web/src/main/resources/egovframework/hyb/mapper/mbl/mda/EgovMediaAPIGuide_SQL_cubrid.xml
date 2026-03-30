@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mediaAPIDAO">
+
+	<resultMap id="mediaDetail" type="egovframework.hyb.mbl.mda.service.MediaAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="mdSj" column="MD_SJ"/>
+		<result property="revivCo" column="REVIV_CO"/>
+	</resultMap>
+	
+	<resultMap id="mediaList" type="egovframework.hyb.mbl.mda.service.MediaAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="mdSj" column="MD_SJ"/>
+		<result property="revivCo" column="REVIV_CO"/>
+	</resultMap>
+	
+	<insert id="insertMediaInfo">
+	    <selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from MEDIA
+		</selectKey>
+			
+	    	INSERT INTO MEDIA 
+				( SN
+				  , UUID
+				  , FILE_SN
+				  , MD_CODE
+				  , MD_SJ 
+				  , USEYN
+				  , REVIV_CO)
+			VALUES ( #{sn}
+				  , #{uuid}
+				  , #{fileSn}
+				  , #{mdCode}
+				  , #{mdSj}
+				  , #{useyn}
+				  , #{revivCo})
+	</insert>
+	
+	<insert id="insertMediaRecordFile">
+	    <selectKey keyProperty="fileSn" resultType="int" order="BEFORE">
+		   SELECT (IFNULL(MAX(FILE_SN), 0)+1) fileSn from FILE_DETAIL_INFO
+		</selectKey>
+			
+	    	INSERT INTO FILE_DETAIL_INFO
+				( FILE_SN
+				  , FILE_STRE_COURS
+				  , STRE_FILE_NM
+				  , ORIGNL_FILE_NM
+				  , FILE_EXTSN
+				  , FILE_CN
+				  , FILE_SIZE )
+			VALUES ( #{fileSn}
+				  , #{fileStreCours}
+				  , #{streFileNm}
+				  , #{orignlFileNm}
+				  , #{fileExtsn}
+				  , #{fileCn}
+				  , #{fileSize})
+	</insert>
+	
+	<update id="updateMediaInfoRevivCo">
+		UPDATE	MEDIA
+		 SET REVIV_CO = REVIV_CO + 1
+ 		WHERE  SN = #{sn}
+	</update>
+	
+	<select id="selectMediaInfoDetail" resultMap="mediaDetail">
+	    	SELECT
+				A.SN, A.MD_SJ, A.REVIV_CO, B.STRE_FILE_NM
+			FROM MEDIA A JOIN FILE_DETAIL_INFO B USING(FILE_SN)
+			WHERE SN = #{sn}
+	</select>
+	
+	<select id="selectMediaInfoList" resultMap="mediaList">
+	    	SELECT
+				SN, MD_SJ, REVIV_CO
+			FROM MEDIA
+			WHERE USEYN = 'Y'
+			  AND MD_CODE IN ('MLT02', 'MLT03')
+			ORDER BY SN DESC
+	</select>
+	
+</mapper>

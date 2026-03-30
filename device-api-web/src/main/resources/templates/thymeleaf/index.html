@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title th:text="#{main.title}"></title>
+</head>
+
+<body>
+
+    <h1>DeviceAPI Web Service</h1>
+
+    <h3 th:text="#{main.description}"></h3>
+
+    <!-- <hr width="100%" color="black"> -->
+
+    <!-- <br/> -->
+    <!-- <br/> -->
+
+<!--     <a th:href="@{/chat-sockjs}">1. 웹소켓 테스트 화면 이동 (Move websocket test screen)</a> -->
+
+<!--     <br/> -->
+<!--     <br/> -->
+
+<!--     <a th:href="@{/test-ajax}">2. Ajax 데이타 송수신 테스트 (Ajax data transmission and reception test)</a> -->
+
+<!--     <br/> -->
+<!--     <br/> -->
+
+    <a th:href="@{/swagger-ui.html}"><span>Swagger</span> <span th:text="#{main.swagger}"></span> <span>(Swagger Restful Service definition document)</span></a>
+
+    <br/>
+    <br/>
+
+</body>
+</html>

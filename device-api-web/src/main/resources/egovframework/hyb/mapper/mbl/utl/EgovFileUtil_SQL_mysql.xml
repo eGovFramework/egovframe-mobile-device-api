@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fileDAO">
+
+	<resultMap id="fileInfo" type="egovframework.hyb.utils.FileVO">
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="fileStreCours" column="FILE_STRE_COURS"/>
+		<result property="streFileNm" column="STRE_FILE_NM"/>
+		<result property="fileExtsn" column="FILE_EXTSN"/>
+		<result property="fileSize" column="FILE_SIZE"/>
+	</resultMap>
+	
+	<select id="selectFileDetailInfo" resultMap="fileInfo">
+		SELECT FILE_SN, FILE_STRE_COURS, STRE_FILE_NM, ORIGNL_FILE_NM, FILE_EXTSN, FILE_SIZE
+		FROM FILE_DETAIL_INFO
+		WHERE FILE_SN = #{fileSn}
+	</select>
+
+	<insert id="insertFileDetailInfo">
+		INSERT INTO FILE_DETAIL_INFO
+			( FILE_SN
+			  , FILE_STRE_COURS
+			  , STRE_FILE_NM
+			  , ORIGNL_FILE_NM
+			  , FILE_EXTSN
+			  , FILE_CN
+			  , FILE_SIZE )
+		VALUES ( #{fileSn}
+			  , #{fileStreCours}
+			  , #{streFileNm}
+			  , #{orignlFileNm}
+			  , #{fileExtsn}
+			  , #{fileCn}
+			  , #{fileSize})
+	</insert>
+	
+</mapper>

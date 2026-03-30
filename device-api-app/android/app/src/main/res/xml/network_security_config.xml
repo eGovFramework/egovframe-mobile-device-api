@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+<!-- Android 9.0 이상부터는 모든 HTTP 접근 제한됨-->
+    <!-- 개발/테스트 환경에서 HTTP 연결 허용 -->
+    <!-- 프로덕션 환경에서는 HTTPS를 사용하는 것을 권장합니다 -->
+    
+    <!-- 특정 도메인/IP에 대해서만 HTTP 허용 -->
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- 개발 서버 IP (iOS Info.plist와 동일) -->
+<!--        <domain includeSubdomains="true">허용할 개발 PC의 IP</domain>-->
+        <!-- Android 에뮬레이터용 localhost -->
+        <domain includeSubdomains="true">10.0.2.2</domain>
+        <!-- 로컬 개발용 -->
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">127.0.0.1</domain>
+    </domain-config>
+    
+    <!-- 모든 HTTP 연결 허용 (개발 환경용, 프로덕션에서는 사용하지 마세요) -->
+    <!-- 
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+    -->
+</network-security-config>
+

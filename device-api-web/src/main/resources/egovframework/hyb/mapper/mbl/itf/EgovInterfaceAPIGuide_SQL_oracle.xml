@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="interfaceAPIDAO">
+
+	<resultMap id="interfaceInfo" type="egovframework.hyb.mbl.itf.service.InterfaceAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+	</resultMap>
+
+	<insert id="insertInterfaceInfo">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from INTERFACE
+		</selectKey>
+		
+		INSERT INTO INTERFACE 
+			( SN
+			  , UUID )
+ 		VALUES ( #{sn}
+			  , #{uuid} )
+	</insert>
+	
+	<select id="selectInterfaceInfoList" parameterType="egovframework.hyb.mbl.itf.service.InterfaceAPIVO" resultMap="interfaceInfo">
+		SELECT
+			SN, UUID
+		FROM INTERFACE
+		ORDER BY SN DESC
+	</select>
+
+</mapper>
