@@ -126,6 +126,6 @@ Andorid SDK 경로 설정, Dart 경로 설정 등의 오류
 
 ## 연관 가이드
 
-- [Android Studio Emulator 설치 및 설정](/emulator.md)
-- [프로젝트 시작하기](/project_start.md)
-- [DeviceAPI 연동 WebServer 기동](/webserver.md)
+- [Android Studio Emulator 설치 및 설정](./emulator.md)
+- [프로젝트 시작하기](./project_start.md)
+- [DeviceAPI 연동 WebServer 기동](./webserver.md)

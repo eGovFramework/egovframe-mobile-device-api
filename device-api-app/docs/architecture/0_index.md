@@ -59,33 +59,33 @@ GetIt을 사용한 의존성 주입을 통해:
 
 ## 가이드 목차
 
-### 1. [프로젝트 구조](./project_structure.md)
+### 1. [프로젝트 구조](./1_project_structure.md)
 - 프로젝트 디렉토리 구조
 - 각 레이어의 역할과 위치
 - 모듈별 구조 예시
 
-### 2. [레이어 구조](./layers.md)
+### 2. [레이어 구조](./2_layers.md)
 - Presentation Layer 상세 설명
 - Domain Layer 상세 설명
 - Data Layer 상세 설명
 - 레이어 간 의존성 규칙
 
-### 3. [의존성 역전 원칙](./dependency_inversion.md)
+### 3. [의존성 역전 원칙](./3_dependency_inversion.md)
 - 의존성 방향과 흐름
 - 의존성 역전의 구현
 - 단계별 설명
 
-### 4. [실제 코드 예시](./examples.md)
+### 4. [실제 코드 예시](./4_examples.md)
 - Device Info 기능 전체 예시
 - 각 레이어별 코드 설명
 - 실제 프로젝트 코드 기반
 
-### 5. [의존성 주입](./dependency_injection.md)
+### 5. [의존성 주입](./5_dependency_injection.md)
 - GetIt을 사용한 의존성 주입
 - 의존성 주입 설정
 - 실제 사용 예시
 
-### 6. [에러 처리](./error_handling.md)
+### 6. [에러 처리](./6_error_handling.md)
 - 통합 에러 핸들러
 - 에러 타입별 처리
 - 실제 사용 예시

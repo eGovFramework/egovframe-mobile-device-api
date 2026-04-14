@@ -1,7 +1,7 @@
 # 실기기에 Build 및 Test 하는 방법
 해당 가이드에서는 Android와 IOS 핸드폰에 Build 하는 방법에 대해서만 안내합니다.</br>
 실기기가 아닌 Emulator를 통해 Build 하는 방법은 아래 URL을 참고하세요.</br>
->[Android Studio Emulator 설치 및 설정](/emulator.md)
+>[Android Studio Emulator 설치 및 설정](./emulator.md)
 
 ## Android
 
