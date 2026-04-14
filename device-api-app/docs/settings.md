@@ -58,7 +58,7 @@ $ flutter doctor
 - `flutter doctor -vv` : 자세한 디버깅 확인 (확인 소요 시간 출력)
 
 - `flutter doctor`를 실행한 결과
-  ![flutter doctor result](/images/image03.png) - Flutter 설치 체크 및 설치된 버전 확인 - \*VS Code, IntelliJ, Android Studio는 필요 시 다운로드 '[X]'체크되어있어도 실행에는 지장 없음
+  ![flutter doctor result](./images/image03.png) - Flutter 설치 체크 및 설치된 버전 확인 - \*VS Code, IntelliJ, Android Studio는 필요 시 다운로드 '[X]'체크되어있어도 실행에는 지장 없음
 
 ### 2) Android SDK, 라이센스 등록
 
@@ -73,7 +73,7 @@ $ flutter doctor
   $ flutter config --list
   ```
 
-  ![flutter config androidsdk](/images/image06.png)
+  ![flutter config androidsdk](./images/image06.png)
 
 - flutter 와 연결된 machine들의 버전 확인
 
@@ -81,7 +81,7 @@ $ flutter doctor
   $ flutter config --machine
   ```
 
-  ![flutter config machine](/images/image07.png)
+  ![flutter config machine](./images/image07.png)
 
 ## 3. 오류
 
@@ -90,7 +90,7 @@ Andorid SDK 경로 설정, Dart 경로 설정 등의 오류
 
 ### 1) Android ToolChain Error (라이센스가 미동의 처리 된 경우)
 
-![flutter android toolchain error](/images/image08.png)
+![flutter android toolchain error](./images/image08.png)
 
 - 동의가 되어있지 않은 경우 flutter doctor에서 'Android toolchain'에 에러 표시</br>
   \*Run `flutter doctor ...` 로 표시된 명령어 확인
@@ -117,7 +117,7 @@ Andorid SDK 경로 설정, Dart 경로 설정 등의 오류
   - 해당 경로 복사
 
 - Android Studio > Settings (또는 Preferences) > Language & Frameworks > Dart
-  ![android stuido darksdk config](/images/image05.png)
+  ![android stuido darksdk config](./images/image05.png)
   - Enable Dart Support for the project 체크박스 활성화
   - 복사한 경로를 Dart SDK Path에 붙여넣기
   - Enable Dart support for the following modules 체크박스 활성화
