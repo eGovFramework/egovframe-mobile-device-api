@@ -30,6 +30,7 @@ import egovframework.hyb.mbl.nwk.service.NetworkAPIVO;
  * @  수정일            수정자        수정내용
  * @ ---------        ---------    -------------------------------
  * @ 2025.10.28        통합개발팀    Android/iOS 패키지 통합
+ * @ 2026.06.24        이백행      [2026년 컨트리뷰션] 불필요한 예외(throws Exception) 제거
  * 
  * @author 디바이스 API 실행환경 팀
  * @since 2025. 10. 28.
@@ -44,9 +45,8 @@ public class NetworkAPIDAO extends EgovAbstractMapper {
      * 네트워크 정보를 등록한다.
      * @param vo - 등록할 정보가 담긴 NetworkAPIVO
      * @return 등록 결과
-     * @exception Exception
      */
-    public int insertNetworkInfo(NetworkAPIVO vo) throws Exception {
+    public int insertNetworkInfo(NetworkAPIVO vo) {
         return (Integer)insert("networkAPIDAO.insertNetworkInfo", vo);
     }
 
@@ -54,9 +54,8 @@ public class NetworkAPIDAO extends EgovAbstractMapper {
      * 네트워크 정보를 수정한다.
      * @param vo - 수정할 정보가 담긴 NetworkAPIVO
      * @return 수정 결과
-     * @exception Exception
      */
-    public int updateNetworkInfo(NetworkAPIVO vo) throws Exception {
+    public int updateNetworkInfo(NetworkAPIVO vo) {
         return (Integer)update("networkAPIDAO.updateNetworkInfo", vo);
     }
 
@@ -64,9 +63,8 @@ public class NetworkAPIDAO extends EgovAbstractMapper {
      * 네트워크 정보를 삭제한다.
      * @param vo - 삭제할 정보가 담긴 NetworkAPIVO
      * @return 삭제 결과
-     * @exception Exception
      */
-    public int deleteNetworkInfo(NetworkAPIVO vo) throws Exception {
+    public int deleteNetworkInfo(NetworkAPIVO vo) {
         return (Integer)delete("networkAPIDAO.deleteNetworkInfo", vo);
     }
 
@@ -74,9 +72,8 @@ public class NetworkAPIDAO extends EgovAbstractMapper {
      * 네트워크 정보를 조회한다.
      * @param vo - 조회할 정보가 담긴 NetworkAPIVO
      * @return 조회한 네트워크 정보
-     * @exception Exception
      */
-    public NetworkAPIVO selectNetworkInfo(NetworkAPIVO vo) throws Exception {
+    public NetworkAPIVO selectNetworkInfo(NetworkAPIVO vo) {
         return (NetworkAPIVO) selectOne("networkAPIDAO.selectNetworkInfo", vo);
     }
 
@@ -84,9 +81,8 @@ public class NetworkAPIDAO extends EgovAbstractMapper {
      * 네트워크 정보 목록을 조회한다.
      * @param vo - 조회할 정보가 담긴 NetworkAPIVO 또는 NetworkAPIDefaultVO
      * @return 네트워크 정보 목록
-     * @exception Exception
      */
-    public List<?> selectNetworkInfoList(Object vo) throws Exception {
+    public List<?> selectNetworkInfoList(Object vo) {
         return selectList("networkAPIDAO.selectNetworkInfoList", vo);
     }
 
@@ -94,7 +90,6 @@ public class NetworkAPIDAO extends EgovAbstractMapper {
      * 네트워크 정보 총 갯수를 조회한다.
      * @param  vo - 조회할 정보가 담긴 NetworkAPIVO 또는 NetworkAPIDefaultVO
      * @return 네트워크 정보 총 갯수
-     * @exception
      */
     public int selectNetworkInfoListTotCnt(Object vo) {
         return (Integer) selectOne("networkAPIDAO.selectNetworkInfoListTotCnt", vo);

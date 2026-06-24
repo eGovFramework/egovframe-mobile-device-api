@@ -13,27 +13,27 @@ import egovframework.hyb.mbl.frw.service.FileReaderWriterAPIVO;
 @Repository("FileReaderWriterAPIDAO")
 public class FileReaderWriterAPIDAO extends EgovAbstractMapper {
 
-    public int insertFileReaderWriterInfo(FileReaderWriterAPIVO vo) throws Exception {
+    public int insertFileReaderWriterInfo(FileReaderWriterAPIVO vo) {
         return (Integer) insert("fileReaderWriterAPIDAO.insertFileReaderWriterInfo", vo);
     }
 
-    public int updateFileReaderWriterInfo(FileReaderWriterAPIVO vo) throws Exception {
+    public int updateFileReaderWriterInfo(FileReaderWriterAPIVO vo) {
         return (Integer) update("fileReaderWriterAPIDAO.updateFileReaderWriterInfo", vo);
     }
 
-    public int deleteFileReaderWriterInfo(FileReaderWriterAPIVO vo) throws Exception {
+    public int deleteFileReaderWriterInfo(FileReaderWriterAPIVO vo) {
         return (Integer) delete("fileReaderWriterAPIDAO.deleteFileReaderWriterInfo", vo);
     }
 
-    public FileReaderWriterAPIVO selectFileReaderWriterInfo(FileReaderWriterAPIVO vo) throws Exception {
+    public FileReaderWriterAPIVO selectFileReaderWriterInfo(FileReaderWriterAPIVO vo) {
         return (FileReaderWriterAPIVO) selectOne("fileReaderWriterAPIDAO.selectFileReaderWriterInfo", vo);
     }
 
-    public List<?> selectFileReaderWriterInfoList(FileReaderWriterAPIVO searchVO) throws Exception {
+    public List<?> selectFileReaderWriterInfoList(FileReaderWriterAPIVO searchVO) {
         return selectList("fileReaderWriterAPIDAO.selectFileReaderWriterInfoList", searchVO);
     }
 
-    public int selectFileReaderWriterInfoListTotCnt(FileReaderWriterAPIVO searchVO) throws Exception {
+    public int selectFileReaderWriterInfoListTotCnt(FileReaderWriterAPIVO searchVO) {
         return (Integer) selectOne("fileReaderWriterAPIDAO.selectFileReaderWriterInfoListTotCnt", searchVO);
     }
     
