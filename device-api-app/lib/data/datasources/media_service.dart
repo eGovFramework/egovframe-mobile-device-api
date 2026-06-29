@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:egovframe_mobile_deviceapi_app/config/app_config.dart';
+import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/media_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/file_validation_util.dart';
 import 'package:http/http.dart' as http;
@@ -397,10 +398,13 @@ class MediaService {
   }
 
   /// 서버에서 미디어를 삭제하는 메서드
-  static Future<Map<String, dynamic>> deleteMediaFromServer(int sn) async {
+  static Future<Map<String, dynamic>> deleteMediaFromServer(int sn, String uuid) async {
     try {
       final uri = Uri.parse(AppConfig.getMediaUrl('/deleteMediaInfo.do'))
-          .replace(queryParameters: {'sn': sn.toString()});
+          .replace(queryParameters: {
+            'sn': sn.toString(),
+            'uuid': uuid,
+          });
 
       print('=== 미디어 삭제 API 요청 시작 ===');
       print('미디어 삭제 API Request URL: $uri');
@@ -438,7 +442,8 @@ class MediaService {
       if (filePath.startsWith('server://')) {
         final sn = int.tryParse(filePath.replaceFirst('server://', ''));
         if (sn != null) {
-          final result = await deleteMediaFromServer(sn);
+          final uuid = await DeviceIdService.getDeviceId();
+          final result = await deleteMediaFromServer(sn, uuid);
           if (result['success']) {
             print('서버 미디어 삭제 성공: SN=$sn');
             return true;

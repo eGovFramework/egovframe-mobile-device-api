@@ -25,8 +25,8 @@ class NetworkRepositoryImpl implements NetworkRepository {
   }
 
   @override
-  Future<bool> deleteNetworkInfo({required String sn}) async {
-    return await _networkService.deleteNetworkInfo(sn);
+  Future<bool> deleteNetworkInfo({required String sn, required String uuid}) async {
+    return await _networkService.deleteNetworkInfo(sn, uuid: uuid);
   }
 }
 

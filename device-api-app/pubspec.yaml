@@ -74,7 +74,7 @@ dependencies:
   # 구글맵
   google_maps_flutter: ^2.13.1
   
-  # WebView (ImageReader 오류 해결용)
+  # WebView
   webview_flutter: ^4.4.2
   
   # 파일 열기 기능

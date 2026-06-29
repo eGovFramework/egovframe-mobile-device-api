@@ -1,5 +1,4 @@
 ﻿abstract class InterfaceRepository {
-  Future<String> getDeviceUUID();
   Future<Map<String, dynamic>> login(String id, String password, String email);
   Future<Map<String, dynamic>> register(String id, String password, String email);
   Future<bool> checkAccountExists(String id, String password, String email);

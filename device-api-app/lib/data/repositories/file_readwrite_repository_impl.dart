@@ -50,7 +50,8 @@ class FileRepositoryImpl implements FileRepository {
   @override
   Future<bool> deleteServerFile({
     required int sn,
+    required String uuid,
   }) async {
-    return await FileReadWriteService.deleteServerFile(sn: sn);
+    return await FileReadWriteService.deleteServerFile(sn: sn, uuid: uuid);
   }
 }

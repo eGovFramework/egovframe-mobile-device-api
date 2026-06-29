@@ -14,7 +14,7 @@
 
 	<insert id="insertGPSInfo">
 		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
-		   SELECT (IFNULL(MAX(SN), 0)+1) sn from GPS
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from GPS WHERE UUID = #{uuid}
 		</selectKey>
 		
 		INSERT INTO GPS 
@@ -35,7 +35,7 @@
 	<delete id="deleteGPSInfo">
 		UPDATE GPS 
 		SET USEYN='N'
-		WHERE UUID = #{uuid}
+		WHERE SN = #{sn} AND UUID = #{uuid}
 	</delete>
 	
 	<select id="selectGPSInfoList" parameterType="egovframework.hyb.mbl.gps.service.GPSAPIVO" resultMap="gpsInfo">
@@ -50,6 +50,7 @@
 	<select id="selectGPSInfoListTotCnt" parameterType="egovframework.hyb.mbl.gps.service.GPSAPIVO" resultType="int">
 		SELECT COUNT(*) totcnt
 		FROM GPS
+		WHERE USEYN='Y' AND UUID = #{uuid}
 	</select>
 
 </mapper>

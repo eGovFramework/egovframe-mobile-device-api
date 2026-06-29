@@ -3,5 +3,5 @@
 abstract class AcceleratorRepository {
   Future<List<AcceleratorInfo>> getAcceleratorInfoList(String uuid);
   Future<bool> saveAcceleratorInfo(AcceleratorInfo info);
-  Future<bool> deleteAcceleratorInfo();
+  Future<bool> deleteAcceleratorInfo({required String uuid, required int sn});
 }

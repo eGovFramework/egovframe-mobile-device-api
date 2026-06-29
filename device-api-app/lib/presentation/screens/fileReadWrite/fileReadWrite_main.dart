@@ -14,7 +14,7 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/server_connection_button.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
-import 'package:egovframe_mobile_deviceapi_app/utils/device_uuid_util.dart';
+import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/server_connection_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -79,7 +79,7 @@ class _FileReadWriteMainPageState extends State<FileReadWriteMainPage> with Sing
 
   /// 디바이스 UUID 생성
   Future<void> _getDeviceUUID() async {
-    _deviceUuid = await DeviceUuidUtil.getDeviceUuid();
+    _deviceUuid = await DeviceIdService.getDeviceId();
     setState(() {});
   }
 

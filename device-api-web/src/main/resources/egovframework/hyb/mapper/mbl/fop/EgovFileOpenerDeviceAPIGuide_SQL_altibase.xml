@@ -5,23 +5,28 @@
 
 	<resultMap id="documentList" type="egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIVO">
 		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
 		<result property="streFileNm" column="STRE_FILE_NM"/>
 		<result property="orignlFileNm" column="ORIGNL_FILE_NM"/>		
 		<result property="updDt" column="UPD_DT"/>		
 		<result property="fileSize" column="FILE_SIZE"/>
+		<result property="fileSn" column="FILE_SN"/>
 	</resultMap>
 	
 	<select id="selectDocumentListInfo" parameterType="egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIVO" resultMap="documentList">
 		SELECT
-			a.SN,			
+			a.SN,
+			a.UUID,
 			TO_CHAR(a.UPD_DT, 'YYYY-MM-DD HH24:MI:SS') UPD_DT,
     		b.STRE_FILE_NM, 
     		b.ORIGNL_FILE_NM,
-    		b.FILE_SIZE
+    		b.FILE_SIZE,
+    		b.FILE_SN
 		FROM 
-			file_opener_list a, FILE_DETAIL_INFO b
+			FILE_OPENER_LIST a, FILE_DETAIL_INFO b
 		WHERE a.FILE_SN = b.FILE_SN
     		AND a.USE_YN = 'Y'
+			AND a.UUID = #{uuid}
     	ORDER BY a.UPD_DT DESC
 	</select>
 

@@ -11,7 +11,7 @@
 
 	<insert id="insertFileReaderWriterInfo">
 		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
-		   SELECT (IFNULL(MAX(SN), 0)+1) sn from FILE_READER_WRITE
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from FILE_READER_WRITE WHERE UUID = #{uuid}
 		</selectKey>
 		
 			INSERT INTO FILE_READER_WRITE
@@ -63,7 +63,7 @@
 			
 			UPDATE FILE_READER_WRITE 
 			SET USEYN='N'
-			WHERE SN = #{sn}
+			WHERE SN = #{sn} AND UUID = #{uuid}
 		
 	</delete>
 

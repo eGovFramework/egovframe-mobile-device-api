@@ -77,9 +77,16 @@ class AccelerometerService {
     return false;
   }
 
-  // 가속도 정보 삭제
-  static Future<bool> deleteAcceleratorInfo() async {
-    final uri = Uri.parse(AppConfig.getAcceleratorUrl('/deleteAcceleratorInfo.do'));
+// 가속도 정보 삭제
+  static Future<bool> deleteAcceleratorInfo({
+    required String uuid,
+    required int sn,
+  }) async {
+    final uri = Uri.parse(AppConfig.getAcceleratorUrl('/deleteAcceleratorInfo.do'))
+        .replace(queryParameters: {
+          'uuid': uuid,
+          'sn': sn.toString(),
+        });
 
     final response = await http.delete(uri).timeout(const Duration(seconds: 10));
 

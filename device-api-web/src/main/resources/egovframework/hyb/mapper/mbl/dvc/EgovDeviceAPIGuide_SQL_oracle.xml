@@ -11,7 +11,7 @@
 
 	<insert id="insertDeviceInfo">
 		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
-		   SELECT (IFNULL(MAX(SN), 0)+1) sn from DEVICE
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from DEVICE WHERE UUID = #{uuid}
 		</selectKey>
 		
 		INSERT INTO DEVICE 
@@ -22,6 +22,19 @@
 			  , #{uuid}
 			  , #{useYn})
 	</insert>
+	
+	<delete id="deleteDeviceInfo">
+		UPDATE DEVICE 
+		SET USEYN='N'
+		WHERE SN=#{sn} AND UUID=#{uuid}
+	</delete>
+	
+	<select id="selectDeviceInfo" parameterType="egovframework.hyb.mbl.dvc.service.DeviceAPIVO" resultMap="deviceInfo">
+		SELECT
+			SN, UUID, USEYN
+		FROM DEVICE 
+		WHERE SN=#{sn} AND UUID=#{uuid}
+	</select>
 	
 	<select id="selectDeviceInfoList" parameterType="egovframework.hyb.mbl.dvc.service.DeviceAPIVO" resultMap="deviceInfo">
 		SELECT

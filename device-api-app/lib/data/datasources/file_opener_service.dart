@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:egovframe_mobile_deviceapi_app/config/app_config.dart';
+import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/file_opener_info.dart';
 import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:http/http.dart' as http;
@@ -689,8 +690,10 @@ class FileOpenerService {
         throw Exception('서버에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요.');
       }
       
-      final uri = Uri.parse(AppConfig.getFileOpenerUrl('/selectFileOpenerList.do'));
-      print('서버 파일 목록 조회 API Request URL: $uri');
+      final uuid = await DeviceIdService.getDeviceId();
+      final uri = Uri.parse(AppConfig.getFileOpenerUrl('/selectFileOpenerList.do'))
+          .replace(queryParameters: {'uuid': uuid});
+      print('서버 파일 목록 조회 API Request URL: $uri (uuid=$uuid)');
       
       final response = await http.get(uri).timeout(const Duration(seconds: 10));
       
@@ -975,7 +978,9 @@ class FileOpenerService {
   /// 서버 연결 상태를 확인하는 메서드
   static Future<bool> checkServerConnection() async {
     try {
-      final uri = Uri.parse(AppConfig.getFileOpenerUrl('/selectFileOpenerList.do'));
+      final uuid = await DeviceIdService.getDeviceId();
+      final uri = Uri.parse(AppConfig.getFileOpenerUrl('/selectFileOpenerList.do'))
+          .replace(queryParameters: {'uuid': uuid});
       final response = await http.get(uri).timeout(
         const Duration(seconds: 5),
       );

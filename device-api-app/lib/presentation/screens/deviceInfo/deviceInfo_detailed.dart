@@ -1,4 +1,5 @@
-﻿import 'package:egovframe_mobile_deviceapi_app/data/datasources/device_service.dart';
+﻿import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
+import 'package:egovframe_mobile_deviceapi_app/data/datasources/device_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/device_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/text_style.dart';
@@ -32,7 +33,7 @@ class _DeviceDetailedPageState extends State<DeviceDetailedPage> with SingleTick
   late TabController _tabController;
   bool isLoading = true;
   bool isDeleting = false;
-  DeviceInfo? deviceInfo; // 서버에서 가져온 최신 데이터
+  DeviceInfo? deviceInfo;
   String? errorMessage;
 
   @override
@@ -53,7 +54,8 @@ class _DeviceDetailedPageState extends State<DeviceDetailedPage> with SingleTick
     });
 
     try {
-      final device = await DeviceService.fetchDeviceInfoDetail(widget.device.sn);
+      final uuid = await DeviceIdService.getDeviceId();
+      final device = await DeviceService.fetchDeviceInfoDetail(widget.device.sn, uuid);
       
       if (mounted) {
         setState(() {
@@ -89,7 +91,8 @@ class _DeviceDetailedPageState extends State<DeviceDetailedPage> with SingleTick
 
     try {
       final deviceSn = deviceInfo?.sn ?? widget.device.sn;
-      final success = await DeviceService.deleteDeviceInfo(deviceSn);
+      final uuid = await DeviceIdService.getDeviceId();
+      final success = await DeviceService.deleteDeviceInfo(deviceSn, uuid);
 
       if (mounted) {
         setState(() {

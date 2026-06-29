@@ -1,3 +1,4 @@
+import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/di/injection_container.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/file_readwrite_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/repositories/file_readwrite_repository.dart';
@@ -62,8 +63,10 @@ class _FileReadWriteDetailPageState extends State<FileReadWriteDetailPage> with 
         await ServerConnectionUtils.checkConnectionAndExecuteIfConnected(
           context: context,
           operation: () async {
+            final uuid = await DeviceIdService.getDeviceId();
             final success = await _fileRepository.deleteServerFile(
               sn: widget.serverFile.sn,
+              uuid: uuid,
             );
 
             if (success) {

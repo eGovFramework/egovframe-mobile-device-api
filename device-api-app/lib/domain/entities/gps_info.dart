@@ -3,6 +3,7 @@ import '../../utils/format_utils.dart';
 
 /// GPS 정보를 담는 Entity 클래스 (로컬 센서 데이터)
 class GpsInfo {
+  final int? sn;
   final String uuid;
   final double latitude;
   final double longitude;
@@ -11,6 +12,7 @@ class GpsInfo {
   final DateTime timestamp;
 
   GpsInfo({
+    this.sn,
     required this.uuid,
     required this.latitude,
     required this.longitude,
@@ -21,6 +23,7 @@ class GpsInfo {
 
   factory GpsInfo.fromJson(Map<String, dynamic> json) {
     return GpsInfo(
+      sn: json['sn'] is int ? json['sn'] : int.tryParse(json['sn']?.toString() ?? ''),
       uuid: json['uuid'],
       latitude: json['lat'].toDouble(),
       longitude: json['lon'].toDouble(),

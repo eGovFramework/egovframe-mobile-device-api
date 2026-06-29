@@ -1,4 +1,5 @@
 ﻿class AcceleratorInfo {
+  final int? sn;
   final String uuid;
   final double xAxis;
   final double yAxis;
@@ -7,6 +8,7 @@
   final String useYn;
 
   AcceleratorInfo({
+    this.sn,
     required this.uuid,
     required this.xAxis,
     required this.yAxis,
@@ -17,6 +19,7 @@
 
   factory AcceleratorInfo.fromJson(Map<String, dynamic> json) {
     return AcceleratorInfo(
+      sn: json['sn'] is int ? json['sn'] : int.tryParse(json['sn']?.toString() ?? ''),
       uuid: json['uuid'] ?? '',
       xAxis: double.tryParse(json['xaxis'] ?? '0') ?? 0.0,
       yAxis: double.tryParse(json['yaxis'] ?? '0') ?? 0.0,
@@ -29,9 +32,9 @@
   Map<String, dynamic> toJson() {
     return {
       'uuid': uuid,
-      'xaxis': xAxis.toString(),
-      'yaxis': yAxis.toString(),
-      'zaxis': zAxis.toString(),
+      'xaxis': xAxis.toStringAsFixed(6),
+      'yaxis': yAxis.toStringAsFixed(6),
+      'zaxis': zAxis.toStringAsFixed(6),
       'timestamp': timestamp,
       'useYn': useYn,
     };

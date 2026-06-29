@@ -93,12 +93,13 @@ lib/
 │       ├── feature_description.dart
 │       ├── infobox.dart
 │       └── ...
+├── core/                   # 앱 공통 핵심 로직
+│   └── device_id_service.dart
 ├── di/                     # 의존성 주입 (GetIt)
 │   └── injection_container.dart
 ├── utils/                  # 유틸리티 함수
 │   ├── error_handler.dart
 │   ├── permission_manager.dart
-│   ├── device_uuid_util.dart
 │   ├── password_encryption.dart
 │   └── server_connection_utils.dart
 └── main.dart              # 앱 진입점
@@ -166,11 +167,16 @@ lib/
 
 - **`error_handler.dart`**: 통합 에러 핸들러
 - **`permission_manager.dart`**: 권한 관리
-- **`device_uuid_util.dart`**: 디바이스 UUID 유틸리티
 - **`password_encryption.dart`**: 비밀번호 암호화
 - **`server_connection_utils.dart`**: 서버 연결 유틸리티
 
-### 6. 설정 (`config/`)
+### 6. Core (`core/`)
+
+**역할**: 앱 전체 공통 핵심 로직
+
+- **`device_id_service.dart`**: 디바이스 UUID 생성·저장·조회
+
+### 7. 설정 (`config/`)
 
 **역할**: 앱 설정
 

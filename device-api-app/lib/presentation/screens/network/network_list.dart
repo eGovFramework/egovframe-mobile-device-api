@@ -39,7 +39,7 @@ class _NetworkListScreenState extends State<NetworkListScreen>
     _tabController = TabController(length: 3, vsync: this, initialIndex: 1);
     _tabController.addListener(() {
       if (mounted) {
-        setState(() {}); // 탭 변경 시 UI 업데이트
+        setState(() {});
       }
     });
     _loadNetworkInfoList();
@@ -51,7 +51,6 @@ class _NetworkListScreenState extends State<NetworkListScreen>
     super.dispose();
   }
 
-  /// 네트워크 정보 목록 로드
   Future<void> _loadNetworkInfoList() async {
     setState(() {
       _isLoading = true;
@@ -77,27 +76,6 @@ class _NetworkListScreenState extends State<NetworkListScreen>
     }
   }
 
-  /// 네트워크 정보 삭제
-  Future<void> _deleteNetworkInfo(NetworkInfo networkInfo) async {
-    try {
-      final success = await _networkRepository.deleteNetworkInfo(sn: networkInfo.sn ?? '');
-      if (success) {
-        showStatusDialog(
-          context,
-          variant: StatusVariant.success,
-          title: '성공',
-          message: '네트워크 정보가 삭제되었습니다.',
-        );
-        await _loadNetworkInfoList(); // 목록 새로고침
-      } else {
-        _showErrorDialog('네트워크 정보 삭제에 실패했습니다.');
-      }
-    } catch (e) {
-      _showErrorDialog('네트워크 정보 삭제 오류: $e');
-    }
-  }
-
-  /// 오류 다이얼로그 표시
   Future<void> _showErrorDialog(String message) async {
     await showStatusDialog(
       context,

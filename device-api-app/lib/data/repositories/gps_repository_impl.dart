@@ -10,7 +10,7 @@ class GpsRepositoryImpl implements GpsRepository {
     final position = await GpsService.getCurrentLocation();
     if (position != null) {
       return GpsInfo(
-        uuid: '', // UUID는 호출하는 곳에서 설정해야 함
+        uuid: '',
         latitude: position.latitude,
         longitude: position.longitude,
         altitude: position.altitude,
@@ -28,11 +28,6 @@ class GpsRepositoryImpl implements GpsRepository {
 
   @override
   Future<List<GpsInfo>> getGpsInfoList(String uuid) async {
-    return await GpsService.getGpsInfoList(uuid);
-  }
-
-  @override
-  Future<bool> deleteAllGpsInfo(String uuid) async {
-    return await GpsService.deleteAllGpsInfo(uuid);
+    return await GpsService.loadGpsInfoList(uuid);
   }
 }

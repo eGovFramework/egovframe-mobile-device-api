@@ -10,7 +10,7 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/infobox.dart
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
-import 'package:egovframe_mobile_deviceapi_app/utils/device_uuid_util.dart';
+import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/server_connection_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -56,7 +56,7 @@ class _FileReadWriteListPageState extends State<FileReadWriteListPage> with Sing
 
   /// 디바이스 UUID를 생성
   Future<void> _getDeviceUUID() async {
-    deviceUuid = await DeviceUuidUtil.getDeviceUuid();
+    deviceUuid = await DeviceIdService.getDeviceId();
     setState(() {});
   }
 
@@ -118,6 +118,7 @@ class _FileReadWriteListPageState extends State<FileReadWriteListPage> with Sing
           operation: () async {
             final success = await _fileRepository.deleteServerFile(
               sn: serverFile.sn,
+              uuid: deviceUuid,
             );
 
             if (success) {

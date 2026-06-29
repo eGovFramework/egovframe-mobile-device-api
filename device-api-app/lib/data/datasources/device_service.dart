@@ -1,41 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter_storage_info/flutter_storage_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/config/app_config.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/device_info.dart';
+import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:flutter_storage_info/flutter_storage_info.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-/// Device 관련 로컬 정보 수집 유틸리티
 class DeviceService {
-  static const String _persistentUuidKey = 'persistent_device_uuid';
-
-  static Future<String> _generateFallbackUuid() async {
-    final random = Random();
-    final timestamp = DateTime.now()
-        .add(Duration(hours: 9))
-        .millisecondsSinceEpoch;
-    final randomNum = random.nextInt(999999);
-    return 'DEVICE_${timestamp}_$randomNum';
-  }
-
-  /// 앱 레벨 영구 UUID (앱 삭제 전까지 동일)
-  static Future<String> getPersistentUuid() async {
-    final prefs = await SharedPreferences.getInstance();
-    final existing = prefs.getString(_persistentUuidKey);
-    if (existing != null && existing.isNotEmpty) return existing;
-    final generated = await _generateFallbackUuid();
-    await prefs.setString(_persistentUuidKey, generated);
-    return generated;
-  }
-
-  /// 네트워크 연결 타입(WiFi/Mobile/Ethernet/Unknown)
   static Future<String> getConnectionType() async {
     try {
       final result = await Connectivity().checkConnectivity();
@@ -96,7 +72,7 @@ class DeviceService {
   /// 로컬 디바이스 정보를 수집해 Domain 엔티티로 반환
   static Future<DeviceInfo> getDeviceInfo() async {
     final deviceInfoPlugin = DeviceInfoPlugin();
-    final uuid = await getPersistentUuid();
+    final uuid = await DeviceIdService.getDeviceId();
     final connectionType = await getConnectionType();
     // Program Version: Dart 런타임 버전을 표시
     final dartVersion = Platform.version.split(' ').first; // e.g., 3.5.2
@@ -190,10 +166,13 @@ class DeviceService {
   }
 
   /// 서버: Device 단건 조회
-  static Future<DeviceInfo?> fetchDeviceInfoDetail(int sn) async {
+  static Future<DeviceInfo?> fetchDeviceInfoDetail(int sn, String uuid) async {
     final uri = Uri.parse(
       AppConfig.getDeviceUrl('/selectDeviceInfo.do'),
-    ).replace(queryParameters: {'sn': sn.toString()});
+    ).replace(queryParameters: {
+      'sn': sn.toString(),
+      'uuid': uuid,
+    });
     try {
       final resp = await http
           .get(uri, headers: {'Accept': 'application/json'})
@@ -258,10 +237,13 @@ class DeviceService {
   }
 
   /// 서버: Device 삭제
-  static Future<bool> deleteDeviceInfo(int sn) async {
+  static Future<bool> deleteDeviceInfo(int sn, String uuid) async {
     final uri = Uri.parse(
       AppConfig.getDeviceUrl('/deleteDeviceInfo.do'),
-    ).replace(queryParameters: {'sn': sn.toString()});
+    ).replace(queryParameters: {
+      'sn': sn.toString(),
+      'uuid': uuid,
+    });
     try {
       final resp = await http.delete(uri).timeout(AppConfig.defaultTimeout);
 

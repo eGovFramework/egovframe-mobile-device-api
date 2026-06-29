@@ -10,7 +10,7 @@
 
 	<insert id="insertInterfaceInfo">
 		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
-		   SELECT (IFNULL(MAX(SN), 0)+1) sn from INTERFACE
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from INTERFACE WHERE UUID = #{uuid}
 		</selectKey>
 		
 		INSERT INTO INTERFACE 

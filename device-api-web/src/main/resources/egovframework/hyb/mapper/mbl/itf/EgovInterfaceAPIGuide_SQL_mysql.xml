@@ -13,7 +13,7 @@
 
 	<insert id="insertInterfaceInfo">
 		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
-		   SELECT (IFNULL(MAX(SN), 0)+1) sn from INTERFACE_EGOV		   
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from INTERFACE_EGOV WHERE UUID = #{uuid}		   
 		</selectKey>
 		
 			INSERT INTO INTERFACE_EGOV 

@@ -17,7 +17,7 @@
 	
 	<insert id="insertMediaInfo">
 	    <selectKey keyProperty="sn" resultType="int" order="BEFORE">
-		   SELECT (IFNULL(MAX(SN), 0)+1) sn from MEDIA
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from MEDIA WHERE UUID = #{uuid}
 		</selectKey>
 			
 	    	INSERT INTO MEDIA 
@@ -40,27 +40,27 @@
 	<update id="updateMediaInfoRevivCo">
 		UPDATE	MEDIA
 		 SET REVIV_CO = REVIV_CO + 1
- 		WHERE  SN = #{sn}
+ 		WHERE  SN = #{sn} AND UUID = #{uuid}
 	</update>
 	
 	<select id="selectMediaInfoDetail" resultMap="mediaDetail">
 	    	SELECT
 				A.SN, A.MD_SJ, A.REVIV_CO, B.STRE_FILE_NM
 			FROM MEDIA A JOIN FILE_DETAIL_INFO B USING(FILE_SN)
-			WHERE SN = #{sn}
+			WHERE SN = #{sn} AND A.UUID = #{uuid}
 	</select>
  
 	 <select id="selectMediaInfoList" resultMap="mediaList">
 	    	SELECT
 				A.SN, A.MD_SJ,A.MD_CODE, B.FILE_SN, B.FILE_STRE_COURS, B.STRE_FILE_NM, B.FILE_EXTSN, B.FILE_SIZE
 			FROM MEDIA A JOIN FILE_DETAIL_INFO B USING(FILE_SN)
-			WHERE A.USEYN = 'Y'
+			WHERE A.USEYN = 'Y' AND A.UUID = #{uuid}
 	</select>
 
 	<delete id="deleteMediaInfo">
 		UPDATE MEDIA 
 		SET USEYN='N'
-		WHERE SN = #{sn}
+		WHERE SN = #{sn} AND UUID = #{uuid}
 	</delete> 
 	
 </mapper>

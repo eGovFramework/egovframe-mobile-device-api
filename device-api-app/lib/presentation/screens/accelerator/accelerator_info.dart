@@ -11,7 +11,7 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/server_connection_button.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
-import 'package:egovframe_mobile_deviceapi_app/utils/device_uuid_util.dart';
+import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:flutter/material.dart';
 
 import 'accelerator_description.dart';
@@ -55,7 +55,7 @@ class _AcceleratorInfoPageState extends State<AcceleratorInfoPage>
   }
 
   Future<void> _getDeviceUuid() async {
-    deviceUuid = await DeviceUuidUtil.getDeviceUuid();
+    deviceUuid = await DeviceIdService.getDeviceId();
   }
 
   void _startAccelerometer() {

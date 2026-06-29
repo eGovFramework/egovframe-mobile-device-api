@@ -5,13 +5,7 @@ class InterfaceRepositoryImpl implements InterfaceRepository {
   InterfaceRepositoryImpl();
 
   @override
-  Future<String> getDeviceUUID() async {
-    return await InterfaceService.getDeviceUUID();
-  }
-
-  @override
-  Future<Map<String, dynamic>> login(String id, String password, String email) async {
-    return await InterfaceService.login(id, password);
+  Future<Map<String, dynamic>> login(String id, String password, String email) async {    return await InterfaceService.login(id, password);
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:egovframe_mobile_deviceapi_app/config/app_config.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/network_info.dart';
+import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:network_info_plus/network_info_plus.dart' as network_info_plus;
@@ -93,21 +94,7 @@ class NetworkService {
   }
 
   /// 디바이스 ID 가져오기
-  Future<String> getDeviceId() async {
-    try {
-      if (Platform.isAndroid) {
-        final androidInfo = await _deviceInfo.androidInfo;
-        return androidInfo.id; // Android ID
-      } else if (Platform.isIOS) {
-        final iosInfo = await _deviceInfo.iosInfo;
-        return iosInfo.identifierForVendor ?? 'unknown_ios_device';
-      }
-      return 'unknown_device';
-    } catch (e) {
-      debugPrint('디바이스 ID 가져오기 오류: $e');
-      return 'unknown_device';
-    }
-  }
+  Future<String> getDeviceId() => DeviceIdService.getDeviceId();
 
   /// 디바이스 이름 가져오기
   Future<String> _getDeviceName() async {
@@ -231,13 +218,14 @@ class NetworkService {
 
 
   /// 네트워크 정보 삭제
-  Future<bool> deleteNetworkInfo(String sn) async {
+  Future<bool> deleteNetworkInfo(String sn, {required String uuid}) async {
     try {
-      debugPrint('네트워크 정보 서버 삭제 시작: $sn');
+      debugPrint('네트워크 정보 서버 삭제 시작: sn=$sn, uuid=$uuid');
       
       final uri = Uri.parse(AppConfig.getNetworkUrl('/deleteNetworkInfo.do')).replace(
         queryParameters: {
           'sn': sn,
+          'uuid': uuid,
         },
       );
 

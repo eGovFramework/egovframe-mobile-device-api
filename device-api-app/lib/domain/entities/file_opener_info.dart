@@ -171,13 +171,17 @@ extension FileTypeExtension on FileType {
 
 /// 서버 파일 정보를 담는 데이터 클래스
 class ServerFileInfo {
-  final String fileSn;              // 일련번호
+  final String sn;              // 목록 일련번호
+  final String uuid;            // 기기 식별코드
+  final String fileSn;          // 파일 일련번호
   final String streFileNm;      // 저장파일명
   final String orignlFileNm;    // 원파일명
   final String updDt;           // 업데이트날짜
   final String fileSize;        // 파일크기
 
   ServerFileInfo({
+    required this.sn,
+    required this.uuid,
     required this.fileSn,
     required this.streFileNm,
     required this.orignlFileNm,
@@ -188,6 +192,8 @@ class ServerFileInfo {
   /// JSON으로부터 ServerFileInfo를 생성
   factory ServerFileInfo.fromJson(Map<String, dynamic> json) {
     return ServerFileInfo(
+      sn: json['sn']?.toString() ?? '',
+      uuid: json['uuid']?.toString() ?? '',
       fileSn: json['fileSn']?.toString() ?? '',
       streFileNm: json['streFileNm']?.toString() ?? '',
       orignlFileNm: json['orignlFileNm']?.toString() ?? '',
@@ -199,6 +205,8 @@ class ServerFileInfo {
   /// JSON으로 변환
   Map<String, dynamic> toJson() {
     return {
+      'sn': sn,
+      'uuid': uuid,
       'fileSn': fileSn,
       'streFileNm': streFileNm,
       'orignlFileNm': orignlFileNm,
@@ -253,7 +261,7 @@ class ServerFileInfo {
 
   @override
   String toString() {
-    return 'ServerFileInfo(fileSn: $fileSn, streFileNm: $streFileNm, orignlFileNm: $orignlFileNm, updDt: $updDt, fileSize: $fileSize)';
+    return 'ServerFileInfo(sn: $sn, uuid: $uuid, fileSn: $fileSn, streFileNm: $streFileNm, orignlFileNm: $orignlFileNm, updDt: $updDt, fileSize: $fileSize)';
   }
 }
 
