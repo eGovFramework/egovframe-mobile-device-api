@@ -9,7 +9,7 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/infobox.dart
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
-import 'package:egovframe_mobile_deviceapi_app/utils/device_uuid_util.dart';
+import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/server_connection_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -56,7 +56,7 @@ class _MediaListPageState extends State<MediaListPage> with SingleTickerProvider
     await _loadServerMediaList();
   }
   Future<void> _getDeviceUUID() async {
-    deviceUuid = await DeviceUuidUtil.getDeviceUuid();
+    deviceUuid = await DeviceIdService.getDeviceId();
     setState(() {});
   }
 
@@ -182,7 +182,7 @@ class _MediaListPageState extends State<MediaListPage> with SingleTickerProvider
           operation: () async {
             // media 테이블의 sn을 사용 (fileSn이 아님)
             final sn = int.tryParse(mediaFile.sn ?? '0') ?? 0;
-            final deleteResult = await MediaService.deleteMediaFromServer(sn);
+            final deleteResult = await MediaService.deleteMediaFromServer(sn, deviceUuid);
 
             if (deleteResult['success'] == true) {
               if (mounted) {

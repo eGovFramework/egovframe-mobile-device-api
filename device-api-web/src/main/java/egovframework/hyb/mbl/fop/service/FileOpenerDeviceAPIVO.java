@@ -30,6 +30,9 @@ public class FileOpenerDeviceAPIVO implements Serializable {
 	
 	@Schema(description = "일련번호")
 	private String sn = "";
+
+	@Schema(description = "기기 식별코드")
+	private String uuid = "";
 	
 	@Schema(description = "저장파일명")
     private String streFileNm = "";
@@ -52,6 +55,14 @@ public class FileOpenerDeviceAPIVO implements Serializable {
 
 	public void setSn(String sn) {
 		this.sn = sn;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public String getStreFileNm() {

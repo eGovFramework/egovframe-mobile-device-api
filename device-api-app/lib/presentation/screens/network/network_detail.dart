@@ -1,3 +1,4 @@
+import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/di/injection_container.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/network_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/repositories/network_repository.dart';
@@ -36,7 +37,7 @@ class _NetworkDetailPageState extends State<NetworkDetailPage> with SingleTicker
     super.initState();
     _tabController = TabController(length: 3, vsync: this, initialIndex: 1);
     _tabController.addListener(() {
-      setState(() {}); // 탭 변경 시 UI 업데이트
+      setState(() {});
     });
   }
 
@@ -62,8 +63,10 @@ class _NetworkDetailPageState extends State<NetworkDetailPage> with SingleTicker
         });
 
         try {
+          final uuid = await DeviceIdService.getDeviceId();
           final success = await _networkRepository.deleteNetworkInfo(
             sn: widget.networkInfo.sn ?? '',
+            uuid: uuid,
           );
 
           if (mounted) {

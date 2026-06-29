@@ -1,4 +1,5 @@
-﻿import 'package:egovframe_mobile_deviceapi_app/data/datasources/gps_service.dart';
+﻿import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
+import 'package:egovframe_mobile_deviceapi_app/data/datasources/gps_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/gps_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/text_style.dart';
@@ -7,11 +8,8 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/button.dart'
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/footer.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/infobox.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart';
-import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
-import 'package:egovframe_mobile_deviceapi_app/utils/device_uuid_util.dart';
 import 'package:flutter/material.dart';
-
 import 'gps_description.dart';
 import 'gps_detail.dart';
 
@@ -22,7 +20,8 @@ class GpsListPage extends StatefulWidget {
   State<GpsListPage> createState() => _GpsListPageState();
 }
 
-class _GpsListPageState extends State<GpsListPage> with SingleTickerProviderStateMixin {
+class _GpsListPageState extends State<GpsListPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<GpsInfo> gpsInfoList = [];
   bool isLoading = true;
@@ -47,7 +46,8 @@ class _GpsListPageState extends State<GpsListPage> with SingleTickerProviderStat
 
   /// 디바이스 UUID 생성
   Future<void> _getDeviceUuid() async {
-    deviceUuid = await DeviceUuidUtil.getDeviceUuid();
+    deviceUuid = await DeviceIdService.getDeviceId();
+
     _loadGpsInfoList();
   }
 
@@ -58,7 +58,7 @@ class _GpsListPageState extends State<GpsListPage> with SingleTickerProviderStat
         errorMessage = '';
       });
 
-      final result = await GpsService.getGpsInfoList(deviceUuid);
+      final result = await GpsService.loadGpsInfoList(deviceUuid);
 
       if (mounted) {
         if (result.isNotEmpty) {
@@ -68,6 +68,8 @@ class _GpsListPageState extends State<GpsListPage> with SingleTickerProviderStat
           });
         } else {
           setState(() {
+            gpsInfoList = [];
+
             errorMessage = 'GPS 정보가 없습니다.';
             isLoading = false;
           });
@@ -79,59 +81,6 @@ class _GpsListPageState extends State<GpsListPage> with SingleTickerProviderStat
           errorMessage = 'GPS 정보 목록을 불러오는 중 오류가 발생했습니다: $e';
           isLoading = false;
         });
-      }
-    }
-  }
-
-  Future<void> _showDeleteConfirmDialog() async {
-    final result = await showPromptDialog(
-      context,
-      title: '목록 삭제',
-      message: '삭제를 누르면 모든 목록이 삭제됩니다. 삭제하시겠습니까?',
-      confirmText: '삭제',
-      cancelText: '취소',
-    );
-
-    if (result == true) {
-      await _deleteAllGpsData();
-    }
-  }
-
-  Future<void> _deleteAllGpsData() async {
-    try {
-      final success = await GpsService.deleteAllGpsInfo(deviceUuid);
-
-      if (success) {
-        if (mounted) {
-          await showStatusDialog(
-            context,
-            variant: StatusVariant.success,
-            title: '성공',
-            message: '모든 GPS 정보가 성공적으로 삭제되었습니다.',
-          );
-          // 삭제 후 목록 다시 로드
-          if (mounted) {
-            await _loadGpsInfoList();
-          }
-        }
-      } else {
-        if (mounted) {
-          showStatusDialog(
-            context,
-            variant: StatusVariant.error,
-            title: '오류',
-            message: '삭제 실패: 서버에서 처리할 수 없습니다.',
-          );
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        showStatusDialog(
-          context,
-          variant: StatusVariant.error,
-          title: '오류',
-          message: '오류가 발생했습니다: $e',
-        );
       }
     }
   }
@@ -205,51 +154,84 @@ class _GpsListPageState extends State<GpsListPage> with SingleTickerProviderStat
                                       ),
                                     )
                                   : gpsInfoList.isEmpty
-                                      ? Center(
-                                          child: Text(
-                                            '저장된 GPS 정보가 없습니다.',
-                                            style: EgovText.regular.copyWith(color: EgovColor.gray40),
-                                          ),
-                                        )
-                                      : RefreshIndicator(
-                                          onRefresh: _loadGpsInfoList,
-                                          child: ListView.builder(
-                                            padding: const EdgeInsets.all(0),
-                                            itemCount: gpsInfoList.length,
-                                            itemBuilder: (context, index) {
-                                              final gpsInfo = gpsInfoList[index];
-                                              return Padding(
-                                                padding: const EdgeInsets.only(bottom: 12),
-                                                child: GestureDetector(
-                                                  onTap: () async {
-                                                    final result = await Navigator.push(
+                                  ? Center(
+                                      child: Text(
+                                        '저장된 GPS 정보가 없습니다.',
+
+                                        style: EgovText.regular.copyWith(
+                                          color: EgovColor.gray40,
+                                        ),
+                                      ),
+                                    )
+                                  : RefreshIndicator(
+                                      onRefresh: _loadGpsInfoList,
+
+                                      child: ListView.builder(
+                                        padding: const EdgeInsets.all(0),
+
+                                        itemCount: gpsInfoList.length,
+
+                                        itemBuilder: (context, index) {
+                                          final gpsInfo = gpsInfoList[index];
+
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                              bottom: 12,
+                                            ),
+
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                final result =
+                                                    await Navigator.push(
                                                       context,
+
                                                       MaterialPageRoute(
-                                                        builder: (context) => GpsDetailPage(gpsInfo: gpsInfo),
+                                                        builder: (context) =>
+                                                            GpsDetailPage(
+                                                              gpsInfo: gpsInfo,
+                                                            ),
                                                       ),
                                                     );
-                                                    
-                                                    if (result == true) {
-                                                      setState(() {
-                                                        isLoading = true;
-                                                        errorMessage = '';
-                                                      });
-                                                      _loadGpsInfoList();
-                                                    }
+
+                                                if (result == true) {
+                                                  setState(() {
+                                                    isLoading = true;
+
+                                                    errorMessage = '';
+                                                  });
+
+                                                  _loadGpsInfoList();
+                                                }
+                                              },
+
+                                              child: DeviceCardExtended(
+                                                title: 'UUID : ${gpsInfo.uuid}',
+
+                                                details: [
+                                                  {
+                                                    'label': '위도',
+                                                    'value': gpsInfo.latitude
+                                                        .toStringAsFixed(6),
                                                   },
-                                                  child: DeviceCardExtended(
-                                                    title: 'UUID : ${gpsInfo.uuid}',
-                                                      details: [
-                                                        {'label': '위도', 'value': gpsInfo.latitude.toStringAsFixed(6)},
-                                                        {'label': '경도', 'value': gpsInfo.longitude.toStringAsFixed(6)},
-                                                        {'label': '정확도', 'value': gpsInfo.formattedAccuracy},
-                                                      ],
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
+
+                                                  {
+                                                    'label': '경도',
+                                                    'value': gpsInfo.longitude
+                                                        .toStringAsFixed(6),
+                                                  },
+
+                                                  {
+                                                    'label': '정확도',
+                                                    'value': gpsInfo
+                                                        .formattedAccuracy,
+                                                  },
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
                             ),
                           ],
                         ),
@@ -259,38 +241,36 @@ class _GpsListPageState extends State<GpsListPage> with SingleTickerProviderStat
               ],
             ),
           ),
+
           if (_tabController.index == 1)
             BottomButtonRow(
               buttons: [
                 CustomButton(
                   text: '새로고침',
+
                   onTap: () {
                     setState(() {
                       isLoading = true;
+
                       errorMessage = '';
                     });
+
                     _loadGpsInfoList();
                   },
+
                   icon: const Icon(
                     Icons.refresh,
+
                     color: EgovColor.white100,
+
                     size: 20,
                   ),
-                ),
-                CustomButton(
-                  text: '목록 삭제',
-                  onTap: _showDeleteConfirmDialog,
-                  icon: const Icon(
-                    Icons.delete,
-                    color: EgovColor.white100,
-                    size: 20,
-                  ),
-                  normalColor: EgovColor.danger50,
                 ),
               ],
             )
           else
-            const SizedBox.shrink(), // 빈 공간으로 처리
+            const SizedBox.shrink(),
+
           const Footer(),
         ],
       ),
@@ -301,19 +281,30 @@ class _GpsListPageState extends State<GpsListPage> with SingleTickerProviderStat
 // 확장된 DeviceCard 위젯
 class DeviceCardExtended extends StatelessWidget {
   final String title;
+
   final String? subtitle;
+
   final List<Map<String, String>> details;
+
   final VoidCallback? onTap;
+
   final bool showArrow;
+
   final bool isSelected;
 
   const DeviceCardExtended({
     super.key,
+
     required this.title,
+
     this.subtitle,
+
     required this.details,
+
     this.onTap,
+
     this.showArrow = true,
+
     this.isSelected = false,
   });
 
@@ -321,111 +312,166 @@ class DeviceCardExtended extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
+
       padding: const EdgeInsets.all(16),
+
       decoration: ShapeDecoration(
         color: EgovColor.white100,
+
         shape: RoundedRectangleBorder(
           side: BorderSide(
             width: isSelected ? 3 : 1,
+
             color: isSelected ? EgovColor.primary50 : EgovColor.gray20,
           ),
+
           borderRadius: BorderRadius.circular(12),
         ),
       ),
+
       child: Row(
         mainAxisSize: MainAxisSize.min,
+
         mainAxisAlignment: MainAxisAlignment.center,
+
         crossAxisAlignment: CrossAxisAlignment.center,
+
         children: [
           Expanded(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8),
+
               child: Column(
                 mainAxisSize: MainAxisSize.min,
+
                 mainAxisAlignment: MainAxisAlignment.start,
+
                 crossAxisAlignment: CrossAxisAlignment.start,
+
                 children: [
                   Container(
                     width: double.infinity,
+
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
+
                       mainAxisAlignment: MainAxisAlignment.start,
+
                       crossAxisAlignment: CrossAxisAlignment.center,
+
                       children: [
                         Expanded(
                           child: Text(
                             title,
+
                             style: const TextStyle(
                               color: EgovColor.gray90,
+
                               fontSize: 19,
+
                               fontFamily: 'Pretendard GOV',
+
                               fontWeight: FontWeight.w700,
+
                               height: 1.50,
                             ),
                           ),
                         ),
+
                         if (showArrow) ...[
                           const SizedBox(width: 8),
+
                           const Icon(
                             Icons.arrow_forward_ios,
+
                             color: EgovColor.gray40,
+
                             size: 16,
                           ),
                         ],
                       ],
                     ),
                   ),
+
                   if (subtitle != null) ...[
                     const SizedBox(height: 16),
+
                     SizedBox(
                       width: double.infinity,
+
                       child: Text(
                         subtitle!,
+
                         style: const TextStyle(
                           color: EgovColor.gray70,
+
                           fontSize: 15,
+
                           fontFamily: 'Pretendard GOV',
+
                           fontWeight: FontWeight.w400,
+
                           height: 1.50,
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 8),
                   ],
-                  ...details.map((detail) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${detail['label']} :',
-                          style: const TextStyle(
-                            color: Color(0xFF1E2124),
-                            fontSize: 13,
-                            fontFamily: 'Pretendard GOV',
-                            fontWeight: FontWeight.w700,
-                            height: 1.50,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            detail['value'] ?? '',
+
+                  ...details.map(
+                    (detail) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+
+                        mainAxisAlignment: MainAxisAlignment.start,
+
+                        crossAxisAlignment: CrossAxisAlignment.start,
+
+                        children: [
+                          Text(
+                            '${detail['label']} :',
+
                             style: const TextStyle(
-                              color: EgovColor.gray90,
+                              color: Color(0xFF1E2124),
+
                               fontSize: 13,
+
                               fontFamily: 'Pretendard GOV',
-                              fontWeight: FontWeight.w400,
+
+                              fontWeight: FontWeight.w700,
+
                               height: 1.50,
                             ),
-                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      ],
+
+                          const SizedBox(width: 8),
+
+                          Expanded(
+                            child: Text(
+                              detail['value'] ?? '',
+
+                              style: const TextStyle(
+                                color: EgovColor.gray90,
+
+                                fontSize: 13,
+
+                                fontFamily: 'Pretendard GOV',
+
+                                fontWeight: FontWeight.w400,
+
+                                height: 1.50,
+                              ),
+
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  )).toList(),
+                  ),
                 ],
               ),
             ),

@@ -33,6 +33,18 @@
 - Device API Web
 
 
+## 패치
+### 2026/06/26 v5.0.1 배포
+- gps, accelerator app에서 제공하던 '목록 삭제'를 상세 화면에서만 삭제할 수 있도록 위젯 및 레이아웃이 변경되었습니다.
+- READ, UPDATE, DELETE 시 기기의 uuid를 검증하는 로직이 추가되었습니다.
+	- A 디바이스에서 서버에 전송한 값을 B 디바이스에서 읽기,쓰기,삭제 불가
+	- CREATE를 진행한 디바이스의 데이터만 READ, UPDATE, DELETE 가능
+	- File Opener 에서 UUID 검증할 수 있도록 DB column 추가 (DDL 수정)
+- UUID 생성 방식이 UUIDv4 방식으로 변경되어 16자리 수로 표현됩니다.
+	- lib/core/device_id_service.dart
+	- application 삭제 전 까지 동일한 uuid를 사용할 수 있습니다. (삭제 시 uuid도 초기화)
+	- docs/applications/utils.md 에서 uuid 관련 항목 참조
+
 ## 기타
 - GPS Application 사용을 위해서는 Google MAP API Key 발급이 필요합니다
 	- - [Google Map API Key 발급 방법](./device-api-app/docs/aaplications/gps.md#Google Maps API 키 설정)

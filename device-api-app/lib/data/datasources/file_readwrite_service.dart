@@ -618,11 +618,13 @@ class FileReadWriteService {
   /// 서버 파일 삭제
   static Future<bool> deleteServerFile({
     required int sn,
+    required String uuid,
   }) async {
     try {
       final uri = Uri.parse(AppConfig.getFileReadWriteUrl('/deleteFileReaderWriterInfo.do'))
           .replace(queryParameters: {
             'sn': sn.toString(),
+            'uuid': uuid,
           });
 
       print('서버 파일 삭제 요청: uri=$uri, sn=$sn');

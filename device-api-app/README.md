@@ -371,12 +371,13 @@ lib/
 │       ├── feature_description.dart
 │       ├── infobox.dart
 │       └── ...
+├── core/                   # 앱 공통 핵심 로직
+│   └── device_id_service.dart
 ├── di/                     # 의존성 주입 (GetIt)
 │   └── injection_container.dart
 ├── utils/                  # 유틸리티 함수
 │   ├── error_handler.dart
 │   ├── permission_manager.dart
-│   ├── device_uuid_util.dart
 │   ├── password_encryption.dart
 │   └── server_connection_utils.dart
 └── main.dart              # 앱 진입점

@@ -5,10 +5,6 @@ class InterfaceUseCase {
 
   InterfaceUseCase(this.repository);
 
-  Future<String> getDeviceUUID() async {
-    return await repository.getDeviceUUID();
-  }
-
   Future<Map<String, dynamic>> login(String id, String password, String email) async {
     return await repository.login(id, password, email);
   }

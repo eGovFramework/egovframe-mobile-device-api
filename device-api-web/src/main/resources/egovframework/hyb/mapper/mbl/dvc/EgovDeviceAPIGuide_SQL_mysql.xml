@@ -17,7 +17,7 @@
 
 	<insert id="insertDeviceInfo">
 		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
-		   SELECT (IFNULL(MAX(SN), 0)+1) SN FROM DEVICE
+		   SELECT (IFNULL(MAX(SN), 0)+1) SN FROM DEVICE WHERE UUID = #{uuid}
 		   
 		</selectKey>
 		
@@ -46,7 +46,7 @@
 		
 			UPDATE DEVICE 
 			SET USEYN='N'
-			WHERE SN=#{sn}
+			WHERE SN=#{sn} AND UUID=#{uuid}
 		
 	</delete>
 	
@@ -55,7 +55,7 @@
 			SELECT
 				SN, UUID, OS, TELNO, STRGE_INFO, NTWRK_DEVICE_INFO, PG_VER, DEVICE_NM , USEYN 
 			FROM DEVICE 
-			WHERE SN=#{sn}
+			WHERE SN=#{sn} AND UUID=#{uuid}
 		
 	</select>
 	

@@ -19,6 +19,7 @@ import egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIVO;
 import egovframework.hyb.utils.EgovFileMngUtil;
 import egovframework.hyb.utils.FileVO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,9 +40,11 @@ public class EgovFileOpenerDeviceAPIController {
 	@Resource(name = "egovFileMngUtil")
 	private EgovFileMngUtil egovFileMngUtil;
 
-	@Operation(summary = "파일 오프너 정보 목록 조회", description = "파일 오프너 정보 목록을 조회합니다.")
+	@Operation(summary = "파일 오프너 정보 목록 조회", description = "기기 UUID에 해당하는 파일 오프너 정보 목록을 조회합니다.")
     @RequestMapping(value = "/fop/selectFileOpenerList.do", method = RequestMethod.GET)
-    public ResponseEntity<?> selectFileOpenerList(@ModelAttribute("fileOpenerDviceAPIVO") FileOpenerDeviceAPIVO searchVO, ModelMap model) throws Exception {
+    public ResponseEntity<?> selectFileOpenerList(
+    		@Parameter(description = "기기 식별코드") @ModelAttribute("fileOpenerDviceAPIVO") FileOpenerDeviceAPIVO searchVO,
+    		ModelMap model) throws Exception {
 		Map<String, Object> response = new HashMap<>();
 		List<?> fileOpenerDeviceAPIVO = egovFileOpenerDeviceAPIService.selectFileOpenerList(searchVO);
 		response.put("resultSet", fileOpenerDeviceAPIVO);

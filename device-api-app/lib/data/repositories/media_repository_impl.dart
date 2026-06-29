@@ -84,8 +84,8 @@ class MediaRepositoryImpl implements MediaRepository {
 
 
   @override
-  Future<Map<String, dynamic>> deleteMediaFromServer(int sn) async {
-    return await MediaService.deleteMediaFromServer(sn);
+  Future<Map<String, dynamic>> deleteMediaFromServer(int sn, String uuid) async {
+    return await MediaService.deleteMediaFromServer(sn, uuid);
   }
 
   @override

@@ -23,8 +23,8 @@ class NetworkUseCase {
   }
 
   /// 네트워크 정보 삭제
-  Future<bool> deleteNetworkInfo({required String sn}) async {
-    return await repository.deleteNetworkInfo(sn: sn);
+  Future<bool> deleteNetworkInfo({required String sn, required String uuid}) async {
+    return await repository.deleteNetworkInfo(sn: sn, uuid: uuid);
   }
 
   /// 특정 네트워크 타입의 정보만 조회
@@ -49,16 +49,6 @@ class NetworkUseCase {
     );
     
     return allNetworkInfo.where((info) => info.useYn == 'Y').toList();
-  }
-
-  /// 네트워크 정보 일괄 삭제
-  Future<int> deleteMultipleNetworkInfo(List<String> snList) async {
-    int successCount = 0;
-    for (final sn in snList) {
-      final success = await repository.deleteNetworkInfo(sn: sn);
-      if (success) successCount++;
-    }
-    return successCount;
   }
 }
 

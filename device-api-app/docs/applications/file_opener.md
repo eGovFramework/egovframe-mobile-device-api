@@ -147,5 +147,8 @@
   - 각 타입별로 다른 색상과 아이콘을 사용하여 시각적으로 구분합니다
 - **파일 정렬 및 필터링**: 이름, 크기, 날짜순으로 정렬할 수 있으며, 파일 타입별 필터링을 지원합니다
 - **서버 연동**: RESTful API를 통한 파일 다운로드
+  - 서버 파일 목록 조회 시 앱의 **기기 UUID**(`DeviceIdService.getDeviceId()`)를 쿼리 파라미터로 전달합니다
+  - API: `GET /fop/selectFileOpenerList.do?uuid={uuid}`
+  - DB `FILE_OPENER_LIST` 테이블의 `UUID` 컬럼과 일치하는 목록만 반환합니다
   - 서버에서 파일을 다운로드하여 로컬에 저장할 수 있습니다
 - **Clean Architecture**: 도메인, 데이터, 프레젠테이션 레이어 분리

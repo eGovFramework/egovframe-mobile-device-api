@@ -12,7 +12,7 @@
 
 	<insert id="insertNetworkInfo">
 		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
-		   SELECT (IFNULL(MAX(SN), 0)+1) sn from NETWORK
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from NETWORK WHERE UUID = #{uuid}
 		</selectKey>
 		
 		INSERT INTO NETWORK 
@@ -32,33 +32,33 @@
 				, UUID = #{uuid}
 				, NTWRK_TYPE = #{networktype}
 				, USEYN = #{useYn}
-		WHERE SN = #{sn}
+		WHERE SN = #{sn} AND UUID = #{uuid}
 	</update>
 	
 	<delete id="deleteNetworkInfo">
 		DELETE FROM NETWORK 
-		WHERE SN=#{sn}
+		WHERE SN=#{sn} AND UUID=#{uuid}
 	</delete>
 	
 	<select id="selectNetworkInfo" resultMap="networkInfo">
 		SELECT
 			SN, UUID, NTWRK_TYPE, USEYN
 		FROM NETWORK 
-		WHERE SN=#{sn}
+		WHERE SN=#{sn} AND UUID=#{uuid}
 	</select>
 	
 	<select id="selectNetworkInfoList" parameterType="egovframework.hyb.mbl.nwk.service.NetworkAPIDefaultVO" resultMap="networkInfo">
 		SELECT
 			SN, UUID, NTWRK_TYPE, USEYN
 		FROM NETWORK
-		WHERE USEYN='Y'
+		WHERE USEYN='Y' AND UUID = #{uuid}
 		ORDER BY SN DESC
 	</select>
 	
 	<select id="selectNetworkInfoListTotCnt" parameterType="egovframework.hyb.mbl.nwk.service.NetworkAPIDefaultVO" resultType="int">
 		SELECT COUNT(*) totcnt
 		FROM NETWORK
-		WHERE USEYN='Y'
+		WHERE USEYN='Y' AND UUID = #{uuid}
 	</select>
 
 </mapper>

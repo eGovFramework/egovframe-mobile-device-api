@@ -4,5 +4,4 @@ abstract class GpsRepository {
   Future<GpsInfo?> getCurrentLocation();
   Future<bool> saveGpsInfo(GpsInfo gpsInfo);
   Future<List<GpsInfo>> getGpsInfoList(String uuid);
-  Future<bool> deleteAllGpsInfo(String uuid);
 }

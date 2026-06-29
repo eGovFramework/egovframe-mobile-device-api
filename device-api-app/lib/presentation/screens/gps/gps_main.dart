@@ -15,7 +15,7 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/server_connection_button.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
-import 'package:egovframe_mobile_deviceapi_app/utils/device_uuid_util.dart';
+import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/permission_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -61,7 +61,7 @@ class _GpsMainPageState extends State<GpsMainPage>
 
   /// 디바이스 UUID 초기화
   Future<void> _initializeDeviceUuid() async {
-    _deviceUuid = await DeviceUuidUtil.getDeviceUuid();
+    _deviceUuid = await DeviceIdService.getDeviceId();
     _loadGpsInfoList();
   }
 

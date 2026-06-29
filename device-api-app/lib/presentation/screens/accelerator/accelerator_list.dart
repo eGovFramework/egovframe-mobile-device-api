@@ -1,4 +1,4 @@
-﻿
+﻿import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/data/datasources/accelerometer_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/accelerator_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
@@ -8,7 +8,6 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/button.dart'
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/footer.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/infobox.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart';
-import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
 import 'package:flutter/material.dart';
 
@@ -22,13 +21,14 @@ class AcceleratorListPage extends StatefulWidget {
   State<AcceleratorListPage> createState() => _AcceleratorListPageState();
 }
 
-class _AcceleratorListPageState extends State<AcceleratorListPage> with SingleTickerProviderStateMixin {
+class _AcceleratorListPageState extends State<AcceleratorListPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<AcceleratorInfo> acceleratorInfoList = [];
   bool isLoading = true;
   String errorMessage = '';
-  Set<int> selectedIndices = {};
-  bool selectAll = false;
+
+  String deviceUuid = '';
 
   @override
   void initState() {
@@ -37,6 +37,11 @@ class _AcceleratorListPageState extends State<AcceleratorListPage> with SingleTi
     _tabController.addListener(() {
       setState(() {}); // 탭 변경 시 UI 업데이트
     });
+    _initList();
+  }
+
+  Future<void> _initList() async {
+    deviceUuid = await DeviceIdService.getDeviceId();
     _loadAcceleratorInfoList();
   }
 
@@ -53,8 +58,10 @@ class _AcceleratorListPageState extends State<AcceleratorListPage> with SingleTi
         errorMessage = '';
       });
 
-      final list = await AccelerometerService.getAcceleratorInfoList('device_uuid');
-      
+      final list = await AccelerometerService.getAcceleratorInfoList(
+        deviceUuid,
+      );
+
       if (mounted) {
         setState(() {
           acceleratorInfoList = list;
@@ -68,54 +75,6 @@ class _AcceleratorListPageState extends State<AcceleratorListPage> with SingleTi
           isLoading = false;
         });
       }
-    }
-  }
-
-  Future<void> _showDeleteConfirmDialog() async {
-    final result = await showPromptDialog(
-      context,
-      title: '목록 삭제',
-      message: '삭제를 누르면 모든 목록이 삭제됩니다. 삭제하시겠습니까?',
-      confirmText: '삭제',
-      cancelText: '취소',
-    );
-
-    if (result == true) {
-      await _deleteAllAcceleratorData();
-    }
-  }
-
-  Future<void> _deleteAllAcceleratorData() async {
-    try {
-      final success = await AccelerometerService.deleteAcceleratorInfo();
-
-      if (success) {
-        if (mounted) {
-          await showStatusDialog(
-            context,
-            variant: StatusVariant.success,
-            title: '성공',
-            message: '가속도 정보 삭제 완료',
-          );
-          if (mounted) {
-            Navigator.pop(context, true);
-          }
-        }
-      } else {
-        showStatusDialog(
-          context,
-          variant: StatusVariant.error,
-          title: '오류',
-          message: '삭제 실패: 서버에서 처리할 수 없습니다.',
-        );
-      }
-    } catch (e) {
-      showStatusDialog(
-        context,
-        variant: StatusVariant.error,
-        title: '오류',
-        message: '오류가 발생했습니다: $e',
-      );
     }
   }
 
@@ -156,9 +115,7 @@ class _AcceleratorListPageState extends State<AcceleratorListPage> with SingleTi
                         padding: const EdgeInsets.all(16),
                         child: Column(
                           children: [
-                            InfoBox(
-                              text: '서버에 저장된 가속도 정보들의 리스트를 조회 합니다.',
-                            ),
+                            InfoBox(text: '서버에 저장된 가속도 정보들의 리스트를 조회 합니다.'),
                             const SizedBox(height: 16),
                             Expanded(
                               child: errorMessage.isNotEmpty
@@ -225,10 +182,9 @@ class _AcceleratorListPageState extends State<AcceleratorListPage> with SingleTi
                                                     subtitle: '시간 : ${info.timestamp}',
                                                     details: [
                                                       {'label': 'X축', 'value': '${info.xAxis.toStringAsFixed(2)}'},
-                                                      {'label': 'Y축', 'value': '${info.zAxis.toStringAsFixed(2)}'},
+                                                      {'label': 'Y축', 'value': '${info.yAxis.toStringAsFixed(2)}'},
                                                       {'label': 'Z축', 'value': '${info.zAxis.toStringAsFixed(2)}'},
                                                     ],
-                                                    isSelected: selectedIndices.contains(index),
                                                   ),
                                                 ),
                                               );
@@ -262,16 +218,6 @@ class _AcceleratorListPageState extends State<AcceleratorListPage> with SingleTi
                     size: 20,
                   ),
                 ),
-                CustomButton(
-                  text: '목록 삭제',
-                  onTap: _showDeleteConfirmDialog,
-                  icon: const Icon(
-                    Icons.delete,
-                    color: EgovColor.white100,
-                    size: 20,
-                  ),
-                  normalColor: EgovColor.danger50,
-                ),
               ],
             )
           else
@@ -289,7 +235,6 @@ class DeviceCardExtended extends StatelessWidget {
   final List<Map<String, String>> details;
   final VoidCallback? onTap;
   final bool showArrow;
-  final bool isSelected;
 
   const DeviceCardExtended({
     super.key,
@@ -298,7 +243,6 @@ class DeviceCardExtended extends StatelessWidget {
     required this.details,
     this.onTap,
     this.showArrow = true,
-    this.isSelected = false,
   });
 
   @override
@@ -309,10 +253,7 @@ class DeviceCardExtended extends StatelessWidget {
       decoration: ShapeDecoration(
         color: EgovColor.white100,
         shape: RoundedRectangleBorder(
-          side: BorderSide(
-            width: isSelected ? 3 : 1,
-            color: isSelected ? EgovColor.primary50 : EgovColor.gray20,
-          ),
+          side: const BorderSide(width: 1, color: EgovColor.gray20),
           borderRadius: BorderRadius.circular(12),
         ),
       ),
@@ -371,33 +312,37 @@ class DeviceCardExtended extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                   ],
-                  ...details.map((detail) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${detail['label']} :',
-                          style: EgovText.captionBold.copyWith(
-                            height: 1.50,
+                  ...details
+                      .map(
+                        (detail) => Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${detail['label']} :',
+                                style: EgovText.captionBold.copyWith(
+                                  height: 1.50,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  detail['value'] ?? '',
+                                  style: EgovText.caption.copyWith(
+                                    color: EgovColor.gray90,
+                                    height: 1.50,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            detail['value'] ?? '',
-                            style: EgovText.caption.copyWith(
-                              color: EgovColor.gray90,
-                              height: 1.50,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )).toList(),
+                      )
+                      .toList(),
                 ],
               ),
             ),

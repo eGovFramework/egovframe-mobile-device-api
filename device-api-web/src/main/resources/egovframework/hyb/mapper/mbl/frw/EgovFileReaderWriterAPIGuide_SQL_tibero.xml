@@ -11,7 +11,7 @@
 
 	<insert id="insertFileReaderWriterInfo">
 		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
-		   SELECT (IFNULL(MAX(SN), 0)+1) sn from FILE_READER_WRITER
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from FILE_READER_WRITER WHERE UUID = #{uuid}
 		</selectKey>
 		
 		INSERT INTO FILE_READER_WRITER 
@@ -27,8 +27,14 @@
 		SELECT
 			SN, UUID, USEYN
 		FROM FILE_READER_WRITER
-		WHERE USEYN='Y'
+		WHERE USEYN='Y' AND UUID = #{uuid}
 		ORDER BY SN DESC
 	</select>
+	
+	<delete id="deleteFileReaderWriterInfo">
+		UPDATE FILE_READER_WRITER 
+		SET USEYN='N'
+		WHERE SN = #{sn} AND UUID = #{uuid}
+	</delete>
 
 </mapper>

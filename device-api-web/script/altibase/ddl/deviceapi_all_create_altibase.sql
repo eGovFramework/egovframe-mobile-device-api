@@ -260,7 +260,8 @@ CREATE TABLE BARCODE_INFO (
   
   
 CREATE TABLE FILE_OPENER_LIST (
-  SN                NUMERIC(6) NOT NULL,  
+  SN                NUMERIC(6) NOT NULL,
+  UUID              VARCHAR(50) NOT NULL,
   USE_YN            CHAR(1)  NULL,  
   UPD_DT            DATE  NULL,
   FILE_SN           NUMERIC(20)  NULL,

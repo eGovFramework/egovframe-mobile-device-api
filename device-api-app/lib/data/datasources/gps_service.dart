@@ -94,8 +94,9 @@ class GpsService {
   /// GPS 정보 목록을 서버에서 가져오는 메서드
   static Future<List<GpsInfo>> loadGpsInfoList(String uuid) async {
     try {
-      final url = Uri.parse(AppConfig.getGpsUrl('/selectGPSInfoList.do'))
-          .replace(queryParameters: {'uuid': uuid});
+      final url = Uri.parse(
+        AppConfig.getGpsUrl('/selectGPSInfoList.do'),
+      ).replace(queryParameters: {'uuid': uuid});
       final response = await http.get(url);
 
       print('GPS 정보 목록 조회 API Response: status=${response.statusCode}');
@@ -117,11 +118,15 @@ class GpsService {
             final item = json as Map<String, dynamic>;
             final serverInfo = GpsInfoServer.fromJson(item);
             return GpsInfo(
+              sn: serverInfo.sn,
               uuid: serverInfo.uuid,
               latitude: serverInfo.lat,
               longitude: serverInfo.lon,
               accrcy: serverInfo.accrcy,
-              timestamp: serverInfo.regDate ?? serverInfo.updDate ?? DateTime.now().add(Duration(hours: 9)),
+              timestamp:
+                  serverInfo.regDate ??
+                  serverInfo.updDate ??
+                  DateTime.now().add(Duration(hours: 9)),
             );
           }).toList();
         } else {
@@ -138,18 +143,15 @@ class GpsService {
     }
   }
 
-  /// GPS 정보를 삭제하는 메서드
-  static Future<bool> deleteGpsInfo(String uuid, int gpsId) async {
+  static Future<bool> deleteGpsInfoBySn({
+    required String uuid,
+    required int sn,
+  }) async {
     try {
-      final url = Uri.parse(AppConfig.getGpsUrl('/deleteGPSInfo'));
-      final response = await http.delete(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'uuid': uuid,
-          'gpsId': gpsId,
-        }),
-      );
+      final url = Uri.parse(
+        AppConfig.getGpsUrl('/deleteGPSInfo.do'),
+      ).replace(queryParameters: {'uuid': uuid, 'sn': sn.toString()});
+      final response = await http.delete(url);
 
       if (response.statusCode == 200) {
         print('GPS 정보 삭제 성공');
@@ -162,35 +164,5 @@ class GpsService {
       print('GPS 정보 삭제 오류: $e');
       return false;
     }
-  }
-
-  /// 모든 GPS 정보를 삭제하는 메서드
-  static Future<bool> clearAllGpsInfo(String uuid) async {
-    try {
-      final url = Uri.parse(AppConfig.getGpsUrl('/deleteGPSInfo.do'))
-          .replace(queryParameters: {'uuid': uuid});
-      final response = await http.delete(url);
-
-      if (response.statusCode == 200) {
-        print('모든 GPS 정보 삭제 성공');
-        return true;
-      } else {
-        print('모든 GPS 정보 삭제 실패: ${response.statusCode}');
-        return false;
-      }
-    } catch (e) {
-      print('모든 GPS 정보 삭제 오류: $e');
-      return false;
-    }
-  }
-
-  /// GPS 정보 목록을 가져오는 메서드
-  static Future<List<GpsInfo>> getGpsInfoList(String uuid) async {
-    return await loadGpsInfoList(uuid);
-  }
-
-  /// 모든 GPS 정보를 삭제하는 메서드
-  static Future<bool> deleteAllGpsInfo(String uuid) async {
-    return await clearAllGpsInfo(uuid);
   }
 }

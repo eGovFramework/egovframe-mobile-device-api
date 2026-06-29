@@ -14,5 +14,6 @@ abstract class FileRepository {
   });
   Future<bool> deleteServerFile({
     required int sn,
+    required String uuid,
   });
 }

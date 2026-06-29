@@ -1,3 +1,4 @@
+import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/data/datasources/media_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/media_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
@@ -125,7 +126,8 @@ class _MediaDetailPageState extends State<MediaDetailPage> with SingleTickerProv
           operation: () async {
             // media 테이블의 sn을 사용 (fileSn이 아님)
             final sn = int.tryParse(widget.mediaFile.sn ?? '0') ?? 0;
-            final deleteResult = await MediaService.deleteMediaFromServer(sn);
+            final uuid = await DeviceIdService.getDeviceId();
+            final deleteResult = await MediaService.deleteMediaFromServer(sn, uuid);
 
             if (deleteResult['success'] == true) {
               if (mounted) {

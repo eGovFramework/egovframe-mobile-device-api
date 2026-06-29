@@ -15,7 +15,7 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/server_connection_button.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
-import 'package:egovframe_mobile_deviceapi_app/utils/device_uuid_util.dart';
+import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/permission_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -87,7 +87,7 @@ class _MediaScreenState extends State<MediaScreen>
 
   /// 디바이스 UUID 생성
   Future<void> _getDeviceUUID() async {
-    _deviceUuid = await DeviceUuidUtil.getDeviceUuid();
+    _deviceUuid = await DeviceIdService.getDeviceId();
     setState(() {});
   }
 
@@ -375,7 +375,7 @@ class _MediaScreenState extends State<MediaScreen>
       for (int sn in serverSnList) {
         try {
           print('서버 파일 삭제 시도: SN=$sn');
-          final result = await MediaService.deleteMediaFromServer(sn);
+          final result = await MediaService.deleteMediaFromServer(sn, _deviceUuid);
           if (result['success'] == true) {
             totalSuccessCount++;
             print('서버 파일 삭제 성공: SN=$sn');

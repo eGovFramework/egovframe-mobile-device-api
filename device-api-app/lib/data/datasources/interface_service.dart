@@ -1,39 +1,16 @@
 ﻿import 'dart:convert';
-import 'dart:io';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:egovframe_mobile_deviceapi_app/config/app_config.dart';
+import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:http/http.dart' as http;
 
 import '../../domain/entities/interface_info.dart';
 import '../../utils/password_encryption.dart';
 
 class InterfaceService {
-
-  static Future<String> getDeviceUUID() async {
-    try {
-      DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-      
-      if (Platform.isAndroid) {
-        AndroidDeviceInfo androidInfo = await deviceInfoPlugin.androidInfo;
-        return androidInfo.id;
-      } else if (Platform.isIOS) {
-        IosDeviceInfo iosInfo = await deviceInfoPlugin.iosInfo;
-        return iosInfo.identifierForVendor ?? 'Unknown';
-      }
-      
-      return 'Unknown';
-    } catch (e) {
-      print('Error getting deviceInfo UUID: $e');
-      return 'Unknown';
-    }
-  }
-
   // 로그인 API 호출
   static Future<Map<String, dynamic>> login(String id, String password) async {
     try {
-      final uuid = await getDeviceUUID();
-      
       final encryptedPassword = PasswordEncryption.hashPasswordWithSalt(password);
       
       final uri = Uri.parse(AppConfig.getInterfaceUrl('/selectInterfaceInfo.do'));
@@ -80,7 +57,7 @@ class InterfaceService {
   // 회원가입 API 호출
   static Future<Map<String, dynamic>> register(String id, String password, String email) async {
     try {
-      final uuid = await getDeviceUUID();
+      final uuid = await DeviceIdService.getDeviceId();
       
       final encryptedPassword = PasswordEncryption.hashPasswordWithSalt(password);
       

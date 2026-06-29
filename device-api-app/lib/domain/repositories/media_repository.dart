@@ -27,7 +27,7 @@ abstract class MediaRepository {
     required int sn,
     required ImageSource source,
   });
-  Future<Map<String, dynamic>> deleteMediaFromServer(int sn);
+  Future<Map<String, dynamic>> deleteMediaFromServer(int sn, String uuid);
   Future<bool> deleteMediaFile(String filePath);
 }
 

@@ -16,7 +16,7 @@ class AcceleratorRepositoryImpl implements AcceleratorRepository {
   }
 
   @override
-  Future<bool> deleteAcceleratorInfo() async {
-    return await AccelerometerService.deleteAcceleratorInfo();
+  Future<bool> deleteAcceleratorInfo({required String uuid, required int sn}) async {
+    return await AccelerometerService.deleteAcceleratorInfo(uuid: uuid, sn: sn);
   }
 }

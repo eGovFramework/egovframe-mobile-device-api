@@ -1,3 +1,5 @@
+import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
+import 'package:egovframe_mobile_deviceapi_app/data/datasources/gps_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/gps_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/appbar.dart';
@@ -5,6 +7,7 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/button.dart'
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/footer.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/infobox.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart';
+import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/table.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +36,7 @@ class _GpsDetailPageState extends State<GpsDetailPage> with SingleTickerProvider
     super.initState();
     _tabController = TabController(length: 3, vsync: this, initialIndex: 1);
     _tabController.addListener(() {
-      setState(() {}); // 탭 변경 시 UI 업데이트
+      setState(() {});
     });
   }
 
@@ -50,43 +53,70 @@ class _GpsDetailPageState extends State<GpsDetailPage> with SingleTickerProvider
     return '${localTime.year}-${localTime.month.toString().padLeft(2, '0')}-${localTime.day.toString().padLeft(2, '0')} ${localTime.hour.toString().padLeft(2, '0')}:${localTime.minute.toString().padLeft(2, '0')}:${localTime.second.toString().padLeft(2, '0')}';
   }
 
-  // Future<void> _deleteGpsInfo() async {
-  //   try {
-  //     final result = await showPromptDialog(
-  //       context,
-  //       title: 'GPS 정보 삭제',
-  //       message: '이 GPS 정보를 삭제하시겠습니까?',
-  //       confirmText: '삭제',
-  //       cancelText: '취소',
-  //     );
-  //
-  //     if (result == true) {
-  //       if (mounted) {
-  //         showStatusToast(
-  //           context,
-  //           variant: StatusVariant.success,
-  //           title: '성공',
-  //           message: 'GPS 정보가 성공적으로 삭제되었습니다.',
-  //           duration: const Duration(seconds: 2),
-  //           position: ToastPosition.center,
-  //         );
-  //         await Future.delayed(const Duration(seconds: 2));
-  //         if (mounted) {
-  //           Navigator.pop(context, true);
-  //         }
-  //       }
-  //     }
-  //   } catch (e) {
-  //     showStatusToast(
-  //       context,
-  //       variant: StatusVariant.error,
-  //       title: '오류',
-  //       message: '오류가 발생했습니다: $e',
-  //       duration: const Duration(seconds: 3),
-  //       position: ToastPosition.center,
-  //     );
-  //   }
-  // }
+  Future<void> _deleteGpsInfo() async {
+    if (widget.gpsInfo.sn == null) {
+      showStatusDialog(
+        context,
+        variant: StatusVariant.error,
+        title: '오류',
+        message: '삭제할 GPS 정보를 식별할 수 없습니다.',
+      );
+      return;
+    }
+
+    try {
+      final result = await showPromptDialog(
+        context,
+        title: 'GPS 정보 삭제',
+        message: '이 GPS 정보를 삭제하시겠습니까?',
+        confirmText: '삭제',
+        cancelText: '취소',
+      );
+
+      if (result == true) {
+        setState(() => isLoading = true);
+
+        final uuid = await DeviceIdService.getDeviceId();
+        final success = await GpsService.deleteGpsInfoBySn(
+          uuid: uuid,
+          sn: widget.gpsInfo.sn!,
+        );
+
+        if (mounted) {
+          setState(() => isLoading = false);
+
+          if (success) {
+            await showStatusDialog(
+              context,
+              variant: StatusVariant.success,
+              title: '성공',
+              message: 'GPS 정보가 성공적으로 삭제되었습니다.',
+            );
+            if (mounted) {
+              Navigator.pop(context, true);
+            }
+          } else {
+            showStatusDialog(
+              context,
+              variant: StatusVariant.error,
+              title: '오류',
+              message: 'GPS 정보 삭제에 실패했습니다.',
+            );
+          }
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => isLoading = false);
+        showStatusDialog(
+          context,
+          variant: StatusVariant.error,
+          title: '오류',
+          message: '오류가 발생했습니다: $e',
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,29 +198,29 @@ class _GpsDetailPageState extends State<GpsDetailPage> with SingleTickerProvider
                     size: 20,
                   ),
                 ),
-                // CustomButton(
-                //   text: '삭제',
-                //   onTap: isLoading ? null : _deleteGpsInfo,
-                //   icon: isLoading
-                //     ? const SizedBox(
-                //         width: 20,
-                //         height: 20,
-                //         child: CircularProgressIndicator(
-                //           strokeWidth: 2,
-                //           valueColor: AlwaysStoppedAnimation<Color>(EgovColor.white100),
-                //         ),
-                //       )
-                //     : const Icon(
-                //         Icons.delete,
-                //         color: EgovColor.white100,
-                //         size: 20,
-                //       ),
-                //   normalColor: EgovColor.danger50,
-                // ),
+                CustomButton(
+                  text: '삭제',
+                  onTap: isLoading ? null : _deleteGpsInfo,
+                  icon: isLoading
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(EgovColor.white100),
+                          ),
+                        )
+                      : const Icon(
+                          Icons.delete,
+                          color: EgovColor.white100,
+                          size: 20,
+                        ),
+                  normalColor: EgovColor.danger50,
+                ),
               ],
             )
           else
-            const SizedBox.shrink(), // 빈 공간으로 처리
+            const SizedBox.shrink(),
           const Footer(),
         ],
       ),
