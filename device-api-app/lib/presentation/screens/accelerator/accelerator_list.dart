@@ -9,6 +9,7 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/footer.dart'
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/infobox.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:flutter/material.dart';
 
 import 'accelerator_description.dart';
@@ -68,10 +69,11 @@ class _AcceleratorListPageState extends State<AcceleratorListPage>
           isLoading = false;
         });
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'AcceleratorListPage._loadAcceleratorInfoList');
       if (mounted) {
         setState(() {
-          errorMessage = '가속도 정보 목록을 불러오는 중 오류가 발생했습니다: $e';
+          errorMessage = ErrorHandler.messageFor(e);
           isLoading = false;
         });
       }

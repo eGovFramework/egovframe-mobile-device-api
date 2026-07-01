@@ -1,5 +1,6 @@
 import 'package:egovframe_mobile_deviceapi_app/data/datasources/network_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 
 class ServerConnectionUtils {
@@ -31,7 +32,7 @@ class ServerConnectionUtils {
       await operation();
       return true;
     } catch (e) {
-      debugPrint('서버 연결 확인 및 작업 실행 오류: $e');
+      AppLogger.e('서버 연결 확인 및 작업 실행 오류', e);
       if (showToastOnFailure) {
         _showConnectionErrorToast(
           context,
@@ -92,7 +93,7 @@ class ServerConnectionUtils {
       
       return true;
     } catch (e) {
-      debugPrint('서버 연결 확인 오류: $e');
+      AppLogger.e('서버 연결 확인 오류', e);
       _showConnectionErrorToast(
         context,
         errorTitle: errorTitle,

@@ -1,13 +1,13 @@
 # Flutter Device API Application
 
-Flutter를 사용한 모바일 디바이스 정보 조회 및 관리 애플리케이션입니다. 
-Clean Architecture 패턴을 적용하여 개발되었으며, 다양한 디바이스 기능을 통합적으로 관리할 수 있습니다.
+Flutter를 사용한 **모바일 Device API 샘플** 애플리케이션입니다.  
+Clean Architecture 패턴을 적용했으며, GPS·가속도·미디어·파일·네트워크·Interface 등 9가지 기능을 통해 **앱 ↔ eGov 웹 서버 REST 연동**이 가능합니다.
 
 ## 목차
 
 - [플러터란?](/docs/whatisflutter.md)
 - [아키텍처](/docs/architecture/0_index.md)
-  - [1. 프로젝트 구조](/docs/architecture/project_structure.md)
+  - [1. 프로젝트 구조](/docs/architecture/1_project_structure.md)
   - [2. 레이어 구조](/docs/architecture/2_layers.md)
   - [3. 의존성 역전 원칙](/docs/architecture/3_dependency_inversion.md)
   - [4. 실제 코드 예시](/docs/architecture/4_examples.md)
@@ -283,9 +283,6 @@ dependencies:
   
   # 의존성 주입
   get_it: ^7.6.4
-  
-  # WebView
-  webview_flutter: ^4.4.2
   
   # URL 실행
   url_launcher: ^6.2.5

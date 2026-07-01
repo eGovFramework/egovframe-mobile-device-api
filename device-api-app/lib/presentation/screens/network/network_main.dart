@@ -5,6 +5,7 @@ import 'package:egovframe_mobile_deviceapi_app/data/datasources/network_service.
 import 'package:egovframe_mobile_deviceapi_app/di/injection_container.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/network_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/repositories/network_repository.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/text_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/screens/network/network_list.dart';
@@ -66,8 +67,15 @@ class _NetworkScreenState extends State<NetworkScreen>
     try {
       await _getCurrentNetworkInfo();
       await _checkNetworkQuality();
-    } catch (e) {
-      _showErrorDialog('네트워크 초기화 오류: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'NetworkPage._initializeNetwork',
+        );
+      }
     } finally {
       setState(() => _isLoading = false);
     }
@@ -99,8 +107,8 @@ class _NetworkScreenState extends State<NetworkScreen>
         _currentNetworkInfo = networkInfo;
         _isConnected = isAvailable;
       });
-    } catch (e) {
-      debugPrint('현재 네트워크 정보 가져오기 오류: $e');
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'NetworkPage._getCurrentNetworkInfo');
     }
   }
 
@@ -112,8 +120,8 @@ class _NetworkScreenState extends State<NetworkScreen>
       setState(() {
         _networkQuality = quality;
       });
-    } catch (e) {
-      debugPrint('네트워크 품질 확인 오류: $e');
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'NetworkPage._checkNetworkQuality');
       setState(() {
         _networkQuality = '알 수 없음';
       });
@@ -123,7 +131,7 @@ class _NetworkScreenState extends State<NetworkScreen>
   /// 네트워크 정보를 서버에 전송
   Future<void> _sendNetworkInfoToServer() async {
     if (_currentNetworkInfo == null) {
-      _showErrorDialog('현재 네트워크 정보를 가져올 수 없습니다.');
+      await ErrorHandler.showErrorDialog(context, '현재 네트워크 정보를 가져올 수 없습니다.');
       return;
     }
 
@@ -142,10 +150,17 @@ class _NetworkScreenState extends State<NetworkScreen>
           );
         }
       } else {
-        _showErrorDialog('네트워크 정보 전송에 실패했습니다.');
+        await ErrorHandler.showErrorDialog(context, '네트워크 정보 전송에 실패했습니다.');
       }
-    } catch (e) {
-      _showErrorDialog('네트워크 정보 전송 중 오류가 발생했습니다: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'NetworkPage._sendNetworkInfoToServer',
+        );
+      }
     } finally {
       setState(() => _isLoading = false);
     }
@@ -352,17 +367,6 @@ class _NetworkScreenState extends State<NetworkScreen>
           ),
         ],
       ),
-    );
-  }
-
-
-  /// 오류 다이얼로그
-  Future<void> _showErrorDialog(String message) async {
-    await showStatusDialog(
-      context,
-      variant: StatusVariant.error,
-      title: '오류',
-      message: message,
     );
   }
 }

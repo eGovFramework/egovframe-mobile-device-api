@@ -10,6 +10,7 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
 import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/server_connection_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -79,23 +80,11 @@ class _MediaListPageState extends State<MediaListPage> with SingleTickerProvider
         errorTitle: '서버 연결 오류',
         errorMessage: '서버에 연결할 수 없습니다. 미디어 목록을 다시 시도해주세요.',
       );
-    } catch (e) {
-      String errorMessage = e.toString();
-      String userMessage;
-      
-      if (errorMessage.contains('서버 초기화 오류')) {
-        userMessage = '서버 초기화 오류가 발생했습니다.\n서버 관리자에게 문의하세요.';
-      } else if (errorMessage.contains('네트워크 연결')) {
-        userMessage = '네트워크 연결을 확인해주세요.';
-      } else if (errorMessage.contains('시간 초과')) {
-        userMessage = '서버 응답이 너무 느립니다.\n잠시 후 다시 시도해주세요.';
-      } else {
-        userMessage = '서버 미디어 목록 조회 실패: $e';
-      }
-      
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'MediaListPage._loadServerMediaList');
       if (mounted) {
         setState(() {
-          this.errorMessage = userMessage;
+          errorMessage = ErrorHandler.messageFor(e);
           isLoading = false;
         });
       }
@@ -116,6 +105,7 @@ class _MediaListPageState extends State<MediaListPage> with SingleTickerProvider
           final result = await MediaService.downloadMedia(
             mediaFile.fileSn ?? 0,
             mediaFile.name,
+            deviceUuid,
             (progress) {
               setState(() {
                 _downloadProgress = progress;
@@ -146,13 +136,13 @@ class _MediaListPageState extends State<MediaListPage> with SingleTickerProvider
         errorTitle: '서버 연결 오류',
         errorMessage: '서버에 연결할 수 없습니다. 미디어 다운로드를 다시 시도해주세요.',
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
-        showStatusDialog(
+        await ErrorHandler.handleException(
           context,
-          variant: StatusVariant.error,
-          title: '오류',
-          message: '미디어 다운로드 중 오류가 발생했습니다: $e',
+          e,
+          stackTrace: stackTrace,
+          logContext: 'MediaListPage._downloadServerMedia',
         );
       }
     } finally {
@@ -215,13 +205,13 @@ class _MediaListPageState extends State<MediaListPage> with SingleTickerProvider
           errorMessage: '서버에 연결할 수 없습니다. 미디어 삭제를 다시 시도해주세요.',
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
-        showStatusDialog(
+        await ErrorHandler.handleException(
           context,
-          variant: StatusVariant.error,
-          title: '오류',
-          message: '서버 미디어 삭제 중 오류가 발생했습니다: $e',
+          e,
+          stackTrace: stackTrace,
+          logContext: 'MediaListPage._deleteServerMedia',
         );
       }
     }

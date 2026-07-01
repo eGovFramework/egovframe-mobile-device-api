@@ -6,6 +6,8 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'app_logger.dart';
+
 /// 권한 관리를 위한 유틸리티 클래스
 class PermissionManager {
   /// 위치 권한을 요청하는 메서드
@@ -34,7 +36,7 @@ class PermissionManager {
              ? PermissionStatus.granted 
              : PermissionStatus.denied;
     } catch (e) {
-      print('위치 권한 요청 오류: $e');
+      AppLogger.e('위치 권한 요청 오류', e);
       return PermissionStatus.denied;
     }
   }
@@ -45,7 +47,7 @@ class PermissionManager {
       final permission = await FlutterContacts.requestPermission(readonly: true);
       return permission ? PermissionStatus.granted : PermissionStatus.denied;
     } catch (e) {
-      print('연락처 권한 요청 오류: $e');
+      AppLogger.e('연락처 권한 요청 오류', e);
       return PermissionStatus.denied;
     }
   }
@@ -56,7 +58,7 @@ class PermissionManager {
       final status = await Permission.camera.request();
       return status;
     } catch (e) {
-      print('카메라 권한 요청 오류: $e');
+      AppLogger.e('카메라 권한 요청 오류', e);
       return PermissionStatus.denied;
     }
   }
@@ -81,7 +83,7 @@ class PermissionManager {
         return status;
       }
     } catch (e) {
-      print('저장소 권한 요청 오류: $e');
+      AppLogger.e('저장소 권한 요청 오류', e);
       return PermissionStatus.denied;
     }
   }

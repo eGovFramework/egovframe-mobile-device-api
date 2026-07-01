@@ -5,6 +5,7 @@ import 'package:egovframe_mobile_deviceapi_app/data/datasources/media_service.da
 import 'package:egovframe_mobile_deviceapi_app/di/injection_container.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/media_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/usecases/media_usecase.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/text_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/appbar.dart';
@@ -104,7 +105,8 @@ class _MediaScreenState extends State<MediaScreen>
     try {
       _mediaFiles = await _mediaUseCase.getLocalMediaFiles();
       setState(() {});
-    } catch (e) {
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'MediaScreen._refreshLocalMediaList');
     } finally {
       setState(() {
         _isLoading = false;
@@ -180,8 +182,15 @@ class _MediaScreenState extends State<MediaScreen>
         return;
       }
       await _uploadSelectedImage(imageFile);
-    } catch (e) {
-      _showMessage('이미지 선택 오류: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'MediaPage._pickImage',
+        );
+      }
     }
   }
 
@@ -237,8 +246,15 @@ class _MediaScreenState extends State<MediaScreen>
         return;
       }
       await _uploadSelectedVideo(videoFile);
-    } catch (e) {
-      _showMessage('비디오 선택 오류: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'MediaPage._pickVideo',
+        );
+      }
     }
   }
 
@@ -260,8 +276,15 @@ class _MediaScreenState extends State<MediaScreen>
       // 로컬 목록 새로고침
       await _refreshLocalMediaList();
       setState(() {});
-    } catch (e) {
-      _showMessage('이미지 저장 오류: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'MediaPage._saveImage',
+        );
+      }
     } finally {
       setState(() {
         _isLoading = false;
@@ -285,8 +308,15 @@ class _MediaScreenState extends State<MediaScreen>
       _showMessage('비디오가 성공적으로 저장되었습니다.');
       await _refreshLocalMediaList();
       setState(() {});
-    } catch (e) {
-      _showMessage('비디오 저장 오류: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'MediaPage._saveVideo',
+        );
+      }
     } finally {
       setState(() {
         _isLoading = false;
@@ -339,9 +369,7 @@ class _MediaScreenState extends State<MediaScreen>
       List<int> serverSnList = [];
       List<String> localFilePaths = [];
 
-      print('=== 선택된 파일들 ===');
       for (String filePath in _selectedFiles) {
-        print('선택된 파일: $filePath');
 
         MediaFileInfo? selectedFile;
         for (MediaFileInfo file in _mediaFiles) {
@@ -354,19 +382,13 @@ class _MediaScreenState extends State<MediaScreen>
         if (selectedFile != null) {
           if (selectedFile.serverSn != null && selectedFile.serverSn! > 0) {
             serverSnList.add(selectedFile.serverSn!);
-            print('서버 파일 추가: SN=${selectedFile.serverSn}, 경로=$filePath');
           } else {
             localFilePaths.add(filePath);
-            print('로컬 파일 추가: $filePath');
           }
         } else {
           localFilePaths.add(filePath);
-          print('MediaFileInfo를 찾을 수 없음, 로컬 파일로 처리: $filePath');
         }
       }
-      print('서버 파일 개수: ${serverSnList.length}');
-      print('로컬 파일 개수: ${localFilePaths.length}');
-      print('==================');
 
       int totalSuccessCount = 0;
       int totalFailCount = 0;
@@ -374,11 +396,9 @@ class _MediaScreenState extends State<MediaScreen>
       // 서버 파일들 개별 삭제
       for (int sn in serverSnList) {
         try {
-          print('서버 파일 삭제 시도: SN=$sn');
           final result = await MediaService.deleteMediaFromServer(sn, _deviceUuid);
           if (result['success'] == true) {
             totalSuccessCount++;
-            print('서버 파일 삭제 성공: SN=$sn');
 
             // 서버 삭제 성공 후 해당하는 로컬 파일도 삭제
             for (String filePath in _selectedFiles) {
@@ -386,37 +406,32 @@ class _MediaScreenState extends State<MediaScreen>
               if (await file.exists()) {
                 try {
                   await file.delete();
-                  print('로컬 파일도 삭제됨: $filePath');
-                } catch (e) {
-                  print('로컬 파일 삭제 실패: $filePath, $e');
+                } catch (e, stackTrace) {
+                  ErrorHandler.logError(e, stackTrace, context: 'MediaScreen._deleteSelectedFiles.localDelete');
                 }
               }
             }
           } else {
             totalFailCount++;
-            print('서버 파일 삭제 실패: SN=$sn, ${result['message']}');
           }
-        } catch (e) {
+        } catch (e, stackTrace) {
+          ErrorHandler.logError(e, stackTrace, context: 'MediaScreen._deleteSelectedFiles.serverDelete');
           totalFailCount++;
-          print('서버 파일 삭제 오류: SN=$sn, $e');
         }
       }
 
       // 로컬 파일들 개별 삭제
       for (String filePath in localFilePaths) {
         try {
-          print('로컬 파일 삭제 시도: $filePath');
           final success = await MediaService.deleteMediaFile(filePath);
           if (success) {
             totalSuccessCount++;
-            print('로컬 파일 삭제 성공: $filePath');
           } else {
             totalFailCount++;
-            print('로컬 파일 삭제 실패: $filePath');
           }
-        } catch (e) {
+        } catch (e, stackTrace) {
+          ErrorHandler.logError(e, stackTrace, context: 'MediaScreen._deleteSelectedFiles.localFileDelete');
           totalFailCount++;
-          print('로컬 파일 삭제 오류: $e');
         }
       }
 
@@ -769,17 +784,6 @@ class _MediaScreenState extends State<MediaScreen>
             }
           }
           
-          int totalFiles = filesToUpload.length;
-          if (result['totalFiles'] != null) {
-            if (result['totalFiles'] is int) {
-              totalFiles = result['totalFiles'] as int;
-            } else if (result['totalFiles'] is String) {
-              totalFiles = int.tryParse(result['totalFiles'] as String) ?? filesToUpload.length;
-            } else {
-              totalFiles = (result['totalFiles'] as num?)?.toInt() ?? filesToUpload.length;
-            }
-          }
-          
           String message = '업로드 완료: 성공 $successCount개';
           if (failCount > 0) {
             message += ', 실패 $failCount개';
@@ -796,8 +800,15 @@ class _MediaScreenState extends State<MediaScreen>
 
         _exitSelectionMode();
         await _refreshLocalMediaList();
-      } catch (e) {
-        _showMessage('업로드 중 오류가 발생했습니다: $e');
+      } catch (e, stackTrace) {
+        if (mounted) {
+          await ErrorHandler.handleException(
+            context,
+            e,
+            stackTrace: stackTrace,
+            logContext: 'MediaPage._uploadSelectedFiles',
+          );
+        }
       } finally {
         setState(() {
           _isLoading = false;
@@ -1030,7 +1041,7 @@ class _MediaScreenState extends State<MediaScreen>
             _toggleFileSelection(imageFile.path);
           } else {
             if (isServerFile && serverSn != null) {
-              final downloadUrl = MediaService.getMediaDownloadUrl(serverSn);
+              final downloadUrl = MediaService.getMediaDownloadUrl(serverSn, _deviceUuid);
               _showMessage('서버 파일 다운로드: $downloadUrl');
             } else {
               _showImageFullScreen(imageFile);
@@ -1193,7 +1204,7 @@ class _MediaScreenState extends State<MediaScreen>
             _toggleFileSelection(videoFile.path);
           } else {
             if (isServerFile && serverSn != null) {
-              final downloadUrl = MediaService.getMediaDownloadUrl(serverSn);
+              final downloadUrl = MediaService.getMediaDownloadUrl(serverSn, _deviceUuid);
               _showMessage('서버 파일 다운로드: $downloadUrl');
             } else {
               _playVideo(videoFile);
@@ -1431,13 +1442,13 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
         _controller!.play();
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'MediaScreen._VideoPlayerState._initializeVideo');
       if (mounted && !_isDisposed) {
         setState(() {
           _hasError = true;
         });
       }
-      print('비디오 초기화 실패: $e');
     }
   }
 
@@ -1463,8 +1474,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           _controller!.pause();
         }
         _controller!.dispose();
-      } catch (e) {
-        print('비디오 플레이어 정리 중 오류: $e');
+      } catch (e, stackTrace) {
+        ErrorHandler.logError(e, stackTrace, context: 'VideoPlayerWidget.dispose');
       }
     }
     _controller = null;
@@ -1629,8 +1640,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         }
         // 약간의 지연을 주어 pause가 완료되도록 함
         await Future.delayed(const Duration(milliseconds: 150));
-      } catch (e) {
-        print('비디오 정지 중 오류: $e');
+      } catch (e, stackTrace) {
+        ErrorHandler.logError(e, stackTrace, context: 'VideoPlayerWidget._stopVideo');
       }
     }
   }

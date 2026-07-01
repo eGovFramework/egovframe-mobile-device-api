@@ -6,6 +6,7 @@ import 'package:egovframe_mobile_deviceapi_app/config/app_config.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/file_readwrite_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/file_validation_util.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/format_utils.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/app_logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
@@ -26,10 +27,9 @@ class FileReadWriteService {
       await file.parent.create(recursive: true);
       
       await file.writeAsString(content, encoding: utf8);
-      print('파일 쓰기 성공: ${file.path}');
       return true;
     } catch (e) {
-      print('파일 쓰기 실패: $e');
+      AppLogger.e('오류', e);
       return false;
     }
   }
@@ -42,14 +42,12 @@ class FileReadWriteService {
       
       if (await file.exists()) {
         final content = await file.readAsString(encoding: utf8);
-        print('파일 읽기 성공: ${file.path}');
         return content;
       } else {
-        print('파일이 존재하지 않습니다: ${file.path}');
         return null;
       }
     } catch (e) {
-      print('파일 읽기 실패: $e');
+      AppLogger.e('오류', e);
       return null;
     }
   }
@@ -60,7 +58,7 @@ class FileReadWriteService {
       final jsonString = jsonEncode(data);
       return await writeTextFile(fileName, jsonString);
     } catch (e) {
-      print('JSON 파일 쓰기 실패: $e');
+      AppLogger.e('오류', e);
       return false;
     }
   }
@@ -74,7 +72,7 @@ class FileReadWriteService {
       }
       return null;
     } catch (e) {
-      print('JSON 파일 읽기 실패: $e');
+      AppLogger.e('오류', e);
       return null;
     }
   }
@@ -87,7 +85,7 @@ class FileReadWriteService {
       final file = File('$documentsPath/$fileName');
       return await file.exists();
     } catch (e) {
-      print('파일 존재 확인 실패: $e');
+      AppLogger.e('오류', e);
       return false;
     }
   }
@@ -101,7 +99,6 @@ class FileReadWriteService {
       File file = File('$documentsPath/$fileName');
       if (await file.exists()) {
         await file.delete();
-        print('파일 삭제 성공 (documents): ${file.path}');
         return true;
       }
       
@@ -109,7 +106,6 @@ class FileReadWriteService {
       file = File('$documentsPath/media/$fileName');
       if (await file.exists()) {
         await file.delete();
-        print('파일 삭제 성공 (media): ${file.path}');
         return true;
       }
       
@@ -117,14 +113,12 @@ class FileReadWriteService {
       file = File('$documentsPath/downloads/$fileName');
       if (await file.exists()) {
         await file.delete();
-        print('파일 삭제 성공 (downloads): ${file.path}');
         return true;
       }
       
-      print('삭제할 파일을 찾을 수 없습니다: $fileName');
       return false;
     } catch (e) {
-      print('파일 삭제 실패: $e');
+      AppLogger.e('오류', e);
       return false;
     }
   }
@@ -136,14 +130,12 @@ class FileReadWriteService {
       
       if (await file.exists()) {
         await file.delete();
-        print('파일 삭제 성공: $filePath');
         return true;
       } else {
-        print('삭제할 파일이 존재하지 않습니다: $filePath');
         return false;
       }
     } catch (e) {
-      print('파일 삭제 실패: $filePath - $e');
+      AppLogger.e('오류', e);
       return false;
     }
   }
@@ -154,18 +146,10 @@ class FileReadWriteService {
       final documentsPath = await getDocumentsPath();
       final directory = Directory(documentsPath);
       
-      print('=== 일반 파일 목록 조회 ===');
-      print('Documents Directory: $documentsPath');
-      print('Directory 존재 여부: ${await directory.exists()}');
       
       if (await directory.exists()) {
         final entities = await directory.list().toList();
         final files = entities.whereType<File>().toList();
-        
-        print('일반 디렉토리 내 파일 개수: ${files.length}');
-        for (File file in files) {
-          print('발견된 일반 파일: ${file.path}');
-        }
         
         List<LocalFileInfo> fileInfos = [];
         for (File file in files) {
@@ -182,7 +166,7 @@ class FileReadWriteService {
       }
       return [];
     } catch (e) {
-      print('파일 목록 조회 실패: $e');
+      AppLogger.e('오류', e);
       return [];
     }
   }
@@ -193,19 +177,10 @@ class FileReadWriteService {
       final documentsPath = await getDocumentsPath();
       final mediaDir = Directory('$documentsPath/media');
       
-      print('=== 미디어 파일 목록 조회 ===');
-      print('Documents Directory: $documentsPath');
-      print('Media Directory: ${mediaDir.path}');
-      print('Media Directory 존재 여부: ${await mediaDir.exists()}');
       
       if (await mediaDir.exists()) {
         final entities = await mediaDir.list().toList();
         final files = entities.whereType<File>().toList();
-        
-        print('미디어 디렉토리 내 파일 개수: ${files.length}');
-        for (File file in files) {
-          print('발견된 미디어 파일: ${file.path}');
-        }
         
         List<LocalFileInfo> fileInfos = [];
         for (File file in files) {
@@ -220,11 +195,10 @@ class FileReadWriteService {
         
         return fileInfos;
       } else {
-        print('미디어 디렉토리가 존재하지 않습니다.');
         return [];
       }
     } catch (e) {
-      print('미디어 파일 목록 조회 실패: $e');
+      AppLogger.e('오류', e);
       return [];
     }
   }
@@ -235,19 +209,10 @@ class FileReadWriteService {
       final documentsPath = await getDocumentsPath();
       final downloadDir = Directory('$documentsPath/downloads');
       
-      print('=== 다운로드 파일 목록 조회 ===');
-      print('Documents Directory: $documentsPath');
-      print('Download Directory: ${downloadDir.path}');
-      print('Download Directory 존재 여부: ${await downloadDir.exists()}');
       
       if (await downloadDir.exists()) {
         final entities = await downloadDir.list().toList();
         final files = entities.whereType<File>().toList();
-        
-        print('다운로드 디렉토리 내 파일 개수: ${files.length}');
-        for (File file in files) {
-          print('발견된 다운로드 파일: ${file.path}');
-        }
         
         List<LocalFileInfo> fileInfos = [];
         for (File file in files) {
@@ -262,11 +227,10 @@ class FileReadWriteService {
         
         return fileInfos;
       } else {
-        print('다운로드 디렉토리가 존재하지 않습니다.');
         return [];
       }
     } catch (e) {
-      print('다운로드 파일 목록 조회 실패: $e');
+      AppLogger.e('오류', e);
       return [];
     }
   }
@@ -286,10 +250,9 @@ class FileReadWriteService {
       // 최신순으로 정렬
       allFiles.sort((a, b) => b.lastModified.compareTo(a.lastModified));
       
-      print('전체 파일 목록 조회 완료: 총 ${allFiles.length}개 (일반: ${documentsFiles.length}, 미디어: ${mediaFiles.length}, 다운로드: ${downloadFiles.length})');
       return allFiles;
     } catch (e) {
-      print('파일 목록 조회 실패: $e');
+      AppLogger.e('오류', e);
       return [];
     }
   }
@@ -306,7 +269,7 @@ class FileReadWriteService {
       }
       return null;
     } catch (e) {
-      print('파일 크기 조회 실패: $e');
+      AppLogger.e('오류', e);
       return null;
     }
   }
@@ -321,20 +284,16 @@ class FileReadWriteService {
       final uri = Uri.parse(AppConfig.getFileReadWriteUrl('/selectFileReaderWriterInfoList.do'))
           .replace(queryParameters: {'uuid': uuid});
 
-      print('파일 정보 목록 조회 API Request URL: $uri');
 
       final response = await http.get(uri).timeout(const Duration(seconds: 10));
 
-      print('파일 정보 목록 조회 API Response: status=${response.statusCode}');
 
       if (response.statusCode == 500) {
-        print('서버 500 오류 응답 본문: ${response.body}');
         throw Exception('서버 초기화 오류가 발생했습니다. 서버 관리자에게 문의하세요.');
       }
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        print('파일 정보 목록 조회 API Response: $jsonResponse');
         
         final List<dynamic>? fileInfoList = jsonResponse['fileReaderWriterInfoList'];
         
@@ -343,25 +302,19 @@ class FileReadWriteService {
               .map((item) => FileReadWriteInfoServer.fromJson(item))
               .toList();
         } else {
-          print('파일 정보 목록이 없습니다.');
           return [];
         }
       } else {
-        print('HTTP 오류: ${response.statusCode}');
         throw Exception('서버 연결 실패: HTTP ${response.statusCode}');
       }
-      return [];
     } on SocketException {
-      print('네트워크 연결 오류');
       throw Exception('네트워크 연결을 확인해주세요.');
     } on TimeoutException {
-      print('서버 응답 시간 초과');
       throw Exception('서버 응답이 너무 느립니다. 잠시 후 다시 시도해주세요.');
     } on FormatException {
-      print('서버 응답 형식 오류');
       throw Exception('서버 응답 형식이 올바르지 않습니다.');
     } catch (e) {
-      print('파일 정보 목록 조회 API Error: $e');
+      AppLogger.e('오류', e);
       throw Exception('서버 파일 목록을 불러올 수 없습니다: $e');
     }
   }
@@ -390,8 +343,6 @@ class FileReadWriteService {
           'useYn': 'Y',
         }).timeout(const Duration(seconds: 30));
 
-        print('파일 정보 저장 API Response Status: ${response.statusCode}');
-        print('파일 정보 저장 API Response Body: ${response.body}');
 
         if (response.statusCode == 200) {
           try {
@@ -418,7 +369,6 @@ class FileReadWriteService {
         }
 
       }catch(e){
-        print('미디어 정보 서버에 저장 실패: $e');
         return {
           'success': false,
           'message': '오류가 발생했습니다: $e',
@@ -445,24 +395,18 @@ class FileReadWriteService {
       
       final uri = Uri.parse(AppConfig.getFileReadWriteUrl('/fileupload.do'));
 
-      print('파일 업로드 API Request URL: $uri');
-      print('파일 업로드 API Request - UUID: $uuid, FileCount: ${files.length}');
 
       var request = http.MultipartRequest('POST', uri);
       request.fields['uuid'] = uuid;
       
       // 여러 파일 추가 (단일 파일도 List로 처리)
       for (File file in files) {
-        final fileName = file.path.split('/').last;
         request.files.add(await http.MultipartFile.fromPath('files', file.path));
-        print('파일 추가: $fileName');
       }
 
       final response = await client.send(request).timeout(const Duration(minutes: 10));
       final responseBody = await response.stream.bytesToString();
 
-      print('파일 업로드 API Response Status: ${response.statusCode}');
-      print('파일 업로드 API Response Body: $responseBody');
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(responseBody) as Map<String, dynamic>;
@@ -494,7 +438,6 @@ class FileReadWriteService {
             };
           }
           
-          print('값 >> :fileSn=${fileSnValue}, fileStreCoures=${fileStreCoursValue},fileSize=${fileSizeValue},fileName=${orignlFileNmValue}');
 
           final insertResult = await insertFileReaderWriteInfo(
             uuid: uuid,
@@ -568,7 +511,7 @@ class FileReadWriteService {
         };
       }
     } catch (e) {
-      print('파일 업로드 API Error: $e');
+      AppLogger.e('오류', e);
       return {
         'success': false,
         'message': '오류가 발생했습니다: $e',
@@ -592,25 +535,21 @@ class FileReadWriteService {
             'fileSn': fileSn.toString(),
           });
 
-      print('파일 다운로드 요청: uri=$uri, uuid=$uuid, fileSn=$fileSn, fileName=$fileName');
 
       final response = await http.get(uri).timeout(const Duration(seconds: 30));
 
-      print('파일 다운로드 응답: status=${response.statusCode}, contentLength=${response.contentLength}');
 
       if (response.statusCode == 200) {
         // 파일 저장
         final file = File(savePath);
         await file.writeAsBytes(response.bodyBytes);
         
-        print('파일 다운로드 완료: $savePath');
         return file;
       } else {
-        print('파일 다운로드 실패: HTTP ${response.statusCode}');
         return null;
       }
     } catch (e) {
-      print('파일 다운로드 실패: $e');
+      AppLogger.e('오류', e);
       return null;
     }
   }
@@ -627,30 +566,24 @@ class FileReadWriteService {
             'uuid': uuid,
           });
 
-      print('서버 파일 삭제 요청: uri=$uri, sn=$sn');
 
       final response = await http.delete(uri).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        print('서버 파일 삭제 응답: $jsonResponse');
         
         final resultState = jsonResponse['resultState'];
-        final resultMessage = jsonResponse['resultMessage'];
         
         if (resultState == 'OK') {
-          print('서버 파일 삭제 성공: $resultMessage');
           return true;
         } else {
-          print('서버 파일 삭제 실패: $resultMessage');
           return false;
         }
       } else {
-        print('서버 파일 삭제 실패: HTTP ${response.statusCode}');
         return false;
       }
     } catch (e) {
-      print('서버 파일 삭제 실패: $e');
+      AppLogger.e('오류', e);
       return false;
     }
   }

@@ -5,6 +5,7 @@ import 'package:egovframe_mobile_deviceapi_app/di/injection_container.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/file_readwrite_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/media_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/repositories/file_readwrite_repository.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/text_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/appbar.dart';
@@ -97,9 +98,10 @@ class _FileReadWriteMainPageState extends State<FileReadWriteMainPage> with Sing
         _fileList = fileList;
         _statusMessage = '파일 목록이 업데이트되었습니다. (${fileList.length}개)';
       });
-    } catch (e) {
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'FileReadWritePage._refreshFileList');
       setState(() {
-        _statusMessage = '파일 목록 조회 실패: $e';
+        _statusMessage = ErrorHandler.messageFor(e);
       });
     } finally {
       setState(() {
@@ -229,9 +231,10 @@ class _FileReadWriteMainPageState extends State<FileReadWriteMainPage> with Sing
           _statusMessage = '파일 생성에 실패했습니다.';
         });
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'FileReadWritePage._createTextFile');
       setState(() {
-        _statusMessage = '파일 생성 오류: $e';
+        _statusMessage = ErrorHandler.messageFor(e);
       });
     } finally {
       setState(() {
@@ -254,8 +257,15 @@ class _FileReadWriteMainPageState extends State<FileReadWriteMainPage> with Sing
       } else {
         _showMessage('파일을 읽을 수 없습니다: $fileName');
       }
-    } catch (e) {
-      _showMessage('파일 읽기 오류: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'FileReadWritePage._readFile',
+        );
+      }
     }
   }
 
@@ -426,12 +436,9 @@ class _FileReadWriteMainPageState extends State<FileReadWriteMainPage> with Sing
         );
         
         final file = File(fileInfo.filePath);
-        print('개별 파일 삭제 시도: ${fileInfo.filePath}');
         
         if (await file.exists()) {
-          print('파일 존재 확인됨, 삭제 시도 중...');
           await file.delete();
-          print('파일 삭제 성공: ${fileInfo.filePath}');
           _showMessage('파일이 삭제되었습니다: $fileName');
           
           setState(() {
@@ -440,11 +447,17 @@ class _FileReadWriteMainPageState extends State<FileReadWriteMainPage> with Sing
           
           await _refreshFileList();
         } else {
-          print('파일이 존재하지 않음: ${fileInfo.filePath}');
           _showMessage('파일이 존재하지 않습니다: $fileName');
         }
-      } catch (e) {
-        _showMessage('파일 삭제 오류: $e');
+      } catch (e, stackTrace) {
+        if (mounted) {
+          await ErrorHandler.handleException(
+            context,
+            e,
+            stackTrace: stackTrace,
+            logContext: 'FileReadWritePage._deleteFile',
+          );
+        }
       }
     }
   }
@@ -547,8 +560,8 @@ class _FileReadWriteMainPageState extends State<FileReadWriteMainPage> with Sing
           if (await file.exists()) {
             filesToUpload.add(file);
           }
-        } catch (e) {
-          print('파일 찾기 실패: $fileName, $e');
+        } catch (e, stackTrace) {
+          ErrorHandler.logError(e, stackTrace, context: 'FileReadWritePage._uploadFiles.findFile');
         }
       }
 
@@ -604,9 +617,15 @@ class _FileReadWriteMainPageState extends State<FileReadWriteMainPage> with Sing
         errorTitle: '서버 연결 오류',
         errorMessage: '서버에 연결할 수 없습니다. 파일 업로드를 다시 시도해주세요.',
       );
-    } catch (e) {
-      _showMessage('업로드 중 오류가 발생했습니다: $e');
-      print('파일 업로드 오류: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'FileReadWritePage._uploadSelectedFiles',
+        );
+      }
     } finally {
       setState(() {
         _isLoading = false;
@@ -645,22 +664,18 @@ class _FileReadWriteMainPageState extends State<FileReadWriteMainPage> with Sing
             );
             
             final file = File(fileInfo.filePath);
-            print('파일 삭제 시도: ${fileInfo.filePath}');
             
             if (await file.exists()) {
-              print('파일 존재 확인됨, 삭제 시도 중...');
               await file.delete();
-              print('파일 삭제 성공: ${fileInfo.filePath}');
               successCount++;
             } else {
-              print('파일이 존재하지 않음: ${fileInfo.filePath}');
               failCount++;
               failedFiles.add(fileName);
             }
-          } catch (e) {
+          } catch (e, stackTrace) {
+            ErrorHandler.logError(e, stackTrace, context: 'FileReadWritePage._deleteSelectedFiles.item');
             failCount++;
             failedFiles.add(fileName);
-            print('파일 삭제 오류 ($fileName): $e');
           }
         }
 
@@ -677,11 +692,14 @@ class _FileReadWriteMainPageState extends State<FileReadWriteMainPage> with Sing
 
         // 삭제 후 파일 목록 새로고침
         await _refreshFileList();
-      } catch (e) {
+      } catch (e, stackTrace) {
+        ErrorHandler.logError(e, stackTrace, context: 'FileReadWritePage._deleteSelectedFiles');
         setState(() {
-          _statusMessage = '파일 삭제 실패: $e';
+          _statusMessage = ErrorHandler.messageFor(e);
         });
-        _showMessage('파일 삭제 실패: $e');
+        if (mounted) {
+          await ErrorHandler.showErrorDialog(context, _statusMessage);
+        }
       } finally {
         setState(() {
           _isLoading = false;

@@ -1,5 +1,6 @@
 ﻿import 'dart:io';
 
+import 'package:egovframe_mobile_deviceapi_app/utils/app_logger.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/format_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -14,9 +15,6 @@ class FileManagementService {
   Future<bool> requestPermissions() async {
     try {
       if (Platform.isAndroid) {
-        debugPrint('Android 권한 요청 시작');
-        
-        // Android 13+ (API 33+)에서는 세분화된 미디어 권한 사용
         final List<Permission> mediaPermissions = [
           Permission.photos,
           Permission.videos,
@@ -25,53 +23,32 @@ class FileManagementService {
         
         for (final permission in mediaPermissions) {
           if (await permission.isDenied) {
-            final result = await permission.request();
-            debugPrint('${permission.toString()} 권한 결과: $result');
+            await permission.request();
           }
         }
         
-        // 기본 저장소 권한 (Android 12 이하)
         final storageStatus = await Permission.storage.status;
-        debugPrint('저장소 권한 상태: $storageStatus');
-        
         if (!storageStatus.isGranted) {
-          final result = await Permission.storage.request();
-          debugPrint('저장소 권한 요청 결과: $result');
-          
-          if (!result.isGranted) {
-            debugPrint('저장소 권한이 거부되었습니다.');
-          }
+          await Permission.storage.request();
         }
         
-        // Android 11+ (API 30+)에서 외부 저장소 관리 권한
         try {
           final manageStatus = await Permission.manageExternalStorage.status;
-          debugPrint('MANAGE_EXTERNAL_STORAGE 권한 상태: $manageStatus');
-          
           if (!manageStatus.isGranted) {
-            // 사용자에게 설정 화면으로 이동하도록 안내
-            debugPrint('MANAGE_EXTERNAL_STORAGE 권한이 필요합니다. 설정에서 허용해주세요.');
-            
-            // 권한 요청 시도
-            final result = await Permission.manageExternalStorage.request();
-            debugPrint('MANAGE_EXTERNAL_STORAGE 권한 요청 결과: $result');
-            
-            if (!result.isGranted) {
-              debugPrint('외부 저장소 관리 권한이 거부되었습니다. 앱 내부 저장소를 사용합니다.');
-            }
+            await Permission.manageExternalStorage.request();
           }
         } catch (e) {
-          debugPrint('MANAGE_EXTERNAL_STORAGE 권한 확인 실패: $e');
+          AppLogger.e('MANAGE_EXTERNAL_STORAGE 권한 확인 실패', e);
         }
         
-        return true; // 앱 내부 저장소는 항상 사용 가능
+        return true;
       } else if (Platform.isIOS) {
         // iOS는 앱 샌드박스 내에서만 파일 접근 가능
         return true;
       }
       return false;
     } catch (e) {
-      debugPrint('권한 요청 오류: $e');
+      AppLogger.e('권한 요청 오류', e);
       return false;
     }
   }
@@ -79,10 +56,9 @@ class FileManagementService {
   /// MANAGE_EXTERNAL_STORAGE 권한을 설정 화면에서 허용하도록 안내
   Future<bool> openPermissionSettings() async {
     try {
-      debugPrint('앱 설정 화면 열기 시도');
       return await openAppSettings();
     } catch (e) {
-      debugPrint('앱 설정 화면 열기 실패: $e');
+      AppLogger.e('앱 설정 화면 열기 실패', e);
       return false;
     }
   }
@@ -98,13 +74,12 @@ class FileManagementService {
         final documentsDir = Directory(directory.path);
         if (!await documentsDir.exists()) {
           await documentsDir.create(recursive: true);
-          debugPrint('iOS Documents 디렉토리 생성: ${directory.path}');
         }
       }
       
       return directory.path;
     } catch (e) {
-      debugPrint('문서 디렉토리 경로 가져오기 오류: $e');
+      AppLogger.e('문서 디렉토리 경로 가져오기 오류', e);
       rethrow;
     }
   }
@@ -129,7 +104,7 @@ class FileManagementService {
       
       return contents;
     } catch (e) {
-      debugPrint('디렉토리 목록 조회 오류: $e');
+      AppLogger.e('디렉토리 목록 조회 오류', e);
       rethrow;
     }
   }
@@ -145,10 +120,9 @@ class FileManagementService {
       }
       
       await directory.create(recursive: true);
-      debugPrint('디렉토리 생성 완료: $newDirectoryPath');
       return true;
     } catch (e) {
-      debugPrint('디렉토리 생성 오류: $e');
+      AppLogger.e('디렉토리 생성 오류', e);
       rethrow;
     }
   }
@@ -161,18 +135,16 @@ class FileManagementService {
       if (entity == FileSystemEntityType.directory) {
         final directory = Directory(path);
         await directory.delete(recursive: true);
-        debugPrint('디렉토리 삭제 완료: $path');
       } else if (entity == FileSystemEntityType.file) {
         final file = File(path);
         await file.delete();
-        debugPrint('파일 삭제 완료: $path');
       } else {
         throw Exception('삭제할 수 없는 항목입니다: $path');
       }
       
       return true;
     } catch (e) {
-      debugPrint('삭제 오류: $e');
+      AppLogger.e('삭제 오류', e);
       rethrow;
     }
   }
@@ -209,7 +181,6 @@ class FileManagementService {
         }
         
         await sourceFile.copy(newPath);
-        debugPrint('파일 복사 완료: $sourcePath -> $newPath');
       } else if (entity == FileSystemEntityType.directory) {
         final sourceDir = Directory(sourcePath);
         
@@ -219,14 +190,13 @@ class FileManagementService {
         }
         
         await _copyDirectory(sourcePath, newPath);
-        debugPrint('디렉토리 복사 완료: $sourcePath -> $newPath');
       } else {
         throw Exception('존재하지 않는 파일입니다: $sourceName');
       }
       
       return true;
     } catch (e) {
-      debugPrint('복사 오류: $e');
+      AppLogger.e('복사 오류', e);
       rethrow;
     }
   }
@@ -263,7 +233,6 @@ class FileManagementService {
         }
         
         await sourceFile.rename(newPath);
-        debugPrint('파일 이동 완료: $sourcePath -> $newPath');
       } else if (entity == FileSystemEntityType.directory) {
         final sourceDirectory = Directory(sourcePath);
         
@@ -279,14 +248,13 @@ class FileManagementService {
         }
         
         await sourceDirectory.rename(newPath);
-        debugPrint('디렉토리 이동 완료: $sourcePath -> $newPath');
       } else {
         throw Exception('존재하지 않는 파일입니다: $sourceName');
       }
       
       return true;
     } catch (e) {
-      debugPrint('이동 오류: $e');
+      AppLogger.e('이동 오류', e);
       rethrow;
     }
   }
@@ -323,14 +291,14 @@ class FileManagementService {
         }
       }
     } catch (e) {
-      debugPrint('디렉토리 복사 중 오류: $e');
+      AppLogger.e('디렉토리 복사 중 오류', e);
       // 부분적으로 생성된 대상 디렉토리 정리
       try {
         if (await destinationDirectory.exists()) {
           await destinationDirectory.delete(recursive: true);
         }
       } catch (cleanupError) {
-        debugPrint('정리 중 오류: $cleanupError');
+        AppLogger.e('정리 중 오류', cleanupError);
       }
       rethrow;
     }
@@ -347,10 +315,9 @@ class FileManagementService {
       }
       
       await file.writeAsString(content);
-      debugPrint('샘플 파일 생성 완료: $filePath');
       return true;
     } catch (e) {
-      debugPrint('샘플 파일 생성 오류: $e');
+      AppLogger.e('샘플 파일 생성 오류', e);
       rethrow;
     }
   }
@@ -392,7 +359,7 @@ class FileManagementService {
         throw Exception('알 수 없는 파일 형식: $path');
       }
     } catch (e) {
-      debugPrint('파일 정보 가져오기 오류: $e');
+      AppLogger.e('파일 정보 가져오기 오류', e);
       rethrow;
     }
   }

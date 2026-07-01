@@ -10,8 +10,8 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/button.dart'
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/footer.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/infobox.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart';
-import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:flutter/material.dart';
 
 import 'network_description.dart';
@@ -66,23 +66,15 @@ class _NetworkListScreenState extends State<NetworkListScreen>
           _isLoading = false;
         });
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'NetworkListScreen._loadNetworkInfoList');
       if (mounted) {
         setState(() {
-          _errorMessage = '네트워크 정보 목록 조회 오류: $e';
+          _errorMessage = ErrorHandler.messageFor(e);
           _isLoading = false;
         });
       }
     }
-  }
-
-  Future<void> _showErrorDialog(String message) async {
-    await showStatusDialog(
-      context,
-      variant: StatusVariant.error,
-      title: '오류',
-      message: message,
-    );
   }
 
   /// 네트워크 정보 카드 위젯

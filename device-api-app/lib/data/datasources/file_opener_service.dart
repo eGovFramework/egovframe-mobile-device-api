@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:egovframe_mobile_deviceapi_app/config/app_config.dart';
 import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/file_opener_info.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/app_logger.dart';
 import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:http/http.dart' as http;
 import 'package:open_file/open_file.dart';
@@ -15,59 +16,45 @@ import 'file_readwrite_service.dart';
 class FileOpenerService {
   static Future<OpenResult> openFile(FileOpenerInfo fileInfo) async {
     try {
-      print('파일 열기 시도: ${fileInfo.fileName}');
-      print('파일 경로: ${fileInfo.filePath}');
-      print('MIME 타입: ${fileInfo.mimeType}');
-      print('파일 확장자: ${fileInfo.fileExtension}');
-      print('로컬 파일 여부: ${fileInfo.isLocalFile}');
-      
-      
       // 로컬 파일인 경우
       if (fileInfo.isLocalFile) {
         final file = File(fileInfo.filePath);
         if (!await file.exists()) {
-          print('파일이 존재하지 않음: ${fileInfo.filePath}');
           return OpenResult(
             success: false,
             message: '파일을 찾을 수 없습니다: ${fileInfo.fileName}',
             errorCode: 'FILE_NOT_FOUND',
           );
         }
-        print('파일 존재 확인됨');
       }
 
       // 파일 열기 시도
-      print('OpenFile.open 호출 시작');
       final result = await OpenFile.open(
         fileInfo.filePath,
         type: _shouldUseMimeType(fileInfo.fileExtension) ? fileInfo.mimeType : null,
       );
       
-      print('OpenFile.open 결과: ${result.type}');
-      print('OpenFile.open 메시지: ${result.message}');
 
       if (result.type == ResultType.done) {
-        print('파일 열기 성공: ${fileInfo.fileName}');
         return OpenResult(
           success: true,
           message: '파일이 성공적으로 열렸습니다: ${fileInfo.fileName}',
           errorCode: null,
         );
       } else {
-        print('파일 열기 실패: ${result.message}');
         
         // 파일 확장자에 따른 대표 뷰어 앱 가져오기
         final suggestedApp = getViewerAppForExtension(fileInfo.fileExtension);
         
         return OpenResult(
           success: false,
-          message: result.message ?? '파일을 열 수 없습니다',
+          message: result.message,
           errorCode: result.type.toString(),
           suggestedApp: suggestedApp,
         );
       }
     } catch (e) {
-      print('파일 열기 오류: $e');
+      AppLogger.e('오류', e);
       return OpenResult(
         success: false,
         message: '파일 열기 중 오류가 발생했습니다: $e',
@@ -84,7 +71,6 @@ class FileOpenerService {
     FileType fileType = FileType.other,
   }) async {
     try {
-      print('파일 선택 시작');
       final effectiveAllowed = _defaultAllowedExtensions(fileType, allowedExtensions);
       
       file_picker.FilePickerResult? result = await file_picker.FilePicker.platform.pickFiles(
@@ -107,14 +93,12 @@ class FileOpenerService {
           }
         }
         
-        print('선택된 파일 개수: ${fileInfos.length}');
         return fileInfos;
       } else {
-        print('파일 선택 취소됨');
         return null;
       }
     } catch (e) {
-      print('파일 선택 오류: $e');
+      AppLogger.e('오류', e);
       return null;
     }
   }
@@ -149,10 +133,9 @@ class FileOpenerService {
         isLocalFile: true,
       );
       
-      print('파일 복사 완료: $fileName -> $targetPath');
       return copiedFileInfo;
     } catch (e) {
-      print('파일 복사 오류: ${originalFile.fileName} - $e');
+      AppLogger.e('오류', e);
       return originalFile; // 복사 실패 시 원본 파일 정보 반환
     }
   }
@@ -160,7 +143,6 @@ class FileOpenerService {
   /// 로컬 파일 목록에서 FileOpenerInfo 목록 생성
   static Future<List<FileOpenerInfo>> getLocalFileList() async {
     try {
-      print('로컬 파일 목록 조회 시작');
       
       final fileInfos = await FileReadWriteService.getAllFileList();
       List<FileOpenerInfo> openerInfos = [];
@@ -203,10 +185,9 @@ class FileOpenerService {
         serverDownloadFiles.where((f) => getDocumentExtensions().contains(f.fileExtension)).toList(),
       );
       
-      print('로컬 파일 목록 조회 완료: ${openerInfos.length}개');
       return openerInfos;
     } catch (e) {
-      print('로컬 파일 목록 조회 오류: $e');
+      AppLogger.e('오류', e);
       return [];
     }
   }
@@ -240,12 +221,11 @@ class FileOpenerService {
           ));
         }
         
-        print('복사된 파일 로드 완료: ${copiedFiles.length}개');
       }
       
       return copiedFiles;
     } catch (e) {
-      print('복사된 파일 로드 오류: $e');
+      AppLogger.e('오류', e);
       return [];
     }
   }
@@ -284,20 +264,18 @@ class FileOpenerService {
                   isLocalFile: true,
                 ));
               } else {
-                print('파일 크기가 0입니다: ${file.path}');
               }
             }
           } catch (e) {
-            print('파일 처리 오류: ${file.path} - $e');
+            AppLogger.e('오류', e);
           }
         }
         
-        print('서버 다운로드 파일 로드 완료: ${serverFiles.length}개');
       }
       
       return serverFiles;
     } catch (e) {
-      print('서버 다운로드 파일 로드 오류: $e');
+      AppLogger.e('오류', e);
       return [];
     }
   }
@@ -386,7 +364,6 @@ class FileOpenerService {
     String? targetPath,
   }) async {
     try {
-      print('파일 다운로드 시작: $fileName');
       
       // 다운로드 경로 설정
       final documentsPath = await getApplicationDocumentsDirectory();
@@ -405,7 +382,6 @@ class FileOpenerService {
         final file = File(filePath);
         await file.writeAsBytes(response.bodyBytes);
         
-        print('파일 다운로드 완료: $filePath');
         
         // 파일 정보 생성
         final extension = fileName.split('.').last.toLowerCase();
@@ -433,7 +409,7 @@ class FileOpenerService {
         );
       }
     } catch (e) {
-      print('파일 다운로드 오류: $e');
+      AppLogger.e('오류', e);
       return OpenResult(
         success: false,
         message: '파일 다운로드 중 오류가 발생했습니다: $e',
@@ -448,7 +424,7 @@ class FileOpenerService {
       final allFiles = await getLocalFileList();
       return allFiles.where((file) => file.fileType == fileType).toList();
     } catch (e) {
-      print('파일 타입별 조회 오류: $e');
+      AppLogger.e('오류', e);
       return [];
     }
   }
@@ -462,7 +438,7 @@ class FileOpenerService {
         file.fileExtension.toLowerCase().contains(query.toLowerCase())
       ).toList();
     } catch (e) {
-      print('파일 검색 오류: $e');
+      AppLogger.e('오류', e);
       return [];
     }
   }
@@ -474,16 +450,14 @@ class FileOpenerService {
         final file = File(fileInfo.filePath);
         if (await file.exists()) {
           await file.delete();
-          print('파일 삭제 성공: ${fileInfo.fileName}');
           return true;
         } else {
-          print('삭제할 파일이 존재하지 않습니다: ${fileInfo.fileName}');
           return false;
         }
       }
       return false;
     } catch (e) {
-      print('파일 삭제 오류: ${fileInfo.fileName} - $e');
+      AppLogger.e('오류', e);
       return false;
     }
   }
@@ -500,13 +474,12 @@ class FileOpenerService {
         
         if (await source.exists()) {
           await source.copy(target.path);
-          print('파일 복사 성공: ${sourceFile.fileName} -> $newFileName');
           return true;
         }
       }
       return false;
     } catch (e) {
-      print('파일 복사 오류: $e');
+      AppLogger.e('오류', e);
       return false;
     }
   }
@@ -514,7 +487,6 @@ class FileOpenerService {
   /// 시스템 다운로드 폴더에서 파일 목록을 가져오는 메서드
   static Future<List<FileOpenerInfo>> getSystemDownloadFiles() async {
     try {
-      print('시스템 다운로드 폴더 스캔 시작');
       
       List<FileOpenerInfo> downloadFiles = [];
       
@@ -532,25 +504,21 @@ class FileOpenerService {
       
       for (final path in possiblePaths) {
         try {
-          print('경로 확인 중: $path');
           final downloadDir = Directory(path);
           
           if (await downloadDir.exists()) {
-            print('폴더 존재 확인: $path');
             
             // 권한 확인을 위해 간단한 접근 시도
             try {
               final entities = await downloadDir.list().toList();
               final files = entities.whereType<File>().toList();
               
-              print('폴더 내 파일 개수: ${files.length}');
               
               for (final file in files) {
                 try {
                   final fileName = file.path.split('/').last;
                   final extension = fileName.split('.').last.toLowerCase();
                   
-                  print('파일 발견: $fileName (확장자: $extension)');
                   
                   // 문서 관련 확장자만 필터링
                   if (getDocumentExtensions().contains(extension)) {
@@ -567,33 +535,29 @@ class FileOpenerService {
                       isLocalFile: true,
                     ));
                     
-                    print('다운로드 파일 추가: $fileName (${stat.size} bytes)');
                   }
                 } catch (e) {
-                  print('파일 처리 오류: ${file.path} - $e');
+                  AppLogger.e('오류', e);
                 }
               }
               
               // 파일이 있는 폴더를 찾으면 중단
               if (files.isNotEmpty) {
-                print('파일이 있는 폴더 발견: $path');
                 break;
               }
             } catch (e) {
-              print('폴더 접근 권한 오류: $path - $e');
+              AppLogger.e('오류', e);
             }
           } else {
-            print('폴더가 존재하지 않음: $path');
           }
         } catch (e) {
-          print('경로 확인 오류: $path - $e');
+          AppLogger.e('오류', e);
         }
       }
       
-      print('시스템 다운로드 파일 스캔 완료: ${downloadFiles.length}개');
       return downloadFiles;
     } catch (e) {
-      print('시스템 다운로드 파일 스캔 오류: $e');
+      AppLogger.e('오류', e);
       return [];
     }
   }
@@ -674,7 +638,7 @@ class FileOpenerService {
         isLocalFile: true,
       );
     } catch (e) {
-      print('FileOpenerInfo 생성 오류: $e');
+      AppLogger.e('오류', e);
       return null;
     }
   }
@@ -682,7 +646,6 @@ class FileOpenerService {
   /// 서버에서 파일 목록을 조회하는 메서드
   static Future<List<ServerFileInfo>> getServerFileList() async {
     try {
-      print('서버 파일 목록 조회 시작');
       
       // 먼저 서버 연결 상태 확인
       final isServerAvailable = await checkServerConnection();
@@ -693,21 +656,17 @@ class FileOpenerService {
       final uuid = await DeviceIdService.getDeviceId();
       final uri = Uri.parse(AppConfig.getFileOpenerUrl('/selectFileOpenerList.do'))
           .replace(queryParameters: {'uuid': uuid});
-      print('서버 파일 목록 조회 API Request URL: $uri (uuid=$uuid)');
       
       final response = await http.get(uri).timeout(const Duration(seconds: 10));
       
-      print('서버 파일 목록 조회 API Response: status=${response.statusCode}');
       
       // 500 오류인 경우 서버 초기화 문제일 가능성이 높음
       if (response.statusCode == 500) {
-        print('서버 500 오류 응답 본문: ${response.body}');
         throw Exception('서버 초기화 오류가 발생했습니다. 서버 관리자에게 문의하세요.\n오류: ${response.body}');
       }
       
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        print('서버 응답: $jsonResponse');
         
         if (jsonResponse['resultState'] == 'OK') {
           final List<dynamic> resultSet = jsonResponse['resultSet'] ?? [];
@@ -715,27 +674,21 @@ class FileOpenerService {
               .map((item) => ServerFileInfo.fromJson(item))
               .toList();
           
-          print('서버 파일 목록 조회 성공: ${serverFiles.length}개');
           return serverFiles;
         } else {
-          print('서버 응답 오류: ${jsonResponse['resultState']}');
           throw Exception('서버에서 오류가 발생했습니다: ${jsonResponse['resultState']}');
         }
       } else {
-        print('HTTP 오류: ${response.statusCode}');
         throw Exception('서버 연결 실패: HTTP ${response.statusCode}');
       }
     } on SocketException {
-      print('네트워크 연결 오류');
       throw Exception('네트워크 연결을 확인해주세요.');
     } on TimeoutException {
-      print('서버 응답 시간 초과');
       throw Exception('서버 응답이 너무 느립니다. 잠시 후 다시 시도해주세요.');
     } on FormatException {
-      print('서버 응답 형식 오류');
       throw Exception('서버 응답 형식이 올바르지 않습니다.');
     } catch (e) {
-      print('서버 파일 목록 조회 오류: $e');
+      AppLogger.e('오류', e);
       throw Exception('서버 파일 목록을 불러올 수 없습니다: $e');
     }
   }
@@ -743,21 +696,20 @@ class FileOpenerService {
   /// 서버에서 파일을 다운로드하는 메서드
   static Future<FileOpenerInfo?> downloadServerFile(ServerFileInfo serverFile) async {
     try {
-      print('서버 파일 다운로드 시작: ${serverFile.orignlFileNm}');
       
       final uri = Uri.parse(AppConfig.getFileOpenerUrl('/fileDownload.do'))
-          .replace(queryParameters: {'fileSn': serverFile.fileSn.toString()});
+          .replace(queryParameters: {
+            'fileSn': serverFile.fileSn.toString(),
+            'uuid': serverFile.uuid,
+          });
       
-      print('파일 다운로드 요청: uri=$uri, sn=${serverFile.fileSn}');
       
       // HTTP 요청으로 파일 다운로드
       final response = await http.get(uri).timeout(const Duration(seconds: 30));
       
-      print('파일 다운로드 응답: status=${response.statusCode}, contentLength=${response.contentLength}');
       
       // 500 오류인 경우 응답 본문도 로그로 출력
       if (response.statusCode == 500) {
-        print('서버 500 오류 응답 본문: ${response.body}');
         throw Exception('서버 오류 (500): ${response.body}');
       }
       
@@ -777,7 +729,6 @@ class FileOpenerService {
         // 파일 저장
         await file.writeAsBytes(response.bodyBytes);
         
-        print('파일 다운로드 완료: $filePath');
         
         // FileOpenerInfo 생성
         final fileStat = await file.stat();
@@ -794,11 +745,10 @@ class FileOpenerService {
         
         return fileInfo;
       } else {
-        print('파일 다운로드 실패: HTTP ${response.statusCode}');
         throw Exception('파일 다운로드 실패: HTTP ${response.statusCode}');
       }
     } catch (e) {
-      print('파일 다운로드 오류: $e');
+      AppLogger.e('오류', e);
       throw Exception('파일 다운로드 중 오류가 발생했습니다: $e');
     }
   }
@@ -812,22 +762,20 @@ class FileOpenerService {
     IOSink? sink;
     
     try {
-      print('서버 파일 다운로드 시작 (진행률 포함): ${serverFile.orignlFileNm}');
       
       final uri = Uri.parse(AppConfig.getFileOpenerUrl('/fileDownload.do'))
-          .replace(queryParameters: {'fileSn': serverFile.fileSn.toString()});
+          .replace(queryParameters: {
+            'fileSn': serverFile.fileSn.toString(),
+            'uuid': serverFile.uuid,
+          });
       
-      print('파일 다운로드 요청: uri=$uri, sn=${serverFile.fileSn}');
       
       final request = http.Request('GET', uri);
       final streamedResponse = await client.send(request).timeout(const Duration(seconds: 30));
       
-      print('파일 다운로드 응답: status=${streamedResponse.statusCode}, contentLength=${streamedResponse.contentLength}');
-      print('응답 헤더: ${streamedResponse.headers}');
       
       if (streamedResponse.statusCode == 500) {
         final responseBody = await streamedResponse.stream.bytesToString();
-        print('서버 500 오류 응답 본문: $responseBody');
         throw Exception('서버 오류 (500): $responseBody');
       }
       
@@ -846,7 +794,6 @@ class FileOpenerService {
         
         // 파일 크기 가져오기
         final contentLength = streamedResponse.contentLength ?? 0;
-        print('Content-Length 헤더: $contentLength bytes');
         
         // 파일 저장 및 진행률 업데이트
         int downloadedBytes = 0;
@@ -868,14 +815,11 @@ class FileOpenerService {
         await sink.close();
         sink = null;
         
-        print('실제 다운로드된 바이트 수: $downloadedBytes bytes');
         
         await Future.delayed(const Duration(milliseconds: 200));
         
-        print('파일 다운로드 완료: $filePath');
         
         final fileStat = await file.stat();
-        print('저장된 파일 크기: ${fileStat.size} bytes');
         final fileInfo = FileOpenerInfo(
           fileName: fileName,
           filePath: filePath,
@@ -889,11 +833,10 @@ class FileOpenerService {
         
         return fileInfo;
       } else {
-        print('파일 다운로드 실패: HTTP ${streamedResponse.statusCode}');
         throw Exception('파일 다운로드 실패: HTTP ${streamedResponse.statusCode}');
       }
     } catch (e) {
-      print('파일 다운로드 오류: $e');
+      AppLogger.e('오류', e);
       throw Exception('파일 다운로드 중 오류가 발생했습니다: $e');
     } finally {
       // 리소스 정리
@@ -905,13 +848,11 @@ class FileOpenerService {
   /// 다운로드된 서버 파일 목록을 가져오는 메서드
   static Future<List<FileOpenerInfo>> getDownloadedServerFiles() async {
     try {
-      print('다운로드된 서버 파일 목록 조회 시작');
       
       final documentsPath = await getApplicationDocumentsDirectory();
       final downloadDir = Directory('${documentsPath.path}/server_downloads');
       
       if (!await downloadDir.exists()) {
-        print('서버 다운로드 폴더가 존재하지 않음');
         return [];
       }
       
@@ -941,18 +882,16 @@ class FileOpenerService {
                 isLocalFile: true,
               ));
             } else {
-              print('파일 크기가 0입니다: ${file.path}');
             }
           }
         } catch (e) {
-          print('파일 처리 오류: ${file.path} - $e');
+          AppLogger.e('오류', e);
         }
       }
       
-      print('다운로드된 서버 파일 목록 조회 완료: ${downloadedFiles.length}개');
       return downloadedFiles;
     } catch (e) {
-      print('다운로드된 서버 파일 목록 조회 오류: $e');
+      AppLogger.e('오류', e);
       return [];
     }
   }
@@ -964,13 +903,12 @@ class FileOpenerService {
         final file = File(fileInfo.filePath);
         if (await file.exists()) {
           await file.delete();
-          print('서버 파일 삭제 완료: ${fileInfo.fileName}');
           return true;
         }
       }
       return false;
     } catch (e) {
-      print('서버 파일 삭제 오류: $e');
+      AppLogger.e('오류', e);
       return false;
     }
   }
@@ -985,23 +923,19 @@ class FileOpenerService {
         const Duration(seconds: 5),
       );
       
-      print('서버 연결 확인: status=${response.statusCode}');
       
       // 500 오류는 서버가 실행 중이지만 초기화에 실패한 경우
       if (response.statusCode == 500) {
-        print('서버 초기화 오류 감지');
         return false;
       }
       
       return response.statusCode == 200;
     } on SocketException {
-      print('서버 연결 확인: 네트워크 오류');
       return false;
     } on TimeoutException {
-      print('서버 연결 확인: 시간 초과');
       return false;
     } catch (e) {
-      print('서버 연결 확인 오류: $e');
+      AppLogger.e('오류', e);
       return false;
     }
   }

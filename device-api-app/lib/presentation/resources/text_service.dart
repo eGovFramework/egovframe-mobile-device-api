@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
+import '../../utils/error_handler.dart';
+
 class TextService {
   static Map<String, dynamic>? _textData;
   
@@ -19,8 +21,8 @@ class TextService {
         _textData = json.decode(jsonString);
         return;
       }
-    } catch (e) {
-      print('JSON 파일 로드 실패: $e');
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'TextService.loadTextData');
     }
   }
   

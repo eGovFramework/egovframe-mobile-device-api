@@ -202,15 +202,15 @@ public class EgovMediaAPIController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "미디어 파일 다운로드", description = "미디어 파일을 다운로드합니다.")
+    @Operation(summary = "미디어 파일 다운로드", description = "기기 UUID 소유권을 검증한 뒤 미디어 파일을 다운로드합니다.")
     @RequestMapping(value = "/mda/downloadMediaFile.do", method = RequestMethod.GET)
-    public void downloadMediaFile(@Parameter(description = "파일 일련번호") @RequestParam("fileSn") int fileSn, HttpServletResponse response) throws Exception {
-    	
-    	
+    public void downloadMediaFile(
+            @Parameter(description = "파일 일련번호") @RequestParam("fileSn") int fileSn,
+            @Parameter(description = "기기 식별코드") @RequestParam("uuid") String uuid,
+            HttpServletResponse response) throws Exception {
         try {
-        	byte[] fileData = fileMngUtil.fileDownload(response, fileSn);
+        	byte[] fileData = fileMngUtil.fileDownload(response, fileSn, uuid);
              
-            // MIME 타입은 fileDownload 메서드 내부에서 설정
             if (response.getContentType() == null) {
                 response.setContentType("application/octet-stream");
             }
@@ -219,6 +219,9 @@ public class EgovMediaAPIController {
             response.getOutputStream().write(fileData);
             response.getOutputStream().flush();
             
+        } catch (SecurityException e) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("파일 접근 권한이 없습니다.");
         } catch (IOException e) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             response.getWriter().write("파일을 찾을 수 없습니다.");

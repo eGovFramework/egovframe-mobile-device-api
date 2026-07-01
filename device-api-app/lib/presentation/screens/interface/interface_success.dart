@@ -1,4 +1,6 @@
-﻿import 'package:egovframe_mobile_deviceapi_app/data/datasources/interface_service.dart';
+﻿import 'package:egovframe_mobile_deviceapi_app/data/datasources/interface_credential_storage.dart';
+import 'package:egovframe_mobile_deviceapi_app/di/injection_container.dart';
+import 'package:egovframe_mobile_deviceapi_app/domain/usecases/interface_usecase.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/appbar.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/button.dart';
@@ -7,8 +9,8 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/infobox.dart
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../screens/application_list_main.dart';
 import 'interface_description.dart';
@@ -17,11 +19,13 @@ import 'interface_main.dart';
 class InterfaceSuccessPage extends StatefulWidget {
   final String userId;
   final String userPw;
+  final bool isPasswordHashed;
 
   const InterfaceSuccessPage({
     super.key,
     required this.userId,
     required this.userPw,
+    this.isPasswordHashed = false,
   });
 
   @override
@@ -30,6 +34,7 @@ class InterfaceSuccessPage extends StatefulWidget {
 
 class _InterfaceSuccessPageState extends State<InterfaceSuccessPage>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+  late final InterfaceUseCase _interfaceUseCase;
   late TabController _tabController;
   bool _isLoading = false;
   bool _isDataLoading = true;
@@ -38,6 +43,7 @@ class _InterfaceSuccessPageState extends State<InterfaceSuccessPage>
   @override
   void initState() {
     super.initState();
+    _interfaceUseCase = getIt<InterfaceUseCase>();
     WidgetsBinding.instance.addObserver(this);
 
     _tabController = TabController(length: 3, vsync: this, initialIndex: 1);
@@ -61,9 +67,10 @@ class _InterfaceSuccessPageState extends State<InterfaceSuccessPage>
   // 사용자 정보 로드
   Future<void> _loadUserInfo() async {
     try {
-      final result = await InterfaceService.getUserInfo(
+      final result = await _interfaceUseCase.getUserInfo(
         widget.userId,
         widget.userPw,
+        isPasswordHashed: widget.isPasswordHashed,
       );
 
       if (result['success']) {
@@ -75,13 +82,20 @@ class _InterfaceSuccessPageState extends State<InterfaceSuccessPage>
         setState(() {
           _isDataLoading = false;
         });
-        _showErrorDialog('사용자 정보를 불러올 수 없습니다: ${result['message'] ?? '알 수 없는 오류'}');
+        await ErrorHandler.showErrorDialog(context, '사용자 정보를 불러올 수 없습니다: ${result['message'] ?? '알 수 없는 오류'}');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       setState(() {
         _isDataLoading = false;
       });
-      _showErrorDialog('오류가 발생했습니다: $e');
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'InterfaceSuccessPage._loadUserInfo',
+        );
+      }
     }
   }
 
@@ -99,12 +113,7 @@ class _InterfaceSuccessPageState extends State<InterfaceSuccessPage>
 
   // 실제 로그아웃
   Future<void> _performLogout() async {
-    // flutter_secure_storage에서 저장된 비밀번호 및 로그인 정보 삭제
-    const storage = FlutterSecureStorage();
-    await storage.delete(key: 'password');
-    await storage.delete(key: 'userId');
-    await storage.delete(key: 'login');
-    await storage.delete(key: 'loginTime');
+    await InterfaceCredentialStorage.clear();
     
     await _showSuccessDialog('로그아웃되었습니다.');
     if (mounted) {
@@ -135,18 +144,14 @@ class _InterfaceSuccessPageState extends State<InterfaceSuccessPage>
     });
 
     try {
-      final result = await InterfaceService.withdraw(
+      final result = await _interfaceUseCase.withdraw(
         widget.userId,
         widget.userPw,
+        isPasswordHashed: widget.isPasswordHashed,
       );
 
       if (result['success']) {
-        // 회원탈퇴 성공 시 flutter_secure_storage에서 저장된 정보 삭제
-        const storage = FlutterSecureStorage();
-        await storage.delete(key: 'password');
-        await storage.delete(key: 'userId');
-        await storage.delete(key: 'login');
-        await storage.delete(key: 'loginTime');
+        await InterfaceCredentialStorage.clear();
         
         await _showSuccessDialog('회원탈퇴가 완료되었습니다.');
         if (mounted) {
@@ -159,10 +164,17 @@ class _InterfaceSuccessPageState extends State<InterfaceSuccessPage>
           );
         }
       } else {
-        _showErrorDialog('회원탈퇴에 실패했습니다: ${result['message']}');
+        await ErrorHandler.showErrorDialog(context, '회원탈퇴에 실패했습니다: ${result['message']}');
       }
-    } catch (e) {
-      _showErrorDialog('오류가 발생했습니다: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'InterfaceSuccessPage._handleWithdrawal',
+        );
+      }
     } finally {
       setState(() {
         _isLoading = false;
@@ -175,15 +187,6 @@ class _InterfaceSuccessPageState extends State<InterfaceSuccessPage>
       context,
       variant: StatusVariant.success,
       title: '성공',
-      message: message,
-    );
-  }
-
-  Future<void> _showErrorDialog(String message) async {
-    await showStatusDialog(
-      context,
-      variant: StatusVariant.error,
-      title: '오류',
       message: message,
     );
   }

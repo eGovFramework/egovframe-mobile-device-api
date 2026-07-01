@@ -14,4 +14,17 @@ public class EgovFileDAO extends EgovAbstractMapper{
 		return (Integer) insert("fileDAO.insertFileDetailInfo", fileVO);
 	}
 
+	public int countFileOwnershipByUuid(int fileSn, String uuid) throws Exception {
+		java.util.Map<String, Object> params = new java.util.HashMap<>();
+		params.put("fileSn", fileSn);
+		params.put("uuid", uuid);
+		Integer count = selectOne("fileDAO.countFileOwnershipByUuid", params);
+		return count != null ? count : 0;
+	}
+
+	public int countFileRegistration(int fileSn) {
+		Integer count = selectOne("fileDAO.countFileRegistration", fileSn);
+		return count != null ? count : 0;
+	}
+
 }

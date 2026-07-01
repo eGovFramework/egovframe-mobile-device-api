@@ -1,6 +1,7 @@
 ﻿import 'dart:convert';
 
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/app_item.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/screens/accelerator/accelerator_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/screens/fileopener/fileOpener_main.dart';
@@ -54,8 +55,8 @@ class _AppListState extends State<AppList> {
       setState(() {
         _isLoading = false;
       });
-    } catch (e) {
-      print('Error loading app data: $e');
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'AppList._loadAppData');
       setState(() {
         _isLoading = false;
       });
@@ -163,7 +164,6 @@ class _AppListState extends State<AppList> {
         break;
       // 다른 페이지들도 여기에 추가할 수 있습니다
       default:
-        print('Unknown target page: $targetPage');
     }
   }
 

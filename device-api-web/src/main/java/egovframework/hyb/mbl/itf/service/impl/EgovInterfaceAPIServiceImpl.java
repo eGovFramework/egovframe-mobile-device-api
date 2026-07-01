@@ -10,7 +10,8 @@ import egovframework.hyb.mbl.itf.service.InterfaceAPIVO;
 import jakarta.annotation.Resource;
 
 /**
- * 통합 Interface API ServiceImpl
+ * 통합 Interface API ServiceImpl.
+ * 비밀번호는 앱에서 1차 해시(SHA-256+userId, Base64)한 값을 그대로 DB에 저장·비교한다.
  */
 @Service("EgovInterfaceAPIService")
 public class EgovInterfaceAPIServiceImpl extends EgovAbstractServiceImpl implements EgovInterfaceAPIService {

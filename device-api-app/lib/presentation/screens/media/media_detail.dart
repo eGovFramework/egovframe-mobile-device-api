@@ -10,6 +10,7 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/table.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/server_connection_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -58,9 +59,11 @@ class _MediaDetailPageState extends State<MediaDetailPage> with SingleTickerProv
       await ServerConnectionUtils.checkConnectionAndExecuteIfConnected(
         context: context,
         operation: () async {
+          final uuid = await DeviceIdService.getDeviceId();
           final result = await MediaService.downloadMedia(
             widget.mediaFile.fileSn ?? 0,
             widget.mediaFile.name,
+            uuid,
             (progress) {
               setState(() {
                 _downloadProgress = progress;
@@ -91,13 +94,13 @@ class _MediaDetailPageState extends State<MediaDetailPage> with SingleTickerProv
         errorTitle: '서버 연결 오류',
         errorMessage: '서버에 연결할 수 없습니다. 미디어 다운로드를 다시 시도해주세요.',
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
-        showStatusDialog(
+        await ErrorHandler.handleException(
           context,
-          variant: StatusVariant.error,
-          title: '오류',
-          message: '미디어 다운로드 중 오류가 발생했습니다: $e',
+          e,
+          stackTrace: stackTrace,
+          logContext: 'MediaDetailPage._downloadMedia',
         );
       }
     } finally {
@@ -156,13 +159,13 @@ class _MediaDetailPageState extends State<MediaDetailPage> with SingleTickerProv
           errorMessage: '서버에 연결할 수 없습니다. 미디어 삭제를 다시 시도해주세요.',
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
-        showStatusDialog(
+        await ErrorHandler.handleException(
           context,
-          variant: StatusVariant.error,
-          title: '오류',
-          message: '서버 미디어 삭제 중 오류가 발생했습니다: $e',
+          e,
+          stackTrace: stackTrace,
+          logContext: 'MediaDetailPage._deleteMedia',
         );
       }
     }

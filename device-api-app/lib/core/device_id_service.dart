@@ -1,7 +1,8 @@
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import '../utils/app_logger.dart';
 
 class DeviceIdService {
   DeviceIdService._();
@@ -25,15 +26,15 @@ class DeviceIdService {
       }
 
       if (stored != null && stored.isNotEmpty) {
-        debugPrint('DeviceIdService: 저장된 ID가 UUID v4가 아니어서 재생성합니다 ($stored)');
+        AppLogger.d('DeviceIdService: 저장된 ID가 UUID v4가 아니어서 재생성합니다');
       }
 
       final deviceId = _generateUuidV4();
       await _storage.write(key: _secureStorageKey, value: deviceId);
       return deviceId;
     } catch (e) {
-      debugPrint('DeviceIdService.getDeviceId 실패: $e');
-      return 'unknown_device';
+      AppLogger.e('DeviceIdService.getDeviceId 실패', e);
+      rethrow;
     }
   }
 

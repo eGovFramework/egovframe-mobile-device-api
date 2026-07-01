@@ -16,7 +16,7 @@ abstract class MediaRepository {
   });
   // Future<Map<String, dynamic>> getMediaInfoDetail(int sn);
   Future<List<MediaFileInfo>> getServerMediaList(String uuid);
-  Future<String> getMediaDownloadUrl(int sn);
+  Future<String> getMediaDownloadUrl(int sn, String uuid);
   Future<Map<String, dynamic>> pickAndUploadImage({
     required String uuid,
     required int sn,

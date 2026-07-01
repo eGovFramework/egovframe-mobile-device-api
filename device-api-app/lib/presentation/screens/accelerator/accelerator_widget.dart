@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
+import 'package:flutter/material.dart';
 
 class AccelerationDisplay extends StatefulWidget {
   final double xAxis;
@@ -58,14 +59,24 @@ class _AccelerationDisplayState extends State<AccelerationDisplay> {
   String _formatTimestamp(String timestamp) {
     try {
       final milliseconds = int.tryParse(timestamp);
-      if (milliseconds != null) {
-        final dateTime = DateTime.fromMillisecondsSinceEpoch(milliseconds, isUtc: true);
-        return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}';
+      if (milliseconds == null) {
+        ErrorHandler.logError(
+          FormatException('타임스탬프를 숫자로 변환할 수 없습니다: $timestamp'),
+          StackTrace.current,
+          context: 'AccelerationDisplay._formatTimestamp',
+        );
+        return timestamp;
       }
-    } catch (e) {
-      print('Error formatting timestamp: $e');
+      final dateTime = DateTime.fromMillisecondsSinceEpoch(milliseconds, isUtc: true);
+      return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}';
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(
+        e,
+        stackTrace,
+        context: 'AccelerationDisplay._formatTimestamp',
+      );
+      return timestamp;
     }
-    return timestamp; // 변환 실패 시 원본 반환
   }
 
   @override

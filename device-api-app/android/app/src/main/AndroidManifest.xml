@@ -34,6 +34,10 @@
     <!-- URL 런처 권한 -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
+    <!-- 연락처 권한 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
     <application
         android:label="egovframe_mobile_deviceapi_app"
         android:name="${applicationName}"

@@ -1,6 +1,8 @@
 ﻿import 'package:egovframe_mobile_deviceapi_app/config/app_config.dart';
-import 'package:egovframe_mobile_deviceapi_app/data/datasources/interface_service.dart';
-import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
+import 'package:egovframe_mobile_deviceapi_app/data/datasources/interface_credential_storage.dart';
+import 'package:egovframe_mobile_deviceapi_app/di/injection_container.dart';
+import 'package:egovframe_mobile_deviceapi_app/domain/interface_input_validator.dart';
+import 'package:egovframe_mobile_deviceapi_app/domain/usecases/interface_usecase.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/appbar.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/button.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/footer.dart';
@@ -10,8 +12,10 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/server_connection_button.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/textForm.dart';
+import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/password_encryption.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../screens/application_list_main.dart';
 import 'interface_description.dart';
@@ -26,6 +30,7 @@ class InterfaceScreen extends StatefulWidget{
 
 class _InterfaceScreen extends State<InterfaceScreen>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver{
+  late final InterfaceUseCase _interfaceUseCase;
   late TabController _tabController;
   final _formKey = GlobalKey<FormState>();
   final _idController = TextEditingController();
@@ -33,12 +38,12 @@ class _InterfaceScreen extends State<InterfaceScreen>
   final _emailController = TextEditingController();
   bool _isLoading = false;
 
-  static final storage = FlutterSecureStorage();
     dynamic userInfo = '';
 
   @override
   void initState(){
     super.initState();
+    _interfaceUseCase = getIt<InterfaceUseCase>();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _asyncMethod();
@@ -53,42 +58,27 @@ class _InterfaceScreen extends State<InterfaceScreen>
   }
 
   _asyncMethod() async {
-    final loginStatus = await storage.read(key: 'login');
-    final savedUserId = await storage.read(key: 'userId');
-    final savedPassword = await storage.read(key: 'password');
-    final loginTimeStr = await storage.read(key: 'loginTime');
+    final session = await InterfaceCredentialStorage.readSession();
 
-    if (loginStatus != null && savedUserId != null && savedPassword != null) {
-      // 세션 만료 시간 확인
+    if (session != null) {
       bool isSessionValid = true;
-      
-      if (loginTimeStr != null) {
-        try {
-          final loginTime = DateTime.parse(loginTimeStr);
-          final now = DateTime.now();
-          
-          if (now.difference(loginTime) > AppConfig.sessionTimeout) {
-            // 세션이 만료되었으면 저장된 정보 삭제
-            isSessionValid = false;
-            await storage.delete(key: 'login');
-            await storage.delete(key: 'userId');
-            await storage.delete(key: 'password');
-            await storage.delete(key: 'loginTime');
-          }
-        } catch (e) {
-          print('세션 시간 파싱 오류: $e');
+
+      if (session.loginTime != null) {
+        final now = DateTime.now();
+        if (now.difference(session.loginTime!) > AppConfig.sessionTimeout) {
           isSessionValid = false;
+          await InterfaceCredentialStorage.clear();
         }
       }
-      
-      // 세션이 유효하면 자동으로 성공 페이지로 이동
+
       if (isSessionValid && mounted) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => InterfaceSuccessPage(
-              userId: savedUserId,
-              userPw: savedPassword,
+              userId: session.userId,
+              userPw: session.hashedPassword,
+              isPasswordHashed: true,
             ),
           ),
         );
@@ -117,7 +107,7 @@ class _InterfaceScreen extends State<InterfaceScreen>
     });
 
     try {
-      final result = await InterfaceService.login(
+      final result = await _interfaceUseCase.login(
         _idController.text.trim(),
         _passwordController.text.trim(),
       );
@@ -127,26 +117,32 @@ class _InterfaceScreen extends State<InterfaceScreen>
         final interfaceInfo = data['interfaceInfo'];
         
         if (interfaceInfo == null) {
-          _showErrorDialog('아이디 또는 비밀번호가 올바르지 않습니다.');
+          await ErrorHandler.showErrorDialog(context, '아이디 또는 비밀번호가 올바르지 않습니다.');
           return;
         }
         
-        // flutter_secure_storage에 평문 비밀번호 저장
-        final now = DateTime.now();
-        await storage.write(key: 'password', value: _passwordController.text.trim());
-        await storage.write(key: 'userId', value: _idController.text.trim());
-        await storage.write(key: 'login', value: 'true');
-        await storage.write(key: 'loginTime', value: now.toIso8601String());
+        // flutter_secure_storage에 해시된 비밀번호 저장
+        await InterfaceCredentialStorage.save(
+          _idController.text.trim(),
+          _passwordController.text.trim(),
+        );
         
         await _showSuccessDialog('로그인 성공');
         if (mounted) {
           _navigateToSuccessPage();
         }
       } else {
-        _showErrorDialog(result['message'] ?? '로그인에 실패했습니다.');
+        await ErrorHandler.showErrorDialog(context, result['message'] ?? '로그인에 실패했습니다.');
       }
-    } catch (e) {
-      _showErrorDialog('오류가 발생했습니다: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'InterfacePage._handleLogin',
+        );
+      }
     } finally {
       setState(() {
         _isLoading = false;
@@ -160,44 +156,59 @@ class _InterfaceScreen extends State<InterfaceScreen>
       return;
     }
 
+    final emailError = InterfaceInputValidator.validateEmail(
+      _emailController.text,
+      required: true,
+    );
+    if (emailError != null) {
+      await ErrorHandler.showErrorDialog(context, emailError);
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
 
     try {
       // 먼저 계정 존재 여부 확인
-      final accountExists = await InterfaceService.checkAccountExists(
+      final accountExists = await _interfaceUseCase.checkAccountExists(
         _idController.text.trim(),
         _passwordController.text.trim(),
         _emailController.text.trim(),
       );
 
       if (accountExists) {
-        _showErrorDialog('이미 존재하는 계정입니다. 로그인을 진행하세요.');
+        await ErrorHandler.showErrorDialog(context, '이미 존재하는 계정입니다. 로그인을 진행하세요.');
         return;
       }
 
       // 계정이 없으면 회원가입 진행
-      final result = await InterfaceService.register(
+      final result = await _interfaceUseCase.register(
         _idController.text.trim(),
         _passwordController.text.trim(),
         _emailController.text.trim(),
       );
 
       if (result['success']) {
-        final now = DateTime.now();
-        await storage.write(key: 'password', value: _passwordController.text.trim());
-        await storage.write(key: 'userId', value: _idController.text.trim());
-        await storage.write(key: 'login', value: 'true');
-        await storage.write(key: 'loginTime', value: now.toIso8601String());
+        await InterfaceCredentialStorage.save(
+          _idController.text.trim(),
+          _passwordController.text.trim(),
+        );
         
         _showSuccessDialog('회원가입이 완료되었습니다.');
         _refreshPage();
       } else {
-        _showErrorDialog('회원가입에 실패했습니다: ${result['message']}');
+        await ErrorHandler.showErrorDialog(context, '회원가입에 실패했습니다: ${result['message']}');
       }
-    } catch (e) {
-      _showErrorDialog('오류가 발생했습니다: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'InterfacePage._handleRegister',
+        );
+      }
     } finally {
       setState(() {
         _isLoading = false;
@@ -210,15 +221,6 @@ class _InterfaceScreen extends State<InterfaceScreen>
       context,
       variant: StatusVariant.success,
       title: '성공',
-      message: message,
-    );
-  }
-
-  Future<void> _showErrorDialog(String message) async {
-    await showStatusDialog(
-      context,
-      variant: StatusVariant.error,
-      title: '오류',
       message: message,
     );
   }
@@ -236,21 +238,24 @@ class _InterfaceScreen extends State<InterfaceScreen>
   }
 
   void _navigateToSuccessPage() async {
-    final savedPassword = await storage.read(key: 'password');
-    final savedUserId = await storage.read(key: 'userId');
-    
+    final session = await InterfaceCredentialStorage.readSession();
+    final hashedPassword = session?.hashedPassword ??
+        PasswordEncryption.encryptPassword(
+          _passwordController.text.trim(),
+          session?.userId ?? _idController.text.trim(),
+        );
+
     if (mounted) {
-      // 현재 화면(로그인 페이지)을 제거하고 성공 페이지로 이동
-      // 첫 번째 화면(메인 화면)만 유지하고 나머지는 모두 제거
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
           builder: (context) => InterfaceSuccessPage(
-            userId: savedUserId ?? _idController.text.trim(),
-            userPw: savedPassword ?? _passwordController.text.trim(),
+            userId: session?.userId ?? _idController.text.trim(),
+            userPw: hashedPassword,
+            isPasswordHashed: true,
           ),
         ),
-        (route) => route.isFirst, // 첫 번째 화면(메인 화면)만 유지
+        (route) => route.isFirst,
       );
     }
   }
@@ -307,33 +312,23 @@ class _InterfaceScreen extends State<InterfaceScreen>
                           const SizedBox(height: 16),
                           Form(
                             key: _formKey,
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
                             child: Column(
                               children: [
                                 CustomTextFormField(
                                   controller: _idController,
                                   label: '사용자 ID',
                                   hintText: 'ID를 입력하세요',
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'ID를 입력해주세요';
-                                    }
-                                    return null;
-                                  },
+                                  maxLength: InterfaceInputValidator.userIdMaxLength,
+                                  validator: InterfaceInputValidator.validateUserId,
                                 ),
                                 const SizedBox(height: 16),
                                 PasswordTextFormField(
                                   controller: _passwordController,
                                   label: '비밀번호',
                                   hintText: '비밀번호를 입력하세요',
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return '비밀번호를 입력해주세요';
-                                    }
-                                    if (value.length < 6) {
-                                      return '비밀번호는 6자 이상이어야 합니다';
-                                    }
-                                    return null;
-                                  },
+                                  maxLength: InterfaceInputValidator.userPwMaxLength,
+                                  validator: InterfaceInputValidator.validateUserPw,
                                 ),
                                 const SizedBox(height: 16),
                                 CustomTextFormField(
@@ -341,14 +336,11 @@ class _InterfaceScreen extends State<InterfaceScreen>
                                   label: '이메일',
                                   hintText: '이메일을 입력하세요',
                                   keyboardType: TextInputType.emailAddress,
-                                  validator: (value) {
-                                    if (value != null && value.isNotEmpty) {
-                                      if (!value.contains('@')) {
-                                        return '올바른 이메일 형식을 입력해주세요';
-                                      }
-                                    }
-                                    return null;
-                                  },
+                                  maxLength: InterfaceInputValidator.emailMaxLength,
+                                  validator: (value) => InterfaceInputValidator.validateEmail(
+                                    value,
+                                    required: false,
+                                  ),
                                 ),
                               ],
                             ),

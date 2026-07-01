@@ -8,9 +8,9 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/button.dart'
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/footer.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/infobox.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart';
-import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
 import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/server_connection_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -79,87 +79,13 @@ class _FileReadWriteListPageState extends State<FileReadWriteListPage> with Sing
         errorTitle: '서버 연결 오류',
         errorMessage: '서버에 연결할 수 없습니다. 파일 목록을 다시 시도해주세요.',
       );
-    } catch (e) {
-      String errorMessage = e.toString();
-      String userMessage;
-      
-      if (errorMessage.contains('서버 초기화 오류')) {
-        userMessage = '서버 초기화 오류가 발생했습니다.\n서버 관리자에게 문의하세요.';
-      } else if (errorMessage.contains('네트워크 연결')) {
-        userMessage = '네트워크 연결을 확인해주세요.';
-      } else if (errorMessage.contains('시간 초과')) {
-        userMessage = '서버 응답이 너무 느립니다.\n잠시 후 다시 시도해주세요.';
-      } else {
-        userMessage = '서버 파일 목록 조회 실패: $e';
-      }
-      
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'FileReadWriteListPage._loadServerFileList');
       if (mounted) {
         setState(() {
-          this.errorMessage = userMessage;
+          errorMessage = ErrorHandler.messageFor(e);
           isLoading = false;
         });
-      }
-    }
-  }
-
-  Future<void> _deleteServerFile(FileInfo serverFile) async {
-    try {
-      final result = await showPromptDialog(
-        context,
-        title: '서버 파일 삭제',
-        message: '${serverFile.fileName} 파일을 서버에서 삭제하시겠습니까?',
-        confirmText: '삭제',
-        cancelText: '취소',
-      );
-
-      if (result == true) {
-        await ServerConnectionUtils.checkConnectionAndExecuteIfConnected(
-          context: context,
-          operation: () async {
-            final success = await _fileRepository.deleteServerFile(
-              sn: serverFile.sn,
-              uuid: deviceUuid,
-            );
-
-            if (success) {
-              if (mounted) {
-                await showStatusDialog(
-                  context,
-                  variant: StatusVariant.success,
-                  title: '성공',
-                  message: '서버 파일이 삭제되었습니다: ${serverFile.fileName}',
-                );
-                if (mounted) {
-                  setState(() {
-                    isLoading = true;
-                    errorMessage = '';
-                  });
-                  _loadServerFileList();
-                }
-              }
-            } else {
-              if (mounted) {
-                showStatusDialog(
-                  context,
-                  variant: StatusVariant.error,
-                  title: '오류',
-                  message: '서버 파일 삭제에 실패했습니다: ${serverFile.fileName}',
-                );
-              }
-            }
-          },
-          errorTitle: '서버 연결 오류',
-          errorMessage: '서버에 연결할 수 없습니다. 파일 삭제를 다시 시도해주세요.',
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        showStatusDialog(
-          context,
-          variant: StatusVariant.error,
-          title: '오류',
-          message: '서버 파일 삭제 중 오류가 발생했습니다: $e',
-        );
       }
     }
   }

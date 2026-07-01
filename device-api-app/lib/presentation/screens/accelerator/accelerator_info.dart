@@ -12,6 +12,7 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/server_connection_button.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
 import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:flutter/material.dart';
 
 import 'accelerator_description.dart';
@@ -103,11 +104,24 @@ class _AcceleratorInfoPageState extends State<AcceleratorInfoPage>
 
       // useYn 설정
       const useYn = "Y";
+
+      if (deviceUuid.isEmpty) {
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+          await ErrorHandler.showErrorDialog(
+            context,
+            '기기 식별 정보를 불러올 수 없습니다.',
+          );
+        }
+        return;
+      }
       
       // API 호출
       final success = await AccelerometerService.saveAcceleratorInfo(
         AcceleratorInfo(
-          uuid: deviceUuid.isNotEmpty ? deviceUuid : 'unknown_device', // 실제 디바이스 UUID 사용
+          uuid: deviceUuid,
           xAxis: xAxis,
           yAxis: yAxis,
           zAxis: zAxis,
@@ -126,14 +140,19 @@ class _AcceleratorInfoPageState extends State<AcceleratorInfoPage>
       if (success) {
         _showSuccessDialog('가속도 정보 저장 성공');
       } else {
-        _showErrorDialog('데이터 전송 중 오류가 발생했습니다.');
+        await ErrorHandler.showErrorDialog(context, '데이터 전송 중 오류가 발생했습니다.');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
         setState(() {
           isLoading = false;
         });
-        _showErrorDialog('오류가 발생했습니다: $e');
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'AcceleratorInfoPage._saveAcceleratorInfo',
+        );
       }
     }
   }
@@ -153,22 +172,18 @@ class _AcceleratorInfoPageState extends State<AcceleratorInfoPage>
     switch (state) {
       case AppLifecycleState.paused:
         // 앱이 백그라운드로 갈 때 센서 중지
-        print('App paused - stopping accelerometer');
         _accelerometerService.stopAccelerometer();
         break;
       case AppLifecycleState.resumed:
         // 앱이 포그라운드로 올 때 센서 재시작
-        print('App resumed - starting accelerometer');
         _startAccelerometer();
         break;
       case AppLifecycleState.inactive:
         // 앱이 비활성화될 때 (전화 수신 등)
-        print('App inactive - stopping accelerometer');
         _accelerometerService.stopAccelerometer();
         break;
       case AppLifecycleState.detached:
         // 앱이 완전히 종료될 때
-        print('App detached - cleaning up accelerometer');
         _accelerometerService.dispose();
         break;
       default:
@@ -181,15 +196,6 @@ class _AcceleratorInfoPageState extends State<AcceleratorInfoPage>
       context,
       variant: StatusVariant.success,
       title: '성공',
-      message: message,
-    );
-  }
-
-  Future<void> _showErrorDialog(String message) async {
-    await showStatusDialog(
-      context,
-      variant: StatusVariant.error,
-      title: '오류',
       message: message,
     );
   }

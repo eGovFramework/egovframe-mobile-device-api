@@ -17,6 +17,20 @@
 		WHERE FILE_SN = #{fileSn}
 	</select>
 
+	<select id="countFileOwnershipByUuid" resultType="int">
+		SELECT
+			(SELECT COUNT(*) FROM MEDIA WHERE FILE_SN = #{fileSn} AND UUID = #{uuid} AND USEYN = 'Y')
+			+ (SELECT COUNT(*) FROM FILE_READER_WRITE WHERE FILE_SN = #{fileSn} AND UUID = #{uuid} AND USEYN = 'Y')
+			+ (SELECT COUNT(*) FROM FILE_OPENER_LIST WHERE FILE_SN = #{fileSn} AND UUID = #{uuid} AND USE_YN = 'Y')
+	</select>
+
+	<select id="countFileRegistration" resultType="int">
+		SELECT
+			(SELECT COUNT(*) FROM MEDIA WHERE FILE_SN = #{fileSn} AND USEYN = 'Y')
+			+ (SELECT COUNT(*) FROM FILE_READER_WRITE WHERE FILE_SN = #{fileSn} AND USEYN = 'Y')
+			+ (SELECT COUNT(*) FROM FILE_OPENER_LIST WHERE FILE_SN = #{fileSn} AND USE_YN = 'Y')
+	</select>
+
 	<insert id="insertFileDetailInfo">
 		INSERT INTO FILE_DETAIL_INFO
 			( FILE_SN

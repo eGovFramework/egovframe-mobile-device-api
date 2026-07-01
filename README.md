@@ -40,10 +40,23 @@
 	- A 디바이스에서 서버에 전송한 값을 B 디바이스에서 읽기,쓰기,삭제 불가
 	- CREATE를 진행한 디바이스의 데이터만 READ, UPDATE, DELETE 가능
 	- File Opener 에서 UUID 검증할 수 있도록 DB column 추가 (DDL 수정)
-- UUID 생성 방식이 UUIDv4 방식으로 변경되어 16자리 수로 표현됩니다.
+- UUID 생성 방식이 UUIDv4 방식으로 변경되었습니다.
 	- lib/core/device_id_service.dart
 	- application 삭제 전 까지 동일한 uuid를 사용할 수 있습니다. (삭제 시 uuid도 초기화)
 	- docs/applications/utils.md 에서 uuid 관련 항목 참조
+	
+### 2026/07/01 v5.0.2 배포
+- Interface APP에서 평문 비밀번호 전송 방지와 Validation 로직이 추가되었습니다.
+	- 비밀번호 평문 전송 제거
+	- SHA-256(userId‖password) Base64 해시값 전송·저장 (flutter_secure_storage)
+	- 서버 조회 응답에서 userPw 제외, @Valid 입력 검증 추가.
+- 파일 다운로드 시 uuid + fileSn 소유권 검증 추가
+- 파일 업로드/다운로드 시 uuid 검증 로직이 추가되었습니다.
+	- 파일 업로드 시 서버에서 uuid·fileSn 자동 등록
+	- 타 기기 fileSn 임의 연결 차단
+- Secure Storage 실패 시 unknown_device 폴백 제거
+- print()로 출력되던 로그 및 민감정보 로그가 정리되고 Applogger를 통해 debug 모드에서만 로그가 출력됩니다.
+- 미사용중인 WebSocket 샘플 모듈이 제거되었으며 차후 버전에서 고도화 될 예정입니다.
 
 ## 기타
 - GPS Application 사용을 위해서는 Google MAP API Key 발급이 필요합니다
