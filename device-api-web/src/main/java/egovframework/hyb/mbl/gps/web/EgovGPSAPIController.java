@@ -49,9 +49,6 @@ public class EgovGPSAPIController {
     public ResponseEntity<?> insertGPSInfo(GPSAPIVO gpsVO, BindingResult bindingResult, Model model, SessionStatus status) throws Exception {
         Map<String, Object> response = new HashMap<>();
         
-        System.out.println("엘에이 값 >> " + gpsVO.getLat());
-        System.out.println("엘오 값 >> " + gpsVO.getLon());
-        
         int cnt = egovGPSAPIService.insertGPSInfo(gpsVO);
         if(cnt > 0) {
 			response.put("resultState","OK");

@@ -52,8 +52,8 @@ class MediaRepositoryImpl implements MediaRepository {
   }
 
   @override
-  Future<String> getMediaDownloadUrl(int sn) async {
-    return MediaService.getMediaDownloadUrl(sn);
+  Future<String> getMediaDownloadUrl(int sn, String uuid) async {
+    return MediaService.getMediaDownloadUrl(sn, uuid);
   }
 
   @override

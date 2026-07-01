@@ -7,8 +7,8 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/button.dart'
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/footer.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/infobox.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart';
-import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:flutter/material.dart';
 
 import 'fileopener_detail.dart';
@@ -66,78 +66,12 @@ class _FileOpenerListPageState extends State<FileOpenerListPage> with SingleTick
           isLoading = false;
         });
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'FileOpenerListPage._loadServerFiles');
       if (mounted) {
         setState(() {
-          errorMessage = '서버 파일 목록을 불러오는 중 오류가 발생했습니다: $e';
+          errorMessage = ErrorHandler.messageFor(e);
           isLoading = false;
-        });
-      }
-    }
-  }
-
-  Future<void> _downloadServerFile(ServerFileInfo serverFile) async {
-    if (!mounted) return;
-    
-    if (mounted) {
-      setState(() {
-        isDownloading = true;
-        downloadingFileName = serverFile.orignlFileNm;
-        downloadProgress = 0.0;
-      });
-    }
-
-    try {
-      final fileInfo = await FileOpenerService.downloadServerFileWithProgress(
-        serverFile,
-        (progress) {
-          if (mounted) {
-            setState(() {
-              downloadProgress = progress;
-            });
-          }
-        },
-      );
-
-      if (fileInfo != null) {
-        if (mounted) {
-          await showStatusDialog(
-            context,
-            variant: StatusVariant.success,
-            title: '성공',
-            message: '파일이 다운로드되었습니다: ${serverFile.orignlFileNm}',
-          );
-          
-          // 다운로드 완료 후 로컬 목록 화면으로 이동하여 새로 다운로드한 파일 확인
-          if (mounted) {
-            Navigator.pop(context);
-          }
-        }
-      } else {
-        if (mounted) {
-          showStatusDialog(
-            context,
-            variant: StatusVariant.error,
-            title: '오류',
-            message: '파일 다운로드에 실패했습니다',
-          );
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        showStatusDialog(
-          context,
-          variant: StatusVariant.error,
-          title: '오류',
-          message: '파일 다운로드 중 오류가 발생했습니다: $e',
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          isDownloading = false;
-          downloadingFileName = null;
-          downloadProgress = 0.0;
         });
       }
     }

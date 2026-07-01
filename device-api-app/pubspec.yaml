@@ -74,9 +74,6 @@ dependencies:
   # 구글맵
   google_maps_flutter: ^2.13.1
   
-  # WebView
-  webview_flutter: ^4.4.2
-  
   # 파일 열기 기능
   open_file: ^3.3.2
   file_picker: ^8.0.0+1

@@ -11,6 +11,7 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/table.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/server_connection_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -96,13 +97,13 @@ class _FileReadWriteDetailPageState extends State<FileReadWriteDetailPage> with 
           errorMessage: '서버에 연결할 수 없습니다. 파일 삭제를 다시 시도해주세요.',
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
-        showStatusDialog(
+        await ErrorHandler.handleException(
           context,
-          variant: StatusVariant.error,
-          title: '오류',
-          message: '서버 파일 삭제 중 오류가 발생했습니다: $e',
+          e,
+          stackTrace: stackTrace,
+          logContext: 'FileReadWriteDetailPage._deleteServerFile',
         );
       }
     }

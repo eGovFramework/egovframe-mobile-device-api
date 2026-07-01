@@ -138,9 +138,7 @@ class DeviceRepositoryImpl implements DeviceRepository {
 
   @override
   Future<DeviceInfo> getDeviceInfo() async {
-    print('=== DeviceInfo 조회 (DeviceService) ===');
     final info = await DeviceService.getDeviceInfo();
-    print('DeviceInfo: $info');
     return info;
   }
 
@@ -238,7 +236,6 @@ class DeviceService {
         return resultState == 'OK';
       }
     } catch (e) {
-      print('업로드 오류: $e');
     }
     return false;
   }
@@ -306,16 +303,15 @@ class _DeviceInfoPageState extends State<DeviceInfoPage>
     try {
       deviceInfo = await _deviceUseCase.getDeviceInfo();
     } catch (e, stackTrace) {
-      ErrorHandler.logError(e, null, context: 'DeviceInfoPage._getDeviceInfo');
-      final errorType = ErrorHandler.detectErrorType(e);
-      final errorMessage = ErrorHandler.getErrorMessage(e, errorType);
-      await ErrorHandler.showErrorDialog(
-        context,
-        errorMessage,
-        title: '디바이스 정보 조회 실패',
-        onRetry: _getDeviceInfo,
-        retryText: '다시 시도',
-      );
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'DeviceInfoPage._getDeviceInfo',
+          title: '디바이스 정보 조회 실패',
+        );
+      }
     } finally {
       setState(() => isLoading = false);
     }

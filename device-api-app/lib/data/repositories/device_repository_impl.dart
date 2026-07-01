@@ -7,9 +7,7 @@ class DeviceRepositoryImpl implements DeviceRepository {
 
   @override
   Future<DeviceInfo> getDeviceInfo() async {
-    print('=== DeviceInfo 조회 (DeviceService) ===');
     final info = await DeviceService.getDeviceInfo();
-    print('DeviceInfo: $info');
     return info;
   }
 

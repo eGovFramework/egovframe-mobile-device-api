@@ -20,6 +20,7 @@ import egovframework.hyb.mbl.itf.service.InterfaceAPIVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 
 /**
  * 통합 Interface API Controller
@@ -46,10 +47,15 @@ public class EgovInterfaceAPIController {
     
     @Operation(summary = "인터페이스 로그인 조회", description = "인터페이스 로그인을 한다.")
     @RequestMapping(value= "/itf/loginInterfaceInfo.do", method = RequestMethod.POST)
-    public ResponseEntity<?> loginInterfaceInfo(@ModelAttribute("searchVO") InterfaceAPIVO searchVO, ModelMap model) throws Exception {
+    public ResponseEntity<?> loginInterfaceInfo(
+            @Valid @ModelAttribute("searchVO") InterfaceAPIVO searchVO,
+            BindingResult bindingResult,
+            ModelMap model) throws Exception {
     	Map<String, Object> response = new HashMap<>();
-    	InterfaceAPIVO vo = new InterfaceAPIVO();
-    	vo = egovInterfaceAPIService.selectInterfaceInfo(searchVO);
+    	if (bindingResult.hasErrors()) {
+    		return ResponseEntity.ok(validationErrorResponse(bindingResult));
+    	}
+    	InterfaceAPIVO vo = egovInterfaceAPIService.selectInterfaceInfo(searchVO);
     	if(vo == null) {
     		int cnt = egovInterfaceAPIService.selectInterfaceInfoListTotCnt(searchVO);
     		if(cnt > 0) {
@@ -69,10 +75,19 @@ public class EgovInterfaceAPIController {
     
     @Operation(summary = "인터페이스 정보 조회", description = "인터페이스 정보를 조회한다.")
     @RequestMapping(value= "/itf/selectInterfaceInfo.do", method = RequestMethod.POST)
-    public ResponseEntity<?> selectInterfaceInfo(@ModelAttribute("searchVO") InterfaceAPIVO searchVO, ModelMap model) throws Exception {
+    public ResponseEntity<?> selectInterfaceInfo(
+            @Valid @ModelAttribute("searchVO") InterfaceAPIVO searchVO,
+            BindingResult bindingResult,
+            ModelMap model) throws Exception {
     	Map<String, Object> response = new HashMap<>();
-    	searchVO = egovInterfaceAPIService.selectInterfaceInfo(searchVO);
-        response.put("interfaceInfo", searchVO);
+    	if (bindingResult.hasErrors()) {
+    		return ResponseEntity.ok(validationErrorResponse(bindingResult));
+    	}
+    	InterfaceAPIVO result = egovInterfaceAPIService.selectInterfaceInfo(searchVO);
+    	if (result != null) {
+    		result.setUserPw(null);
+    	}
+        response.put("interfaceInfo", result);
         response.put("resultState", "OK");
 
     	return ResponseEntity.ok(response);
@@ -80,8 +95,20 @@ public class EgovInterfaceAPIController {
 
     @Operation(summary = "인터페이스 정보 등록", description = "인터페이스 정보를 등록합니다.")
     @RequestMapping(value = "/itf/insertInterfaceInfo.do", method = RequestMethod.POST)
-    public ResponseEntity<?> insertInterfaceInfo(InterfaceAPIVO interfaceVO, BindingResult bindingResult, Model model, SessionStatus status) throws Exception {
+    public ResponseEntity<?> insertInterfaceInfo(
+            @Valid @ModelAttribute("interfaceVO") InterfaceAPIVO interfaceVO,
+            BindingResult bindingResult,
+            Model model,
+            SessionStatus status) throws Exception {
         Map<String, Object> response = new HashMap<>();
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.ok(validationErrorResponse(bindingResult));
+        }
+        if (interfaceVO.getEmails() == null || interfaceVO.getEmails().isBlank()) {
+            response.put("resultState", "FAIL");
+            response.put("resultMessage", "이메일은 필수 입력값입니다.");
+            return ResponseEntity.ok(response);
+        }
         int cnt = egovInterfaceAPIService.insertInterfaceInfo(interfaceVO);
         if(cnt > 0) {
 			response.put("resultState","OK");
@@ -95,8 +122,15 @@ public class EgovInterfaceAPIController {
 
     @Operation(summary = "인터페이스 정보 삭제", description = "인터페이스 정보를 삭제합니다. (회원탈퇴) ")
     @RequestMapping(value = "/itf/deleteInterfaceInfo.do", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteInterfaceInfo(InterfaceAPIVO interfaceVO, BindingResult bindingResult, Model model, SessionStatus status) throws Exception {
+    public ResponseEntity<?> deleteInterfaceInfo(
+            @Valid @ModelAttribute("interfaceVO") InterfaceAPIVO interfaceVO,
+            BindingResult bindingResult,
+            Model model,
+            SessionStatus status) throws Exception {
         Map<String, Object> response = new HashMap<>();
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.ok(validationErrorResponse(bindingResult));
+        }
         int cnt = egovInterfaceAPIService.deleteInterfaceInfo(interfaceVO);
         if(cnt > 0) {
 			response.put("resultState","OK");
@@ -106,6 +140,17 @@ public class EgovInterfaceAPIController {
 			response.put("resultMessage","탈퇴에 실패하였습니다.l");
 		}
 		return ResponseEntity.ok(response);
+    }
+
+    private Map<String, Object> validationErrorResponse(BindingResult bindingResult) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("resultState", "FAIL");
+        if (!bindingResult.getFieldErrors().isEmpty()) {
+            response.put("resultMessage", bindingResult.getFieldErrors().get(0).getDefaultMessage());
+        } else {
+            response.put("resultMessage", "입력값이 올바르지 않습니다.");
+        }
+        return response;
     }
 
 }

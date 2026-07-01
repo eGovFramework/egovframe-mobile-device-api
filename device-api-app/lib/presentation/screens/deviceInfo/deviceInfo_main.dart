@@ -35,7 +35,6 @@ class _DeviceInfoPageState extends State<DeviceInfoPage> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    print('=== DeviceInfoPage.initState 시작 ===');
     
     _tabController = TabController(length: 3, vsync: this, initialIndex: 1);
     _tabController.addListener(() {
@@ -43,17 +42,13 @@ class _DeviceInfoPageState extends State<DeviceInfoPage> with SingleTickerProvid
     });
     
     // Use Cases 초기화
-    print('DeviceUseCase 의존성 주입 시도...');
     try {
       _deviceUseCase = getIt<DeviceUseCase>();
-      print('DeviceUseCase 의존성 주입 성공: $_deviceUseCase');
     } catch (e) {
-      print('DeviceUseCase 의존성 주입 실패: $e');
+      ErrorHandler.logError(e, null, context: 'DeviceInfoPage.initState');
     }
     
-    print('_getDeviceInfo() 호출...');
     _getDeviceInfo();
-    print('=== DeviceInfoPage.initState 완료 ===');
   }
 
   @override
@@ -64,38 +59,30 @@ class _DeviceInfoPageState extends State<DeviceInfoPage> with SingleTickerProvid
 
   Future<void> _getDeviceInfo() async {
     try {
-      print('=== DeviceInfoPage._getDeviceInfo 시작 ===');
       
       setState(() {
         isLoading = true;
       });
       
-      print('DeviceUseCase 초기화 확인: $_deviceUseCase');
       
-      print('DeviceUseCase.getDeviceInfo() 호출 중...');
       deviceInfo = await _deviceUseCase.getDeviceInfo();
-      print('DeviceInfo 조회 완료: $deviceInfo');
       
     } catch (e, stackTrace) {
-      print('=== DeviceInfoPage._getDeviceInfo 오류 ===');
-      print('오류: $e');
-      print('스택 트레이스: $stackTrace');
-      
-      ErrorHandler.logError(e, null, context: 'DeviceInfoPage._getDeviceInfo');
-      final errorType = ErrorHandler.detectErrorType(e);
-      final errorMessage = ErrorHandler.getErrorMessage(e, errorType);
-      await ErrorHandler.showErrorDialog(
-        context,
-        errorMessage,
-        title: '디바이스 정보 조회 실패',
-        onRetry: _getDeviceInfo,
-        retryText: '다시 시도',
-      );
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'DeviceInfoPage._getDeviceInfo',
+          title: '디바이스 정보 조회 실패',
+          onRetry: _getDeviceInfo,
+          retryText: '다시 시도',
+        );
+      }
     } finally {
       setState(() {
         isLoading = false;
       });
-      print('=== DeviceInfoPage._getDeviceInfo 완료 ===');
     }
   }
 
@@ -147,37 +134,28 @@ class _DeviceInfoPageState extends State<DeviceInfoPage> with SingleTickerProvid
           message: '서버에 정보 업로드에 실패했습니다.',
         );
       }
-    } catch (e) {
-      // Close loading dialog if it's still open
+    } catch (e, stackTrace) {
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
       }
-      
-      ErrorHandler.logError(e, null, context: 'DeviceInfoPage._uploadDeviceInfo');
-      final errorType = ErrorHandler.detectErrorType(e);
-      final errorMessage = ErrorHandler.getErrorMessage(e, errorType);
-      await showStatusDialog(
-        context,
-        variant: StatusVariant.error,
-        title: '오류',
-        message: errorMessage,
-      );
+
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'DeviceInfoPage._uploadDeviceInfo',
+        );
+      }
     }
-  }
-
-
-  Future<void> _showErrorDialog(String message) async {
-    await showStatusDialog(
-      context,
-      variant: StatusVariant.error,
-      title: '오류',
-      message: message,
-    );
   }
 
   Future<void> _navigateToServerList() async {
     if (deviceInfo == null) {
-      _showErrorDialog('디바이스 정보가 없어 서버 목록을 조회할 수 없습니다.');
+      await ErrorHandler.showErrorDialog(
+        context,
+        '디바이스 정보가 없어 서버 목록을 조회할 수 없습니다.',
+      );
       return;
     }
     

@@ -1,5 +1,6 @@
 ﻿import 'package:egovframe_mobile_deviceapi_app/data/datasources/file_opener_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/file_opener_info.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/text_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/appbar.dart';
@@ -69,13 +70,18 @@ class _FileOpenerScreenState extends State<FileOpenerScreen>
       if (mounted) {
         _applyFilters();
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (!mounted) return;
       setState(() {
         _isLoading = false;
       });
       if (mounted) {
-        _showErrorSnackBar('파일 목록을 불러오는데 실패했습니다: $e');
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'FileOpenerPage._loadFiles',
+        );
       }
     }
   }
@@ -142,9 +148,14 @@ class _FileOpenerScreenState extends State<FileOpenerScreen>
           _showErrorSnackBar('파일을 열 수 없습니다: ${result.message}');
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
-        _showErrorSnackBar('파일 열기 중 오류가 발생했습니다: $e');
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'FileOpenerPage._openFile',
+        );
       }
     }
   }
@@ -181,9 +192,14 @@ class _FileOpenerScreenState extends State<FileOpenerScreen>
           _showErrorSnackBar('앱 스토어를 열 수 없습니다');
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
-        _showErrorSnackBar('앱 스토어를 열 수 없습니다: $e');
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'FileOpenerPage._openAppStore',
+        );
       }
     }
   }
@@ -209,9 +225,14 @@ class _FileOpenerScreenState extends State<FileOpenerScreen>
           }
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
-        _showErrorSnackBar('파일 선택 중 오류가 발생했습니다: $e');
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'FileOpenerPage._pickFiles',
+        );
       }
     }
   }
@@ -244,9 +265,14 @@ class _FileOpenerScreenState extends State<FileOpenerScreen>
             _showErrorSnackBar('파일 삭제에 실패했습니다');
           }
         }
-      } catch (e) {
+      } catch (e, stackTrace) {
         if (mounted) {
-          _showErrorSnackBar('파일 삭제 중 오류가 발생했습니다: $e');
+          await ErrorHandler.handleException(
+            context,
+            e,
+            stackTrace: stackTrace,
+            logContext: 'FileOpenerPage._deleteFile',
+          );
         }
       }
     }
@@ -264,12 +290,7 @@ class _FileOpenerScreenState extends State<FileOpenerScreen>
 
   Future<void> _showErrorSnackBar(String message) async {
     if (!mounted) return;
-    await showStatusDialog(
-      context,
-      variant: StatusVariant.error,
-      title: '오류',
-      message: message,
-    );
+    await ErrorHandler.showErrorDialog(context, message);
   }
 
   Future<bool?> _showDeleteConfirmDialog(String fileName) {

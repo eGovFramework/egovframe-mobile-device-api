@@ -1,7 +1,8 @@
 ﻿import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../../../utils/error_handler.dart';
 
 class ThreeDCube extends StatefulWidget {
   final double xAxis;
@@ -148,10 +149,8 @@ class Simple3DCubePainter extends CustomPainter {
       // 큐브의 모서리 그리기
       _drawEdges(canvas, transformedVertices);
       
-    } catch (e) {
-      if (kDebugMode) {
-        print('간단한 큐브 그리기 오류: $e');
-      }
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'CubePainter.paint');
     }
   }
   
@@ -185,14 +184,10 @@ class Simple3DCubePainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.0;
       canvas.drawPath(path, borderPaint);
-    } catch (e) {
-      if (kDebugMode) {
-        print('면 그리기 오류: $e');
-      }
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'CubePainter._drawFace');
     }
   }
-  
-
 
   void _drawEdges(Canvas canvas, List<Offset> vertices) {
     try {
@@ -213,10 +208,8 @@ class Simple3DCubePainter extends CustomPainter {
           canvas.drawLine(vertices[edge[0]], vertices[edge[1]], edgePaint);
         }
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('모서리 그리기 오류: $e');
-      }
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'CubePainter._drawEdges');
     }
   }
   

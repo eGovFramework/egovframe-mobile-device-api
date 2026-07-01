@@ -1,6 +1,8 @@
 ﻿import 'dart:io';
 
 import 'package:egovframe_mobile_deviceapi_app/data/datasources/file_management_service.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/app_logger.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/text_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/appbar.dart';
@@ -66,11 +68,16 @@ class _FileManagementScreenState extends State<FileManagementScreen> with Single
       // 문서 디렉토리 경로 가져오기
       try {
         _currentPath = await _fileService.getApplicationDocumentsPath();
-        debugPrint('초기화된 경로: $_currentPath');
-      } catch (e) {
-        debugPrint('문서 경로 가져오기 실패: $e');
+        AppLogger.d('초기화된 경로: $_currentPath');
+      } catch (e, stackTrace) {
         if (mounted) {
-          _showErrorDialog('문서 폴더에 접근할 수 없습니다: $e');
+          await ErrorHandler.handleException(
+            context,
+            e,
+            stackTrace: stackTrace,
+            logContext: 'FileMgmtPage._initializeFileSystem.documentsPath',
+            title: '문서 폴더 접근 실패',
+          );
         }
         return;
       }
@@ -87,15 +94,19 @@ class _FileManagementScreenState extends State<FileManagementScreen> with Single
             'eGovFrame 파일관리 기능에 오신 것을 환영합니다!\n\n이 파일은 iOS에서 파일관리 기능이 정상 작동하는지 확인하기 위한 샘플 파일입니다.'
           );
           await _loadDirectoryContents();
-        } catch (e) {
-          debugPrint('초기 샘플 파일 생성 실패: $e');
+        } catch (e, stackTrace) {
+          ErrorHandler.logError(e, stackTrace, context: 'FileMgmtPage._initializeFileSystem.sampleFile');
         }
       }
       
-    } catch (e) {
-      debugPrint('파일 시스템 초기화 오류: $e');
+    } catch (e, stackTrace) {
       if (mounted) {
-        _showErrorDialog('파일 시스템 초기화 오류: $e');
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'FileMgmtPage._initializeFileSystem',
+        );
       }
     } finally {
       if (mounted) {
@@ -114,8 +125,15 @@ class _FileManagementScreenState extends State<FileManagementScreen> with Single
         _selectedItems.clear();
         _isSelectionMode = false;
       });
-    } catch (e) {
-      _showErrorDialog('디렉토리 로드 오류: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'FileMgmtPage._loadDirectoryContents',
+        );
+      }
     } finally {
       setState(() => _isLoading = false);
     }
@@ -465,8 +483,15 @@ class _FileManagementScreenState extends State<FileManagementScreen> with Single
         );
       }
       await _loadDirectoryContents();
-    } catch (e) {
-      _showErrorDialog('폴더 생성 오류: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'FileMgmtPage._createFolder',
+        );
+      }
     } finally {
       setState(() => _isLoading = false);
     }
@@ -538,8 +563,15 @@ class _FileManagementScreenState extends State<FileManagementScreen> with Single
         );
       }
       await _loadDirectoryContents();
-    } catch (e) {
-      _showErrorDialog('샘플 파일 생성 오류: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'FileMgmtPage._createSampleFile',
+        );
+      }
     } finally {
       setState(() => _isLoading = false);
     }
@@ -578,8 +610,15 @@ class _FileManagementScreenState extends State<FileManagementScreen> with Single
         );
       }
       await _loadDirectoryContents();
-    } catch (e) {
-      _showErrorDialog('삭제 오류: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'FileMgmtPage._deleteSelected',
+        );
+      }
     } finally {
       setState(() => _isLoading = false);
     }
@@ -615,8 +654,15 @@ class _FileManagementScreenState extends State<FileManagementScreen> with Single
         );
       }
       await _loadDirectoryContents();
-    } catch (e) {
-      _showErrorDialog('복사 오류: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'FileMgmtPage._copySelected',
+        );
+      }
     } finally {
       setState(() => _isLoading = false);
     }
@@ -653,8 +699,15 @@ class _FileManagementScreenState extends State<FileManagementScreen> with Single
         );
       }
       await _loadDirectoryContents();
-    } catch (e) {
-      _showErrorDialog('이동 오류: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'FileMgmtPage._moveSelected',
+        );
+      }
     } finally {
       setState(() => _isLoading = false);
     }
@@ -795,15 +848,6 @@ class _FileManagementScreenState extends State<FileManagementScreen> with Single
       ),
     );
   }
-
-  Future<void> _showErrorDialog(String message) async {
-    await showStatusDialog(
-      context,
-      variant: StatusVariant.error,
-      title: '오류',
-      message: message,
-    );
-  }
 }
 
 /// 폴더 선택 다이얼로그 위젯
@@ -847,13 +891,13 @@ class _FolderSelectionDialogState extends State<FolderSelectionDialog> {
       setState(() {
         _directories = directories;
       });
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
-        showStatusDialog(
+        await ErrorHandler.handleException(
           context,
-          variant: StatusVariant.error,
-          title: '오류',
-          message: '디렉토리 로드 오류: $e',
+          e,
+          stackTrace: stackTrace,
+          logContext: 'FolderSelectionDialog._loadDirectories',
         );
       }
     } finally {
@@ -883,13 +927,13 @@ class _FolderSelectionDialogState extends State<FolderSelectionDialog> {
       _pathHistory.clear();
       _currentPath = rootPath;
       await _loadDirectories();
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
-        showStatusDialog(
+        await ErrorHandler.handleException(
           context,
-          variant: StatusVariant.error,
-          title: '오류',
-          message: '루트 디렉토리 이동 오류: $e',
+          e,
+          stackTrace: stackTrace,
+          logContext: 'FolderSelectionDialog._navigateToRoot',
         );
       }
     }
@@ -942,13 +986,13 @@ class _FolderSelectionDialogState extends State<FolderSelectionDialog> {
             message: '폴더가 생성되었습니다: $folderName',
           );
         }
-      } catch (e) {
+      } catch (e, stackTrace) {
         if (mounted) {
-          showStatusDialog(
+          await ErrorHandler.handleException(
             context,
-            variant: StatusVariant.error,
-            title: '오류',
-            message: '폴더 생성 오류: $e',
+            e,
+            stackTrace: stackTrace,
+            logContext: 'FolderSelectionDialog._createNewFolder',
           );
         }
       } finally {

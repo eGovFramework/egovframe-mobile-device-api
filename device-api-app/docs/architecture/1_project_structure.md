@@ -33,6 +33,7 @@ lib/
 │   │   ├── file_readwrite_service.dart
 │   │   ├── file_opener_service.dart
 │   │   ├── interface_service.dart
+│   │   ├── interface_credential_storage.dart  # Interface 로컬 세션
 │   │   ├── media_service.dart
 │   │   └── network_service.dart
 │   └── repositories/         # Repository 구현체
@@ -54,6 +55,7 @@ lib/
 │   │   ├── interface_info.dart
 │   │   ├── media_info.dart
 │   │   └── network_info.dart
+│   ├── interface_input_validator.dart  # Interface 입력 검증
 │   ├── repositories/        # Repository 인터페이스
 │   │   ├── device_repository.dart
 │   │   ├── gps_repository.dart
@@ -98,6 +100,7 @@ lib/
 ├── di/                     # 의존성 주입 (GetIt)
 │   └── injection_container.dart
 ├── utils/                  # 유틸리티 함수
+│   ├── app_logger.dart
 │   ├── error_handler.dart
 │   ├── permission_manager.dart
 │   ├── password_encryption.dart
@@ -165,9 +168,10 @@ lib/
 
 **역할**: 공통 유틸리티 함수
 
-- **`error_handler.dart`**: 통합 에러 핸들러
+- **`app_logger.dart`**: 디버그 빌드 전용 로거 (`kDebugMode`)
+- **`error_handler.dart`**: 통합 에러 핸들러 (사용자 메시지·다이얼로그)
 - **`permission_manager.dart`**: 권한 관리
-- **`password_encryption.dart`**: 비밀번호 암호화
+- **`password_encryption.dart`**: Interface용 비밀번호 해시 `SHA-256(userId‖password)` → Base64
 - **`server_connection_utils.dart`**: 서버 연결 유틸리티
 
 ### 6. Core (`core/`)

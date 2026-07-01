@@ -5,6 +5,7 @@ import 'package:egovframe_mobile_deviceapi_app/config/app_config.dart';
 import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/media_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/file_validation_util.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/app_logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -23,14 +24,12 @@ class MediaService {
       );
 
       if (image != null) {
-        print('이미지 선택 성공: ${image.path}');
         return image;
       } else {
-        print('이미지 선택 취소됨');
         return null;
       }
     } catch (e) {
-      print('이미지 선택 실패: $e');
+      AppLogger.e('오류', e);
       // 일반 예외도 다시 throw
       rethrow;
     }
@@ -45,14 +44,12 @@ class MediaService {
       );
 
       if (video != null) {
-        print('비디오 선택 성공: ${video.path}');
         return video;
       } else {
-        print('비디오 선택 취소됨');
         return null;
       }
     } catch (e) {
-      print('비디오 선택 실패: $e');
+      AppLogger.e('오류', e);
       // 일반 예외도 다시 throw
       rethrow;
     }
@@ -71,10 +68,9 @@ class MediaService {
       final savedPath = '${mediaDir.path}/$fileName';
       await imageFile.saveTo(savedPath);
 
-      print('이미지 저장 성공: $savedPath');
       return savedPath;
     } catch (e) {
-      print('이미지 저장 실패: $e');
+      AppLogger.e('오류', e);
       return null;
     }
   }
@@ -92,10 +88,9 @@ class MediaService {
       final savedPath = '${mediaDir.path}/$fileName';
       await videoFile.saveTo(savedPath);
 
-      print('비디오 저장 성공: $savedPath');
       return savedPath;
     } catch (e) {
-      print('비디오 저장 실패: $e');
+      AppLogger.e('오류', e);
       return null;
     }
   }
@@ -106,23 +101,13 @@ class MediaService {
       final documentsDir = await getApplicationDocumentsDirectory();
       final mediaDir = Directory('${documentsDir.path}/media');
 
-      print('=== 로컬 미디어 파일 경로 정보 ===');
-      print('Documents Directory: ${documentsDir.path}');
-      print('Media Directory: ${mediaDir.path}');
-      print('Media Directory 존재 여부: ${await mediaDir.exists()}');
 
       if (!await mediaDir.exists()) {
-        print('미디어 디렉토리가 존재하지 않습니다.');
         return [];
       }
 
       final entities = await mediaDir.list().toList();
       final files = entities.whereType<File>().toList();
-
-      print('미디어 디렉토리 내 파일 개수: ${files.length}');
-      for (File file in files) {
-        print('발견된 파일: ${file.path}');
-      }
 
       List<MediaFileInfo> mediaFiles = [];
       for (File file in files) {
@@ -146,9 +131,6 @@ class MediaService {
         }
 
         final fileName = file.path.split('/').last;
-        print(
-          '로컬 파일 처리: $fileName (경로: ${file.path}, 크기: ${stat.size}, 타입: $type)',
-        );
 
         mediaFiles.add(
           MediaFileInfo(
@@ -167,10 +149,9 @@ class MediaService {
       // 최신순으로 정렬
       mediaFiles.sort((a, b) => b.lastModified.compareTo(a.lastModified));
 
-      // print('로컬 미디어 파일 ${mediaFiles.length}개 조회 완료');
       return mediaFiles;
     } catch (e) {
-      print('로컬 미디어 파일 조회 실패: $e');
+      AppLogger.e('오류', e);
       return [];
     }
   }
@@ -185,10 +166,6 @@ class MediaService {
   }) async {
     final uri = Uri.parse(AppConfig.getMediaUrl('/insertMediaInfo.do'));
     try {
-      print('미디어 정보 저장 API Request URL: $uri');
-      print(
-        '미디어 정보 저장 API Request Body: sn=$sn, uuid=$uuid, fileSn=$fileSn, mdSj=$mdSj',
-      );
 
       final response = await http
           .post(
@@ -197,8 +174,6 @@ class MediaService {
           )
           .timeout(const Duration(seconds: 30));
 
-      print('미디어 정보 저장 API Response Status: ${response.statusCode}');
-      print('미디어 정보 저장 API Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
         try {
@@ -225,7 +200,7 @@ class MediaService {
         };
       }
     } catch (e) {
-      print('미디어 정보 서버에 저장 실패: $e');
+      AppLogger.e('오류', e);
       return {'success': false, 'message': '오류가 발생했습니다: $e'};
     }
   }
@@ -252,10 +227,6 @@ class MediaService {
 
       final uri = Uri.parse(AppConfig.getMediaUrl('/uploadMediaFile.do'));
 
-      print('미디어 업로드 API Request URL: $uri');
-      print(
-        '미디어 업로드 API Request - UUID: $uuid, StartSN: $startSn, FileCount: ${files.length}',
-      );
 
       var request = http.MultipartRequest('POST', uri);
       request.fields['uuid'] = uuid;
@@ -263,11 +234,9 @@ class MediaService {
 
       // 여러 파일 추가 (단일 파일도 List로 처리)
       for (File file in files) {
-        final fileName = file.path.split('/').last;
         request.files.add(
           await http.MultipartFile.fromPath('files', file.path),
         );
-        print('파일 추가: $fileName');
       }
 
       final response = await client
@@ -275,8 +244,6 @@ class MediaService {
           .timeout(const Duration(minutes: 10));
       final responseBody = await response.stream.bytesToString();
 
-      print('미디어 업로드 API Response Status: ${response.statusCode}');
-      print('미디어 업로드 API Response Body: $responseBody');
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(responseBody) as Map<String, dynamic>;
@@ -321,7 +288,7 @@ class MediaService {
         };
       }
     } catch (e) {
-      print('미디어 업로드 API Error: $e');
+      AppLogger.e('오류', e);
       return {'success': false, 'message': '오류가 발생했습니다: $e'};
     } finally {
       client.close();
@@ -329,9 +296,12 @@ class MediaService {
   }
 
   /// 미디어 파일 다운로드 URL을 반환하는 메서드
-  static String getMediaDownloadUrl(int fileSn) {
+  static String getMediaDownloadUrl(int fileSn, String uuid) {
     return Uri.parse(AppConfig.getMediaUrl('/downloadMediaFile.do'))
-        .replace(queryParameters: {'fileSn': fileSn.toString()})
+        .replace(queryParameters: {
+          'fileSn': fileSn.toString(),
+          'uuid': uuid,
+        })
         .toString();
   }
 
@@ -361,7 +331,7 @@ class MediaService {
 
       return uploadResult;
     } catch (e) {
-      print('이미지 선택 및 업로드 실패: $e');
+      AppLogger.e('오류', e);
       return {'success': false, 'message': '오류가 발생했습니다: $e'};
     }
   }
@@ -392,7 +362,7 @@ class MediaService {
 
       return uploadResult;
     } catch (e) {
-      print('비디오 선택 및 업로드 실패: $e');
+      AppLogger.e('오류', e);
       return {'success': false, 'message': '오류가 발생했습니다: $e'};
     }
   }
@@ -406,14 +376,9 @@ class MediaService {
             'uuid': uuid,
           });
 
-      print('=== 미디어 삭제 API 요청 시작 ===');
-      print('미디어 삭제 API Request URL: $uri');
-      print('미디어 삭제 API Request - SN: $sn');
 
       final response = await http.delete(uri);
 
-      print('미디어 삭제 API Response Status: ${response.statusCode}');
-      print('미디어 삭제 API Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
@@ -430,7 +395,7 @@ class MediaService {
         };
       }
     } catch (e) {
-      print('미디어 삭제 API Error: $e');
+      AppLogger.e('오류', e);
       return {'success': false, 'message': '오류가 발생했습니다: $e'};
     }
   }
@@ -445,14 +410,11 @@ class MediaService {
           final uuid = await DeviceIdService.getDeviceId();
           final result = await deleteMediaFromServer(sn, uuid);
           if (result['success']) {
-            print('서버 미디어 삭제 성공: SN=$sn');
             return true;
           } else {
-            print('서버 미디어 삭제 실패: ${result['message']}');
             return false;
           }
         } else {
-          print('잘못된 서버 파일 경로: $filePath');
           return false;
         }
       }
@@ -461,14 +423,12 @@ class MediaService {
       final file = File(filePath);
       if (await file.exists()) {
         await file.delete();
-        print('로컬 미디어 파일 삭제 성공: $filePath');
         return true;
       } else {
-        print('삭제할 파일이 존재하지 않습니다: $filePath');
         return false;
       }
     } catch (e) {
-      print('미디어 파일 삭제 실패: $e');
+      AppLogger.e('오류', e);
       return false;
     }
   }
@@ -508,7 +468,7 @@ class MediaService {
 
       return mediaFiles;
     } catch (e) {
-      print('로컬 미디어 목록 조회 실패: $e');
+      AppLogger.e('오류', e);
       return [];
     }
   }
@@ -520,7 +480,6 @@ class MediaService {
         AppConfig.getMediaUrl('/selectMediaInfoList.do'),
       ).replace(queryParameters: {'uuid': uuid});
 
-      print('서버 미디어 목록 요청: $uri');
 
       final response = await http.get(uri).timeout(const Duration(seconds: 10));
 
@@ -531,14 +490,10 @@ class MediaService {
         if (resultState == 'OK') {
           final mediaListData = jsonResponse['mediaInfoList'];
           if (mediaListData == null) {
-            print('서버 미디어 목록이 비어있습니다 (null)');
             return [];
           }
 
           if (mediaListData is! List) {
-            print(
-              '서버 응답 형식 오류: mediaInfoList가 List가 아닙니다. 타입: ${mediaListData.runtimeType}',
-            );
             return [];
           }
 
@@ -547,32 +502,25 @@ class MediaService {
 
           for (final item in data) {
             try {
-              print('서버 응답 데이터: $item');
               final mediaFile = MediaFileInfo.fromServerApi(
                 item as Map<String, dynamic>,
               );
-              print(
-                '변환된 MediaFileInfo: name=${mediaFile.name}, size=${mediaFile.size}, fileExtsn=${mediaFile.fileExtsn}, formattedSize=${mediaFile.formattedSize}, fileStreCours=${mediaFile.fileStreCours}',
-              );
               mediaFiles.add(mediaFile);
             } catch (e) {
-              print('미디어 파일 변환 오류: $e, 데이터: $item');
+              AppLogger.e('오류', e);
               continue;
             }
           }
 
-          print('서버 미디어 목록 조회 성공: ${mediaFiles.length}개');
           return mediaFiles;
         } else {
-          print('서버 미디어 목록 조회 실패: $resultState');
           return [];
         }
       } else {
-        print('서버 미디어 목록 조회 실패: ${response.statusCode}');
         return [];
       }
     } catch (e) {
-      print('서버 미디어 목록 조회 오류: $e');
+      AppLogger.e('오류', e);
       return [];
     }
   }
@@ -581,10 +529,11 @@ class MediaService {
   static Future<Map<String, dynamic>> downloadMedia(
     int fileSn,
     String fileName,
+    String uuid,
     Function(double) onProgress,
   ) async {
     try {
-      final downloadUrl = getMediaDownloadUrl(fileSn);
+      final downloadUrl = getMediaDownloadUrl(fileSn, uuid);
       final uri = Uri.parse(downloadUrl);
 
       final response = await http.get(uri);
@@ -613,7 +562,7 @@ class MediaService {
         };
       }
     } catch (e) {
-      print('미디어 다운로드 오류: $e');
+      AppLogger.e('오류', e);
       return {'success': false, 'message': '다운로드 중 오류가 발생했습니다: $e'};
     }
   }

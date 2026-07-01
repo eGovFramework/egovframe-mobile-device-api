@@ -5,23 +5,20 @@ import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
 import 'package:http/http.dart' as http;
 
 import '../../domain/entities/interface_info.dart';
+import '../../utils/app_logger.dart';
 import '../../utils/password_encryption.dart';
 
 class InterfaceService {
-  // 로그인 API 호출
   static Future<Map<String, dynamic>> login(String id, String password) async {
     try {
-      final encryptedPassword = PasswordEncryption.hashPasswordWithSalt(password);
-      
+      final clientHash = PasswordEncryption.encryptPassword(password, id);
+
       final uri = Uri.parse(AppConfig.getInterfaceUrl('/selectInterfaceInfo.do'));
-      
+
       final body = {
         'userId': id,
-        'userPw': encryptedPassword,
+        'userPw': clientHash,
       };
-
-      print('Login API Request URL: $uri');
-      print('Login API Request Body: $body');
 
       final response = await http.post(
         uri,
@@ -33,8 +30,7 @@ class InterfaceService {
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        print('Login API Response: $jsonResponse');
-        
+
         return {
           'success': true,
           'data': jsonResponse,
@@ -46,7 +42,7 @@ class InterfaceService {
         };
       }
     } catch (e) {
-      print('Login API Error: $e');
+      AppLogger.e('Login API 오류', e);
       return {
         'success': false,
         'message': '오류가 발생했습니다: $e',
@@ -58,20 +54,17 @@ class InterfaceService {
   static Future<Map<String, dynamic>> register(String id, String password, String email) async {
     try {
       final uuid = await DeviceIdService.getDeviceId();
-      
-      final encryptedPassword = PasswordEncryption.hashPasswordWithSalt(password);
-      
+
+      final clientHash = PasswordEncryption.encryptPassword(password, id);
+
       final uri = Uri.parse(AppConfig.getInterfaceUrl('/insertInterfaceInfo.do'));
-      
+
       final body = {
         'userId': id,
-        'userPw': encryptedPassword,
+        'userPw': clientHash,
         'emails': email,
         'uuid': uuid,
       };
-
-      print('Register API Request URL: $uri');
-      print('Register API Request Body: $body');
 
       final response = await http.post(
         uri,
@@ -83,8 +76,7 @@ class InterfaceService {
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        print('Register API Response: $jsonResponse');
-        
+
         return {
           'success': true,
           'data': jsonResponse,
@@ -96,7 +88,7 @@ class InterfaceService {
         };
       }
     } catch (e) {
-      print('Register API Error: $e');
+      AppLogger.e('회원가입 API 오류', e);
       return {
         'success': false,
         'message': '오류가 발생했습니다: $e',
@@ -108,37 +100,40 @@ class InterfaceService {
   static Future<bool> checkAccountExists(String id, String password, String email) async {
     try {
       final result = await login(id, password);
-      
+
       if (result['success'] && result['data'] != null) {
         final data = result['data'] as Map<String, dynamic>;
         final interfaceInfo = data['interfaceInfo'];
-        
+
         if (interfaceInfo != null) {
           return true;
         }
       }
-      
+
       return false;
     } catch (e) {
-      print('Check account exists error: $e');
+      AppLogger.e('계정 존재 여부 확인 오류', e);
       return false;
     }
   }
 
   // 사용자 정보 조회 API 호출
-  static Future<Map<String, dynamic>> getUserInfo(String userId, String userPw) async {
+  static Future<Map<String, dynamic>> getUserInfo(
+    String userId,
+    String userPw, {
+    bool isPasswordHashed = false,
+  }) async {
     try {
-      final encryptedPassword = PasswordEncryption.hashPasswordWithSalt(userPw);
-      
+      final clientHash = isPasswordHashed
+          ? userPw
+          : PasswordEncryption.encryptPassword(userPw, userId);
+
       final uri = Uri.parse(AppConfig.getInterfaceUrl('/selectInterfaceInfo.do'));
-      
+
       final body = {
         'userId': userId,
-        'userPw': encryptedPassword,
+        'userPw': clientHash,
       };
-
-      print('GetUserInfo API Request URL: $uri');
-      print('GetUserInfo API Request Body: $body');
 
       final response = await http.post(
         uri,
@@ -150,9 +145,8 @@ class InterfaceService {
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        print('GetUserInfo API Response: $jsonResponse');
-        final interfaceInfo = jsonResponse['interfaceInfo'] as Map<String,dynamic>?;
-        if(interfaceInfo != null){
+        final interfaceInfo = jsonResponse['interfaceInfo'] as Map<String, dynamic>?;
+        if (interfaceInfo != null) {
           final userInfo = UserInfo.fromJson(interfaceInfo);
           return {
             'success': true,
@@ -171,7 +165,7 @@ class InterfaceService {
         };
       }
     } catch (e) {
-      print('GetUserInfo API Error: $e');
+      AppLogger.e('사용자 정보 조회 API 오류', e);
       return {
         'success': false,
         'message': '오류가 발생했습니다: $e',
@@ -180,19 +174,22 @@ class InterfaceService {
   }
 
   // 회원탈퇴 API 호출
-  static Future<Map<String, dynamic>> withdraw(String userId, String userPw) async {
+  static Future<Map<String, dynamic>> withdraw(
+    String userId,
+    String userPw, {
+    bool isPasswordHashed = false,
+  }) async {
     try {
-      final encryptedPassword = PasswordEncryption.hashPasswordWithSalt(userPw);
-      
+      final clientHash = isPasswordHashed
+          ? userPw
+          : PasswordEncryption.encryptPassword(userPw, userId);
+
       final uri = Uri.parse(AppConfig.getInterfaceUrl('/deleteInterfaceInfo.do'));
-      
+
       final body = {
         'userId': userId,
-        'userPw': encryptedPassword,
+        'userPw': clientHash,
       };
-
-      print('Withdraw API Request URL: $uri');
-      print('Withdraw API Request Body: $body');
 
       final response = await http.delete(
         uri,
@@ -204,8 +201,7 @@ class InterfaceService {
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        print('Withdraw API Response: $jsonResponse');
-        
+
         return {
           'success': true,
           'data': jsonResponse,
@@ -217,7 +213,7 @@ class InterfaceService {
         };
       }
     } catch (e) {
-      print('Withdraw API Error: $e');
+      AppLogger.e('회원탈퇴 API 오류', e);
       return {
         'success': false,
         'message': '오류가 발생했습니다: $e',

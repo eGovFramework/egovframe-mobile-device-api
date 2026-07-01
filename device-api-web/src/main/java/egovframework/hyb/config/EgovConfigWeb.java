@@ -29,8 +29,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 		EgovConfigMapper.class,
 		EgovConfigProperties.class,
 		EgovConfigTransaction.class,
-		EgovConfigValidation.class,
-		egovframework.hyb.mbl.websocket.config.WebsocketConfig.class
+		EgovConfigValidation.class
 })
 public class EgovConfigWeb implements WebMvcConfigurer, ApplicationContextAware {
 

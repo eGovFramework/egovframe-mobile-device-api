@@ -1,5 +1,6 @@
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/text_style.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -49,15 +50,25 @@ class _GpsLocationDisplayState extends State<GpsLocationDisplay> {
   String _formatTimestamp(String timestamp) {
     try {
       final milliseconds = int.tryParse(timestamp);
-      if (milliseconds != null) {
-        final dateTime = DateTime.fromMillisecondsSinceEpoch(milliseconds, isUtc: true);
-        final localTime = dateTime.toLocal(); // UTC를 로컬 시간으로 변환
-        return '${localTime.year}-${localTime.month.toString().padLeft(2, '0')}-${localTime.day.toString().padLeft(2, '0')} ${localTime.hour.toString().padLeft(2, '0')}:${localTime.minute.toString().padLeft(2, '0')}:${localTime.second.toString().padLeft(2, '0')}';
+      if (milliseconds == null) {
+        ErrorHandler.logError(
+          FormatException('타임스탬프를 숫자로 변환할 수 없습니다: $timestamp'),
+          StackTrace.current,
+          context: 'GpsLocationDisplay._formatTimestamp',
+        );
+        return timestamp;
       }
-    } catch (e) {
-      print('Error formatting timestamp: $e');
+      final dateTime = DateTime.fromMillisecondsSinceEpoch(milliseconds, isUtc: true);
+      final localTime = dateTime.toLocal();
+      return '${localTime.year}-${localTime.month.toString().padLeft(2, '0')}-${localTime.day.toString().padLeft(2, '0')} ${localTime.hour.toString().padLeft(2, '0')}:${localTime.minute.toString().padLeft(2, '0')}:${localTime.second.toString().padLeft(2, '0')}';
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(
+        e,
+        stackTrace,
+        context: 'GpsLocationDisplay._formatTimestamp',
+      );
+      return timestamp;
     }
-    return timestamp; // 변환 실패 시 원본 반환
   }
 
   @override

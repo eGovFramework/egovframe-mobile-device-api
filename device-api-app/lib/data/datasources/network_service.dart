@@ -6,7 +6,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:egovframe_mobile_deviceapi_app/config/app_config.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/network_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
-import 'package:flutter/material.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/app_logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:network_info_plus/network_info_plus.dart' as network_info_plus;
 
@@ -24,10 +24,9 @@ class NetworkService {
     try {
       final results = await _connectivity.checkConnectivity();
       final result = results.isNotEmpty ? results.first : ConnectivityResult.none;
-      debugPrint('현재 네트워크 상태: $result');
       return result;
     } catch (e) {
-      debugPrint('네트워크 상태 확인 오류: $e');
+      AppLogger.e('네트워크 상태 확인 오류', e);
       return ConnectivityResult.none;
     }
   }
@@ -54,9 +53,8 @@ class NetworkService {
         try {
           ipAddress = await _networkInfoPlugin.getWifiIP();
           ssid = await _networkInfoPlugin.getWifiName();
-          // MAC 주소는 보안상 제한됨 (Android 6.0+, iOS)
         } catch (e) {
-          debugPrint('WiFi 정보 가져오기 오류: $e');
+          AppLogger.e('WiFi 정보 가져오기 오류', e);
         }
       }
 
@@ -72,7 +70,7 @@ class NetworkService {
         ssid: ssid,
       );
     } catch (e) {
-      debugPrint('네트워크 정보 가져오기 오류: $e');
+      AppLogger.e('네트워크 정보 가져오기 오류', e);
       rethrow;
     }
   }
@@ -83,7 +81,7 @@ class NetworkService {
       case ConnectivityResult.wifi:
         return 'WIFI';
       case ConnectivityResult.mobile:
-        return 'CELL_4G'; // 기본적으로 4G로 설정, 실제로는 더 세분화 가능
+        return 'CELL_4G';
       case ConnectivityResult.ethernet:
         return 'ETHERNET';
       case ConnectivityResult.none:
@@ -108,15 +106,13 @@ class NetworkService {
       }
       return 'Unknown Device';
     } catch (e) {
-      debugPrint('디바이스 이름 가져오기 오류: $e');
+      AppLogger.e('디바이스 이름 가져오기 오류', e);
       return 'Unknown Device';
     }
   }
 
   Future<bool> sendNetworkInfoToServer(NetworkInfo networkInfo) async {
     try {
-      debugPrint('네트워크 정보 서버 전송 시작: ${networkInfo.toJson()}');
-
       final uri = Uri.parse(AppConfig.getNetworkUrl('/insertNetworkInfo.do'));
       
       final body = {
@@ -133,27 +129,20 @@ class NetworkService {
         },
         body: body,
       ).timeout(const Duration(seconds: 10));
-      
-      debugPrint('네트워크 정보 서버 전송 응답: status=${response.statusCode}');
 
       if (response.statusCode == 200) {
         try {
           final Map<String, dynamic> responseBody = jsonDecode(response.body);
           final successCode = (responseBody['successCode'] ?? responseBody['resultState'] ?? '').toString().toUpperCase();
-          final ok = successCode == 'OK';
-          if (!ok) {
-            debugPrint('네트워크 정보 서버 전송 실패: successCode=$successCode');
-          }
-          return ok;
+          return successCode == 'OK';
         } catch (_) {
           return true;
         }
       }
 
-      debugPrint('네트워크 정보 서버 전송 실패: HTTP ${response.statusCode}');
       return false;
     } catch (e) {
-      debugPrint('네트워크 정보 서버 전송 오류: $e');
+      AppLogger.e('네트워크 정보 서버 전송 오류', e);
       return false;
     }
   }
@@ -164,8 +153,6 @@ class NetworkService {
     String networkType = 'ALL',
   }) async {
     try {
-      debugPrint('네트워크 정보 목록 서버 조회 시작: uuid=$uuid, networkType=$networkType');
-
       final uri = Uri.parse(AppConfig.getNetworkUrl('/selectNetworkInfoList.do')).replace(
         queryParameters: {
           'uuid': uuid,
@@ -174,10 +161,8 @@ class NetworkService {
       );
 
       final response = await http.get(uri).timeout(const Duration(seconds: 10));
-      debugPrint('네트워크 정보 목록 서버 조회 응답: status=${response.statusCode}');
 
       if (response.statusCode != 200) {
-        debugPrint('네트워크 정보 목록 조회 실패: HTTP ${response.statusCode}');
         return [];
       }
 
@@ -205,13 +190,12 @@ class NetworkService {
           );
         }
       } catch (e) {
-        debugPrint('네트워크 정보 목록 JSON 파싱 오류: $e');
+        AppLogger.e('네트워크 정보 목록 JSON 파싱 오류', e);
       }
 
-      debugPrint('네트워크 정보 목록 서버 조회 완료: ${result.length}개');
       return result;
     } catch (e) {
-      debugPrint('네트워크 정보 목록 서버 조회 오류: $e');
+      AppLogger.e('네트워크 정보 목록 서버 조회 오류', e);
       return [];
     }
   }
@@ -220,8 +204,6 @@ class NetworkService {
   /// 네트워크 정보 삭제
   Future<bool> deleteNetworkInfo(String sn, {required String uuid}) async {
     try {
-      debugPrint('네트워크 정보 서버 삭제 시작: sn=$sn, uuid=$uuid');
-      
       final uri = Uri.parse(AppConfig.getNetworkUrl('/deleteNetworkInfo.do')).replace(
         queryParameters: {
           'sn': sn,
@@ -230,26 +212,20 @@ class NetworkService {
       );
 
       final response = await http.delete(uri).timeout(const Duration(seconds: 10));
-      debugPrint('네트워크 정보 서버 삭제 응답: status=${response.statusCode}');
 
       if (response.statusCode == 200) {
         try {
           final Map<String, dynamic> responseBody = jsonDecode(response.body);
           final successCode = (responseBody['successCode'] ?? responseBody['resultState'] ?? '').toString().toUpperCase();
-          final ok = successCode == 'OK';
-          if (!ok) {
-            debugPrint('네트워크 정보 서버 삭제 실패: successCode=$successCode');
-          }
-          return ok;
+          return successCode == 'OK';
         } catch (_) {
           return true;
         }
       }
 
-      debugPrint('네트워크 정보 서버 삭제 실패: HTTP ${response.statusCode}');
       return false;
     } catch (e) {
-      debugPrint('네트워크 정보 서버 삭제 오류: $e');
+      AppLogger.e('네트워크 정보 서버 삭제 오류', e);
       return false;
     }
   }
@@ -260,7 +236,7 @@ class NetworkService {
       final results = await _connectivity.checkConnectivity();
       return results.isNotEmpty && !results.contains(ConnectivityResult.none);
     } catch (e) {
-      debugPrint('네트워크 연결 확인 오류: $e');
+      AppLogger.e('네트워크 연결 확인 오류', e);
       return false;
     }
   }
@@ -268,18 +244,10 @@ class NetworkService {
   /// 서버 연결 상태 확인
   Future<bool> isServerConnected() async {
     try {
-      debugPrint('서버 연결 상태 확인 시작...');
-      
-      // 먼저 네트워크 연결 상태 확인
-      final isNetworkAvailable = await this.isNetworkAvailable();
-      if (!isNetworkAvailable) {
-        debugPrint('네트워크 연결이 없습니다.');
+      if (!await isNetworkAvailable()) {
         return false;
       }
 
-      debugPrint('네트워크 연결 확인됨, 서버 연결 테스트 시작...');
-
-      // 실제 서버 연결 테스트
       final client = http.Client();
       try {
         final response = await client
@@ -287,22 +255,18 @@ class NetworkService {
             .timeout(const Duration(seconds: 5));
         
         if (response.statusCode == 500) {
-          debugPrint('서버 초기화 오류 감지 (상태코드: ${response.statusCode})');
           return false;
         }
         
-        final isConnected = response.statusCode == 200;
-        debugPrint('서버 연결 상태: ${isConnected ? "연결됨" : "연결 안됨"} (상태코드: ${response.statusCode})');
-        return isConnected;
+        return response.statusCode == 200;
       } catch (e) {
-        debugPrint('서버 연결 테스트 실패: $e');
+        AppLogger.e('서버 연결 테스트 실패', e);
         return false;
       } finally {
         client.close();
-        debugPrint('서버 연결 확인 완료');
       }
     } catch (e) {
-      debugPrint('서버 연결 확인 오류: $e');
+      AppLogger.e('서버 연결 확인 오류', e);
       return false;
     }
   }
@@ -325,7 +289,7 @@ class NetworkService {
           return '알 수 없음';
       }
     } catch (e) {
-      debugPrint('네트워크 품질 확인 오류: $e');
+      AppLogger.e('네트워크 품질 확인 오류', e);
       return '알 수 없음';
     }
   }

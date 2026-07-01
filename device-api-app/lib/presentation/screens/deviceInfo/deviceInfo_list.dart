@@ -10,6 +10,7 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/footer.dart'
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/infobox.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:flutter/material.dart';
 
 import 'deviceInfo_description.dart';
@@ -57,11 +58,14 @@ class _DeviceListPageState extends State<DeviceListPage> with SingleTickerProvid
         isLoading = false;
         errorMessage = '';
       });
-    } catch (e) {
-      setState(() {
-        errorMessage = e.toString();
-        isLoading = false;
-      });
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'DeviceListPage._fetchDeviceList');
+      if (mounted) {
+        setState(() {
+          errorMessage = ErrorHandler.messageFor(e);
+          isLoading = false;
+        });
+      }
     }
   }
 

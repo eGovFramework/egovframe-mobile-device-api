@@ -6,6 +6,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:egovframe_mobile_deviceapi_app/config/app_config.dart';
 import 'package:egovframe_mobile_deviceapi_app/domain/entities/device_info.dart';
 import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/app_logger.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_storage_info/flutter_storage_info.dart';
 import 'package:http/http.dart' as http;
@@ -88,15 +89,15 @@ class DeviceService {
         );
         telno = contacts.length.toString();
       }
-    } catch (_) {}
+    } catch (e) {
+      AppLogger.e('연락처 조회 오류', e);
+    }
 
     // 디바이스 스토리지 용량
     int strgeInfo;
     try {
       // total: 총 용량에서 System OS 용량 제외
       int? totalSpace = await FlutterStorageInfo.storageTotalSpace;
-      int? freeSpace = await FlutterStorageInfo.storageFreeSpace;
-      print('total: $totalSpace, free: $freeSpace');
       strgeInfo = totalSpace;
     } catch (_) {
       strgeInfo = 0;
@@ -121,7 +122,7 @@ class DeviceService {
       } else if (Platform.isIOS) {
         final info = await deviceInfoPlugin.iosInfo;
         os = _composeIosOs(info);
-        deviceNm = info.name ?? 'iOS Device';
+        deviceNm = info.name;
       }
     } catch (_) {
       /* ignore and use defaults */
@@ -160,7 +161,8 @@ class DeviceService {
       } else {
         return [];
       }
-    } catch (_) {
+    } catch (e) {
+      AppLogger.e('Device 목록 조회 오류', e);
       return [];
     }
   }
@@ -184,7 +186,9 @@ class DeviceService {
           return DeviceInfo.fromJson(deviceInfoData);
         }
       }
-    } catch (_) {}
+    } catch (e) {
+      AppLogger.e('Device 상세 조회 오류', e);
+    }
     return null;
   }
 
@@ -201,23 +205,17 @@ class DeviceService {
       'strgeInfo': info.strgeInfo.toString(),
     };
 
-    print('=== Device 업로드 시작 ===');
-    print('URL: $uri');
-    print('Fields: $fields');
 
     try {
       final resp = await http
           .post(uri, body: fields)
           .timeout(AppConfig.defaultTimeout);
 
-      print('응답 상태: ${resp.statusCode}');
-      print('응답 본문: ${resp.body}');
 
       if (resp.statusCode == 200) {
         final jsonMap = json.decode(resp.body) as Map<String, dynamic>;
 
         final resultState = (jsonMap['resultState'] ?? '').toString();
-        print('resultState: $resultState');
 
         if (resultState == 'OK') {
           return true;
@@ -226,12 +224,11 @@ class DeviceService {
         final deviceVO = jsonMap['deviceAPIVO'] as Map<String, dynamic>?;
         if (deviceVO != null) {
           final useYn = (deviceVO['useYn'] ?? '').toString();
-          print('useYn: $useYn');
           return useYn == 'OK';
         }
       }
     } catch (e) {
-      print('업로드 오류: $e');
+      AppLogger.e('Device 업로드 오류', e);
     }
     return false;
   }
@@ -253,7 +250,9 @@ class DeviceService {
       if (resultState == 'OK') {
         return true;
       }
-    } catch (_) {}
+    } catch (e) {
+      AppLogger.e('Device 삭제 오류', e);
+    }
     return false;
   }
 }

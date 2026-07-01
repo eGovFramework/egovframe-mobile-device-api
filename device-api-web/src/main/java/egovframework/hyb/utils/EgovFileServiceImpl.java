@@ -3,7 +3,6 @@ package egovframework.hyb.utils;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.springframework.stereotype.Service;
 
-import egovframework.hyb.mbl.mda.service.impl.MediaAPIDAO;
 import jakarta.annotation.Resource;
 
 @Service("EgovFileService")
@@ -20,6 +19,19 @@ public class EgovFileServiceImpl extends EgovAbstractServiceImpl implements Egov
 	@Override
 	public int insertFileDetailInfo(FileVO fileVO) throws Exception {
 		return fileDAO.insertFileDetailInfo(fileVO);
+	}
+
+	@Override
+	public boolean isFileOwnedByUuid(int fileSn, String uuid) throws Exception {
+		if (uuid == null || uuid.isBlank()) {
+			return false;
+		}
+		return fileDAO.countFileOwnershipByUuid(fileSn, uuid) > 0;
+	}
+
+	@Override
+	public boolean isFileRegistered(int fileSn) throws Exception {
+		return fileDAO.countFileRegistration(fileSn) > 0;
 	}
 
 }

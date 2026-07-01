@@ -48,8 +48,16 @@ class _DeviceInfoPageState extends State<DeviceInfoPage> {
   Future<void> _getDeviceInfo() async {
     try {
       deviceInfo = await _deviceUseCase.getDeviceInfo(); // Use Case 호출
-    } catch (e) {
-      ErrorHandler.showErrorDialog(context, e.toString());
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'DeviceInfoPage._getDeviceInfo',
+          title: '디바이스 정보 조회 실패',
+        );
+      }
     }
   }
 }

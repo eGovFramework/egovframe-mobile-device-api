@@ -11,6 +11,7 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/table.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/format_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -68,10 +69,11 @@ class _DeviceDetailedPageState extends State<DeviceDetailedPage> with SingleTick
           }
         });
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'DeviceDetailedPage._fetchDeviceDetail');
       if (mounted) {
         setState(() {
-          errorMessage = '오류가 발생했습니다: $e';
+          errorMessage = ErrorHandler.messageFor(e);
           isLoading = false;
         });
       }
@@ -118,16 +120,16 @@ class _DeviceDetailedPageState extends State<DeviceDetailedPage> with SingleTick
           );
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
         setState(() {
           isDeleting = false;
         });
-        showStatusDialog(
+        await ErrorHandler.handleException(
           context,
-          variant: StatusVariant.error,
-          title: '오류',
-          message: '오류가 발생했습니다: $e',
+          e,
+          stackTrace: stackTrace,
+          logContext: 'DeviceDetailedPage._deleteDevice',
         );
       }
     }

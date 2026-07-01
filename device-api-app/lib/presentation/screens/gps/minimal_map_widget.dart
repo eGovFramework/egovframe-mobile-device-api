@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:egovframe_mobile_deviceapi_app/data/datasources/network_service.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -58,42 +59,6 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
     _setupConnectivityListener();
   }
 
-  // @override
-  // void didUpdateWidget(MinimalMapWidget oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //
-  //   // initialLatitude/Longitude 변경 감지
-  //   final newLat = widget.initialLatitude;
-  //   final newLon = widget.initialLongitude;
-  //   final oldLat = oldWidget.initialLatitude;
-  //   final oldLon = oldWidget.initialLongitude;
-  //
-  //   if ((newLat != oldLat || newLon != oldLon) &&
-  //       newLat != null && newLon != null) {
-  //     print('위치 변경 감지: $newLat, $newLon');
-  //     // 빌드 완료 후에 실행하도록 지연
-  //     Future.microtask(() {
-  //       if (mounted) {
-  //         _updateMapLocation();
-  //       }
-  //     });
-  //   }
-  //
-  //   // currentPosition 변경 감지 (현재 위치 버튼 클릭 시)
-  //   final newPosition = widget.currentPosition;
-  //   final oldPosition = oldWidget.currentPosition;
-  //
-  //   if (newPosition != oldPosition && newPosition != null) {
-  //     print('현재 위치 변경 감지: ${newPosition.latitude}, ${newPosition.longitude}');
-  //     // 빌드 완료 후에 실행하도록 지연
-  //     Future.microtask(() {
-  //       if (mounted) {
-  //         _moveToCurrentPosition(newPosition);
-  //       }
-  //     });
-  //   }
-  // }
-
   @override
   void didUpdateWidget(MinimalMapWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -110,7 +75,6 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
     if ((newLat != oldLat || newLon != oldLon) &&
         newLat != null && newLon != null) {
       needsUpdate = true;
-      print('위치 변경 감지: $newLat, $newLon');
     }
 
     // currentPosition 변경 감지
@@ -119,7 +83,6 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
 
     if (newPosition != oldPosition && newPosition != null) {
       needsUpdate = true;
-      print('현재 위치 변경 감지: ${newPosition.latitude}, ${newPosition.longitude}');
     }
 
     // 실제로 변경이 있을 때만 업데이트
@@ -144,7 +107,6 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      print('앱이 포그라운드로 복귀 - 네트워크 확인 및 지도 재초기화');
       _checkNetworkAndInitialize();
     }
   }
@@ -155,10 +117,8 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
         final wasAvailable = _isNetworkAvailable;
         _isNetworkAvailable = result != ConnectivityResult.none;
         
-        print('네트워크 상태 변경: ${_isNetworkAvailable ? "연결됨" : "연결 안됨"}');
         
         if (_isNetworkAvailable && !wasAvailable && !_isMapInitialized) {
-          print('네트워크 연결됨 - 지도 초기화 시작');
           _initializeMap();
         }
       },
@@ -167,14 +127,11 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
 
   Future<void> _checkNetworkAndInitialize() async {
     try {
-      print('네트워크 연결 상태 확인 중...');
       _isNetworkAvailable = await _networkService.isNetworkAvailable();
       
       if (_isNetworkAvailable) {
-        print('네트워크 연결됨 - 지도 초기화 시작');
         await _initializeMap();
       } else {
-        print('네트워크 연결 안됨 - 지도 초기화 대기 중...');
         setState(() {
           _isLoading = true;
           _errorMessage = '';
@@ -189,52 +146,28 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
           retryCount++;
           
           if (_isNetworkAvailable) {
-            print('네트워크 연결 확인됨 - 지도 초기화 시작');
             await _initializeMap();
             break;
           }
         }
         
         if (!_isNetworkAvailable && mounted) {
-          print('네트워크 연결 없음 - 오프라인 모드로 기본 위치 설정');
           _setDefaultLocation();
           _isMapInitialized = true;
         }
       }
-    } catch (e) {
-      print('네트워크 확인 오류: $e');
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'MinimalMapWidget._checkNetworkAndInitialize');
       _setDefaultLocation();
       _isMapInitialized = true;
     }
   }
 
-  // void _startMemoryCleanup() {
-  //   // 15초마다 메모리 정리 (더 자주)
-  //   _memoryCleanupTimer = Timer.periodic(const Duration(seconds: 15), (timer) {
-  //     if (mounted) {
-  //       _cleanupMemory();
-  //     }
-  //   });
-  // }
-
-  // void _cleanupMemory() {
-  //   // 메모리 정리 로직
-  //   if (Platform.isAndroid) {
-  //     try {
-  //       // 가비지 컬렉션 강제 실행
-  //       SystemChannels.platform.invokeMethod('System.gc');
-  //       // 로그 제거 (15초마다 출력되어 로그가 너무 많이 쌓임)
-  //     } catch (e) {
-  //       print('메모리 정리 실패: $e');
-  //     }
-  //   }
-  // }
-
   void _startMemoryCleanup() {
     // 기존 타이머가 있으면 먼저 취소
     _memoryCleanupTimer?.cancel();
 
-    // 10초마다 메모리 정리 (더 자주 실행)
+    // 10초마다 메모리 정리
     _memoryCleanupTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
       if (!mounted) {
         timer.cancel();
@@ -252,39 +185,36 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
       try {
         // 가비지 컬렉션 강제 실행
         SystemChannels.platform.invokeMethod('System.gc');
-
         // 지도 컨트롤러가 있으면 메모리 정리 시도
         if (_mapController != null) {
-          // 마커가 너무 많으면 정리
           if (_markers.length > 10) {
             if (mounted) {
               setState(() {
-                // 가장 오래된 마커 제거 (필요시)
-                // 현재는 단일 마커만 사용하므로 생략 가능
               });
             }
           }
         }
-      } catch (e) {
-        // 로그 출력 최소화 (너무 많은 로그는 성능 저하)
-        // print('메모리 정리 실패: $e');
+      } catch (e, stackTrace) {
+        ErrorHandler.logError(e, stackTrace, context: 'MinimalMapWidget._cleanupMemory');
       }
     }
   }
 
   Future<void> _initializeMap() async {
     if (_isMapInitialized) {
-      print('지도가 이미 초기화됨 - 스킵');
       return;
     }
 
     try {
-      print('MinimalMapWidget 초기화 시작');
       
       if (!_isNetworkAvailable) {
         _isNetworkAvailable = await _networkService.isNetworkAvailable();
         if (!_isNetworkAvailable) {
-          print('네트워크 연결 없음 - 오프라인 모드로 진행');
+          ErrorHandler.logError(
+            StateError('네트워크를 사용할 수 없어 지도 초기화를 진행할 수 없습니다.'),
+            StackTrace.current,
+            context: 'MinimalMapWidget._initializeMap',
+          );
         }
       }
       
@@ -297,8 +227,8 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
       }
       
       _isMapInitialized = true;
-    } catch (e) {
-      print('지도 초기화 오류: $e');
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'MinimalMapWidget._initializeMap');
       _setDefaultLocation();
       _isMapInitialized = true;
     }
@@ -326,8 +256,6 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
         _errorMessage = '';
       });
 
-      print('현재 위치 가져오기 시작');
-
       final serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         throw Exception('위치 서비스가 비활성화되어 있습니다.');
@@ -337,16 +265,6 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
         desiredAccuracy: LocationAccuracy.high,
         timeLimit: const Duration(seconds: 10),
       );
-
-      print('=== 현재 위치 가져오기 성공 ===');
-      print('위도: ${position.latitude}');
-      print('경도: ${position.longitude}');
-      print('정확도: ${position.accuracy}m');
-      print('고도: ${position.altitude}m');
-      print('속도: ${position.speed}m/s');
-      print('방향: ${position.heading}°');
-      print('신호 품질: ${position.accuracy < 10 ? "양호" : position.accuracy < 50 ? "보통" : "나쁨"}');
-      print('===============================');
 
       setState(() {
         _currentPosition = position;
@@ -368,14 +286,20 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
         Future.delayed(const Duration(milliseconds: 1000), () {
           if (_mapController != null) {
             _moveToLocation(position.latitude, position.longitude);
+          } else {
+            ErrorHandler.logError(
+              StateError('지연 재시도 후에도 지도 컨트롤러가 준비되지 않았습니다.'),
+              StackTrace.current,
+              context: 'MinimalMapWidget._getCurrentLocation',
+            );
           }
         });
       }
 
-    } catch (e) {
-      print('현재 위치 가져오기 실패: $e');
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'MinimalMapWidget._getCurrentLocation');
       setState(() {
-        _errorMessage = '현재 위치를 가져올 수 없습니다: ${e.toString()}';
+        _errorMessage = ErrorHandler.messageFor(e);
         _isLoading = false;
       });
       _setDefaultLocation();
@@ -383,7 +307,6 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
   }
 
   void _setDefaultLocation() {
-    print('기본 위치 설정');
     setState(() {
       _currentPosition = Position(
         latitude: widget.initialLatitude ?? _defaultLatitude,
@@ -409,7 +332,6 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
 
   void _addCurrentLocationMarker() {
     if (_currentPosition != null) {
-      print('마커 추가 시작: ${_currentPosition!.latitude}, ${_currentPosition!.longitude}');
       if (mounted) {
         setState(() {
           _markers = {
@@ -423,32 +345,34 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
           };
         });
       }
-      print('마커 추가 완료: ${_markers.length}개 마커');
     } else {
-      print('현재 위치가 null이므로 마커를 추가할 수 없음');
+      ErrorHandler.logError(
+        StateError('현재 위치 정보가 없어 마커를 추가할 수 없습니다.'),
+        StackTrace.current,
+        context: 'MinimalMapWidget._addCurrentLocationMarker',
+      );
     }
   }
 
   void _moveToLocation(double latitude, double longitude) {
     if (_mapController != null) {
-      print('지도 중심 이동: $latitude, $longitude');
       _mapController!.animateCamera(
         CameraUpdate.newLatLngZoom(
           LatLng(latitude, longitude),
           widget.initialZoom ?? 15.0,
         ),
       );
-      print('지도 이동 명령 실행 완료');
     } else {
-      print('지도 컨트롤러가 아직 준비되지 않음');
+      ErrorHandler.logError(
+        StateError('지도 컨트롤러가 준비되지 않아 카메라를 이동할 수 없습니다.'),
+        StackTrace.current,
+        context: 'MinimalMapWidget._moveToLocation',
+      );
     }
   }
 
   void _updateMapLocation() {
     if (widget.initialLatitude != null && widget.initialLongitude != null) {
-      print('지도 위치 업데이트: ${widget.initialLatitude}, ${widget.initialLongitude}');
-      
-      // 새로운 위치로 Position 객체 생성
       final newPosition = Position(
         latitude: widget.initialLatitude!,
         longitude: widget.initialLongitude!,
@@ -462,20 +386,15 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
         headingAccuracy: 0.0,
       );
 
-      // setState를 안전하게 호출
       if (mounted) {
         setState(() {
           _currentPosition = newPosition;
         });
       }
 
-      // 마커 업데이트
       _addCurrentLocationMarker();
-      
-      // 지도 이동
       _moveToLocation(widget.initialLatitude!, widget.initialLongitude!);
-      
-      // 콜백 호출
+
       if (widget.onLocationChanged != null) {
         widget.onLocationChanged!(newPosition);
       }
@@ -483,28 +402,18 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
   }
 
   void _moveToCurrentPosition(Position position) {
-    print('현재 위치로 지도 이동: ${position.latitude}, ${position.longitude}');
-    
-    // 현재 위치 업데이트
     if (mounted) {
       setState(() {
         _currentPosition = position;
       });
     }
-
-    // 마커 업데이트
     _addCurrentLocationMarker();
-    
-    // 지도 이동
     _moveToLocation(position.latitude, position.longitude);
   }
 
 
   @override
   Widget build(BuildContext context) {
-    print('MinimalMapWidget 빌드: isLoading=$_isLoading, errorMessage=$_errorMessage');
-    print('현재 위치: ${_currentPosition?.latitude}, ${_currentPosition?.longitude}');
-    print('지도 컨트롤러 상태: ${_mapController != null ? "준비됨" : "준비 안됨"}');
 
     if (_isLoading) {
       return Container(
@@ -596,44 +505,12 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
                 ),
                 zoom: widget.initialZoom ?? 15.0,
               ),
-              // onMapCreated: (GoogleMapController controller) async {
-              //   print('Google Maps 컨트롤러 생성 완료');
-              //   _mapController = controller;
-              //
-              //   try {
-              //     // 지도 스타일 설정 (기본 스타일 사용)
-              //     await controller.setMapStyle(null);
-              //     print('지도 스타일 설정 완료');
-              //
-              //   } catch (e) {
-              //     print('지도 스타일 설정 실패: $e');
-              //   }
-              //
-              //   // 지도 상호작용 테스트
-              //   print('지도 상호작용 설정:');
-              //   print('- scrollGesturesEnabled: true');
-              //   print('- zoomGesturesEnabled: true');
-              //   print('- tiltGesturesEnabled: true');
-              //   print('- rotateGesturesEnabled: true');
-              //
-              //   // 지도 컨트롤러가 준비되면 현재 위치로 이동
-              //   if (_currentPosition != null) {
-              //     Future.delayed(const Duration(milliseconds: 500), () {
-              //       _moveToLocation(_currentPosition!.latitude, _currentPosition!.longitude);
-              //     });
-              //   }
-              // },
               onMapCreated: (GoogleMapController controller) {
                 // 지도 컨트롤러 저장 (비동기 작업 최소화)
                 _mapController = controller;
-                print('Google Maps 컨트롤러 생성 완료');
-
-                // setMapStyle(null) 호출 제거 (기본 스타일 사용 시 불필요)
-                // await controller.setMapStyle(null); <- 이 줄 제거
 
                 // 지도 컨트롤러가 준비되면 현재 위치로 이동 (지연 최소화)
                 if (_currentPosition != null && mounted) {
-                  // 즉시 실행하되, 안전하게 처리
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     if (mounted && _mapController != null) {
                       _moveToLocation(_currentPosition!.latitude, _currentPosition!.longitude);
@@ -670,12 +547,6 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
 
   @override
   void dispose() {
-    // WidgetsBinding.instance.removeObserver(this);
-    // _memoryCleanupTimer?.cancel();
-    // _connectivitySubscription?.cancel();
-    // _mapController?.dispose();
-    // super.dispose();
-
     // 위젯이 dispose되는지 확인
     if (!mounted) return;
 
@@ -694,8 +565,8 @@ class _MinimalMapWidgetState extends State<MinimalMapWidget> with WidgetsBinding
     if (_mapController != null) {
       try {
         _mapController!.dispose();
-      } catch (e) {
-        print('지도 컨트롤러 dispose 오류: $e');
+      } catch (e, stackTrace) {
+        ErrorHandler.logError(e, stackTrace, context: 'MinimalMapWidget.dispose');
       } finally {
         _mapController = null;
       }

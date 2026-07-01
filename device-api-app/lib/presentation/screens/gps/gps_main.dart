@@ -16,6 +16,7 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/server_connection_button.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
 import 'package:egovframe_mobile_deviceapi_app/core/device_id_service.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/permission_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -93,9 +94,10 @@ class _GpsMainPageState extends State<GpsMainPage>
             _statusMessage = '위치 권한 상태를 확인할 수 없습니다.';
           });
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'GpsPage._requestLocationPermissionOnStart');
       setState(() {
-        _statusMessage = 'GPS 초기화 중 오류가 발생했습니다: $e';
+        _statusMessage = ErrorHandler.messageFor(e);
       });
     }
   }
@@ -136,20 +138,14 @@ class _GpsMainPageState extends State<GpsMainPage>
       });
 
       if (!mounted) return;
-      // await showStatusDialog(
-      //   context,
-      //   variant: StatusVariant.success,
-      //   title: '현재 위치',
-      //   message:
-      //       '위도: ${position.latitude.toStringAsFixed(6)}\n경도: ${position.longitude.toStringAsFixed(6)}',
-      // );
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
-        await showStatusDialog(
+        await ErrorHandler.handleException(
           context,
-          variant: StatusVariant.error,
-          title: '오류',
-          message: '위치 가져오기 실패: $e',
+          e,
+          stackTrace: stackTrace,
+          logContext: 'GpsPage._getCurrentLocation',
+          title: '위치 가져오기 실패',
         );
       }
     } finally {
@@ -162,7 +158,7 @@ class _GpsMainPageState extends State<GpsMainPage>
   /// 현재 GPS 정보를 저장
   Future<void> _saveCurrentGpsInfo() async {
     if (_currentPosition == null) {
-      _showErrorDialog('저장할 위치 정보가 없습니다. 먼저 위치를 가져와주세요.');
+      await ErrorHandler.showErrorDialog(context, '저장할 위치 정보가 없습니다. 먼저 위치를 가져와주세요.');
       return;
     }
 
@@ -194,13 +190,21 @@ class _GpsMainPageState extends State<GpsMainPage>
         setState(() {
           _statusMessage = 'GPS 정보 저장에 실패했습니다.';
         });
-        _showErrorDialog('GPS 정보 저장에 실패했습니다.');
+        await ErrorHandler.showErrorDialog(context, 'GPS 정보 저장에 실패했습니다.');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       setState(() {
-        _statusMessage = 'GPS 정보 저장 중 오류가 발생했습니다: $e';
+        _statusMessage = ErrorHandler.messageFor(e);
       });
-      _showErrorDialog('GPS 정보 저장 중 오류가 발생했습니다: $e');
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'GpsPage._saveCurrentGpsInfo',
+          title: 'GPS 정보 저장 실패',
+        );
+      }
     } finally {
       setState(() {
         _isLoading = false;
@@ -222,22 +226,13 @@ class _GpsMainPageState extends State<GpsMainPage>
       setState(() {
         _isLoading = false;
       });
-    } catch (e) {
+    } catch (e, stackTrace) {
+      ErrorHandler.logError(e, stackTrace, context: 'GpsPage._loadGpsInfoList');
       setState(() {
         _isLoading = false;
         _gpsInfoList = [];
       });
     }
-  }
-
-  /// 오류 다이얼로그
-  Future<void> _showErrorDialog(String message) async {
-    await showStatusDialog(
-      context,
-      variant: StatusVariant.error,
-      title: '오류',
-      message: message,
-    );
   }
 
   /// 성공 다이얼로그
@@ -269,8 +264,15 @@ class _GpsMainPageState extends State<GpsMainPage>
       if (mounted) {
         await _loadGpsInfoList();
       }
-    } catch (e) {
-      _showErrorDialog('GPS 정보 삭제 중 오류가 발생했습니다: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'GpsPage._deleteGpsInfo',
+        );
+      }
     }
   }
 
@@ -286,8 +288,15 @@ class _GpsMainPageState extends State<GpsMainPage>
       if (mounted) {
         await _loadGpsInfoList();
       }
-    } catch (e) {
-      _showErrorDialog('GPS 정보 삭제 중 오류가 발생했습니다: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'GpsPage._clearAllGpsInfo',
+        );
+      }
     }
   }
 
@@ -295,7 +304,7 @@ class _GpsMainPageState extends State<GpsMainPage>
   Future<bool> _uploadGpsInfoToServer() async {
     try {
       if (_gpsInfoList.isEmpty) {
-        _showErrorDialog('업로드할 GPS 정보가 없습니다.');
+        await ErrorHandler.showErrorDialog(context, '업로드할 GPS 정보가 없습니다.');
         return false;
       }
 
@@ -307,8 +316,15 @@ class _GpsMainPageState extends State<GpsMainPage>
       });
 
       return true;
-    } catch (e) {
-      _showErrorDialog('서버 업로드 중 오류가 발생했습니다: $e');
+    } catch (e, stackTrace) {
+      if (mounted) {
+        await ErrorHandler.handleException(
+          context,
+          e,
+          stackTrace: stackTrace,
+          logContext: 'GpsPage._uploadGpsInfoToServer',
+        );
+      }
       return false;
     }
   }

@@ -49,4 +49,10 @@
 		
 	</select>
 
+	<select id="selectInterfaceInfoListTotCnt" parameterType="egovframework.hyb.mbl.itf.service.InterfaceAPIVO" resultType="int">
+			SELECT COUNT(*)
+			FROM INTERFACE_EGOV
+			WHERE USER_ID = #{userId}
+	</select>
+
 </mapper>

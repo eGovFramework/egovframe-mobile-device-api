@@ -3,8 +3,6 @@
  */
 package egovframework.hyb.utils;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,7 +30,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
@@ -194,6 +191,20 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 	 * @return byte[]
 	 * @exception Exception
 	 */
+	/**
+	 * UUID 소유권 검증 후 파일 다운로드.
+	 *
+	 * @param response HttpServletResponse
+	 * @param fileSn   파일 일련번호
+	 * @param uuid     기기 식별코드
+	 */
+	public byte[] fileDownload(HttpServletResponse response, int fileSn, String uuid) throws Exception {
+		if (!fileService.isFileOwnedByUuid(fileSn, uuid)) {
+			throw new SecurityException("파일 접근 권한이 없습니다.");
+		}
+		return fileDownload(response, fileSn);
+	}
+
 	public byte[] fileDownload(HttpServletResponse response, int fileSn) throws Exception {
 		
 		FileVO fileVO = new FileVO();
@@ -338,6 +349,8 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 		for (String allowedExt : allowedExtensions) {
 			String trimmedExt = allowedExt.trim().toLowerCase();
 			if (!trimmedExt.isEmpty() && extension.equals(trimmedExt)) {
+
+				
 				return true;
 			}
 		}
@@ -346,7 +359,6 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 	}
 
 	/**
-	 * 공통 컴포넌트 utl.fcc 패키지와 Dependency 제거를 위해 내부 메서드로 추가 정의함 응용어플리케이션에서 고유값을 사용하기 위해
 	 * 시스템에서 17자리의 TIMESTAMP값을 구하는 기능
 	 *
 	 * @param

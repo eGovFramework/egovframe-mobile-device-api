@@ -10,6 +10,7 @@ import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/license.dart
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/tabbar.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/table.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:flutter/material.dart';
 
 import 'gps_description.dart';
@@ -105,14 +106,14 @@ class _GpsDetailPageState extends State<GpsDetailPage> with SingleTickerProvider
           }
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
         setState(() => isLoading = false);
-        showStatusDialog(
+        await ErrorHandler.handleException(
           context,
-          variant: StatusVariant.error,
-          title: '오류',
-          message: '오류가 발생했습니다: $e',
+          e,
+          stackTrace: stackTrace,
+          logContext: 'GpsDetailPage._deleteGpsInfo',
         );
       }
     }

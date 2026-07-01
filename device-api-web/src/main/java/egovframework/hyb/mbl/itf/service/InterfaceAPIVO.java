@@ -17,7 +17,10 @@ package egovframework.hyb.mbl.itf.service;
 
 import java.io.Serializable;
 
+import egovframework.hyb.validation.EgovNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 
 /**  
  * @Class Name : InterfaceAPIVO.java
@@ -38,15 +41,22 @@ public class InterfaceAPIVO implements Serializable {
     private int sn;
 
     /** 기기식별코드 */
+    @Size(max = 36, message = "{interface.uuid.maxlength}")
     private String uuid;
 
     /** 아이디 */
+    @EgovNotNull(message = "{interface.userId.required}")
+    @Size(max = 20, message = "{interface.userId.maxlength}")
     private String userId;
 
-    /** 비밀번호 */
+    /** 비밀번호 (앱 1차 해시: SHA-256(userId||password) Base64 — DB에 그대로 저장) */
+    @EgovNotNull(message = "{interface.userPw.required}")
+    @Size(min = 1, max = 200, message = "{interface.userPw.invalid}")
     private String userPw;
 
     /** E-mail */
+    @Email(message = "{interface.emails.invalid}")
+    @Size(max = 100, message = "{interface.emails.maxlength}")
     private String emails;
 
     /** resultState */

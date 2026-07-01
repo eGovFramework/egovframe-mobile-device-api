@@ -13,11 +13,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import egovframework.hyb.mbl.fop.service.EgovFileOpenerDeviceAPIService;
 import egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIVO;
 import egovframework.hyb.utils.EgovFileMngUtil;
-import egovframework.hyb.utils.FileVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -60,11 +60,15 @@ public class EgovFileOpenerDeviceAPIController {
 	 * @return ModelAndView
 	 * @exception Exception
 	 */
-    @Operation(summary = "파일 오프너 파일 다운로드", description = "파일 오프너 파일을 다운로드합니다.")
+    @Operation(summary = "파일 오프너 파일 다운로드", description = "기기 UUID 소유권을 검증한 뒤 파일을 다운로드합니다.")
     @RequestMapping(value = "/fop/fileDownload.do", method = RequestMethod.GET)
-	public void fileDownload(HttpServletRequest request, HttpServletResponse response, FileVO fileVO) throws Exception{
+	public void fileDownload(
+			@Parameter(description = "기기 식별코드") @RequestParam("uuid") String uuid,
+			@Parameter(description = "파일 일련번호") @RequestParam("fileSn") int fileSn,
+			HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
         try {
-      	byte[] fildData = egovFileMngUtil.fileDownload(response, fileVO.getFileSn());
+      	byte[] fildData = egovFileMngUtil.fileDownload(response, fileSn, uuid);
            
           response.setContentType("application/octet-stream");
           response.setContentLength(fildData.length);
@@ -72,6 +76,9 @@ public class EgovFileOpenerDeviceAPIController {
           response.getOutputStream().write(fildData);
           response.getOutputStream().flush();
           
+      } catch (SecurityException e) {
+          response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+          response.getWriter().write("파일 접근 권한이 없습니다.");
       } catch (IOException e) {
           response.setStatus(HttpServletResponse.SC_NOT_FOUND);
           response.getWriter().write("파일을 찾을 수 없습니다.");

@@ -1,6 +1,7 @@
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/text_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 
 enum ErrorType {
@@ -121,6 +122,11 @@ class ErrorHandler {
     }
   }
 
+  /// 예외에 대한 사용자 친화적 메시지 반환
+  static String messageFor(Object error) {
+    return getErrorMessage(error, detectErrorType(error));
+  }
+
   /// 에러 다이얼로그 표시
   static Future<void> showErrorDialog(
     BuildContext context, 
@@ -216,16 +222,30 @@ class ErrorHandler {
     );
   }
 
-  /// 에러 로깅
+  /// 에러 로깅 (디버그 빌드에서만 출력)
   static void logError(dynamic error, StackTrace? stackTrace, {String? context}) {
-    print('=== ERROR LOG ===');
-    if (context != null) {
-      print('Context: $context');
-    }
-    print('Error: $error');
-    if (stackTrace != null) {
-      print('Stack Trace: $stackTrace');
-    }
-    print('================');
+    final prefix = context != null ? '[$context] ' : '';
+    AppLogger.e('${prefix}Error', error, stackTrace);
+  }
+
+  /// 예외를 로깅하고 사용자에게 다이얼로그로 표시
+  static Future<void> handleException(
+    BuildContext context,
+    Object error, {
+    StackTrace? stackTrace,
+    String? logContext,
+    String? title,
+    VoidCallback? onRetry,
+    String? retryText,
+  }) async {
+    logError(error, stackTrace, context: logContext);
+    final message = messageFor(error);
+    await showErrorDialog(
+      context,
+      message,
+      title: title,
+      onRetry: onRetry,
+      retryText: retryText,
+    );
   }
 }
