@@ -13,23 +13,23 @@ import egovframework.hyb.mbl.dvc.service.DeviceAPIVO;
 @Repository("DeviceAPIDAO")
 public class DeviceAPIDAO extends EgovAbstractMapper {
 
-    public int insertDeviceInfo(DeviceAPIVO vo) throws Exception {
+    public int insertDeviceInfo(DeviceAPIVO vo) {
         return (Integer) insert("deviceAPIDAO.insertDeviceInfo", vo);
     }
 
-    public int deleteDeviceInfo(DeviceAPIVO vo) throws Exception {
+    public int deleteDeviceInfo(DeviceAPIVO vo) {
         return (Integer) delete("deviceAPIDAO.deleteDeviceInfo", vo);
     }
 
-    public DeviceAPIVO selectDeviceInfo(DeviceAPIVO vo) throws Exception {
+    public DeviceAPIVO selectDeviceInfo(DeviceAPIVO vo) {
         return (DeviceAPIVO) selectOne("deviceAPIDAO.selectDeviceInfo", vo);
     }
 
-    public List<?> selectDeviceInfoList(DeviceAPIVO searchVO) throws Exception {
+    public List<?> selectDeviceInfoList(DeviceAPIVO searchVO) {
         return selectList("deviceAPIDAO.selectDeviceInfoList", searchVO);
     }
 
-    public int selectDeviceInfoListTotCnt(DeviceAPIVO searchVO) throws Exception {
+    public int selectDeviceInfoListTotCnt(DeviceAPIVO searchVO) {
         return (Integer) selectOne("deviceAPIDAO.selectDeviceInfoListTotCnt", searchVO);
     }
 }

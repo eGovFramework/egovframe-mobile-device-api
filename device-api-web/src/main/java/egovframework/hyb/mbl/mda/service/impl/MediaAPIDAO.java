@@ -13,27 +13,27 @@ import egovframework.hyb.mbl.mda.service.MediaAPIVO;
 @Repository("MediaAPIDAO")
 public class MediaAPIDAO extends EgovAbstractMapper {
 
-    public int insertMediaInfo(MediaAPIVO vo) throws Exception {
+    public int insertMediaInfo(MediaAPIVO vo) {
         return (Integer) insert("mediaAPIDAO.insertMediaInfo", vo);
     }
 
-    public int updateMediaInfo(MediaAPIVO vo) throws Exception {
+    public int updateMediaInfo(MediaAPIVO vo) {
         return (Integer) update("mediaAPIDAO.updateMediaInfo", vo);
     }
 
-    public int deleteMediaInfo(MediaAPIVO vo) throws Exception {
+    public int deleteMediaInfo(MediaAPIVO vo) {
         return (Integer) delete("mediaAPIDAO.deleteMediaInfo", vo);
     }
 
-    public MediaAPIVO selectMediaInfo(MediaAPIVO vo) throws Exception {
+    public MediaAPIVO selectMediaInfo(MediaAPIVO vo) {
         return (MediaAPIVO) selectOne("mediaAPIDAO.selectMediaInfo", vo);
     }
 
-    public List<?> selectMediaInfoList(MediaAPIVO searchVO) throws Exception {
+    public List<?> selectMediaInfoList(MediaAPIVO searchVO) {
         return selectList("mediaAPIDAO.selectMediaInfoList", searchVO);
     }
 
-    public int selectMediaInfoListTotCnt(MediaAPIVO searchVO) throws Exception {
+    public int selectMediaInfoListTotCnt(MediaAPIVO searchVO) {
         return (Integer) selectOne("mediaAPIDAO.selectMediaInfoListTotCnt", searchVO);
     }
 }

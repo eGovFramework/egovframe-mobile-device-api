@@ -13,27 +13,27 @@ import egovframework.hyb.mbl.itf.service.InterfaceAPIVO;
 @Repository("InterfaceAPIDAO")
 public class InterfaceAPIDAO extends EgovAbstractMapper {
 
-    public int insertInterfaceInfo(InterfaceAPIVO vo) throws Exception {
+    public int insertInterfaceInfo(InterfaceAPIVO vo) {
         return (Integer) insert("interfaceAPIDAO.insertInterfaceInfo", vo);
     }
 
-    public int updateInterfaceInfo(InterfaceAPIVO vo) throws Exception {
+    public int updateInterfaceInfo(InterfaceAPIVO vo) {
         return (Integer) update("interfaceAPIDAO.updateInterfaceInfo", vo);
     }
 
-    public int deleteInterfaceInfo(InterfaceAPIVO vo) throws Exception {
+    public int deleteInterfaceInfo(InterfaceAPIVO vo) {
         return (Integer) delete("interfaceAPIDAO.deleteInterfaceInfo", vo);
     }
 
-    public InterfaceAPIVO selectInterfaceInfo(InterfaceAPIVO vo) throws Exception {
+    public InterfaceAPIVO selectInterfaceInfo(InterfaceAPIVO vo) {
         return (InterfaceAPIVO) selectOne("interfaceAPIDAO.selectInterfaceInfo", vo);
     }
 
-    public List<?> selectInterfaceInfoList(InterfaceAPIVO searchVO) throws Exception {
+    public List<?> selectInterfaceInfoList(InterfaceAPIVO searchVO) {
         return selectList("interfaceAPIDAO.selectInterfaceInfoList", searchVO);
     }
 
-    public int selectInterfaceInfoListTotCnt(InterfaceAPIVO searchVO) throws Exception {
+    public int selectInterfaceInfoListTotCnt(InterfaceAPIVO searchVO) {
         return (Integer) selectOne("interfaceAPIDAO.selectInterfaceInfoListTotCnt", searchVO);
     }
 }

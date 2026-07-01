@@ -13,19 +13,19 @@ import egovframework.hyb.mbl.gps.service.GPSAPIVO;
 @Repository("GPSAPIDAO")
 public class GPSAPIDAO extends EgovAbstractMapper {
 
-    public int insertGPSInfo(GPSAPIVO vo) throws Exception {
+    public int insertGPSInfo(GPSAPIVO vo) {
         return (Integer) insert("gpsAPIDAO.insertGPSInfo", vo);
     }
 
-    public int deleteGPSInfo(GPSAPIVO vo) throws Exception {
+    public int deleteGPSInfo(GPSAPIVO vo) {
         return (Integer) delete("gpsAPIDAO.deleteGPSInfo", vo);
     }
 
-    public List<?> selectGPSInfoList(GPSAPIVO searchVO) throws Exception {
+    public List<?> selectGPSInfoList(GPSAPIVO searchVO) {
         return selectList("gpsAPIDAO.selectGPSInfoList", searchVO);
     }
 
-    public int selectGPSInfoListTotCnt(GPSAPIVO searchVO) throws Exception {
+    public int selectGPSInfoListTotCnt(GPSAPIVO searchVO) {
         return (Integer) selectOne("gpsAPIDAO.selectGPSInfoListTotCnt", searchVO);
     }
 }
