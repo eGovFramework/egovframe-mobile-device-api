@@ -18,22 +18,26 @@ package egovframework.hyb.mbl.nwk.service;
 import java.io.Serializable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
-/**  
+/**
  * @Class Name : NetworkAPIVO.java
  * @Description : 통합 Network API VO Class
- * @Modification Information  
+ * @Modification Information
  * @
  * @ 수정일               수정자              수정내용
  * @ ----------   ---------   -------------------------------
  *   2025.10.28   통합개발팀          Android/iOS 패키지 통합
- * 
+ *
  * @author 디바이스 API 실행환경 팀
  * @since 2025. 10. 28.
  * @version 2.0
  * @see
- * 
+ *
  */
+@Getter
+@Setter
 @Schema(description = "네트워크 API VO")
 public class NetworkAPIVO extends NetworkAPIDefaultVO implements Serializable {
 
@@ -54,37 +58,5 @@ public class NetworkAPIVO extends NetworkAPIDefaultVO implements Serializable {
     /** 사용여부 */
     @Schema(description = "사용여부")
     private String useYn;
-
-    public int getSn() {
-        return sn;
-    }
-
-    public void setSn(int sn) {
-        this.sn = sn;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getNetworktype() {
-        return networktype;
-    }
-
-    public void setNetworktype(String networktype) {
-        this.networktype = networktype;
-    }
-
-    public String getUseYn() {
-        return useYn;
-    }
-
-    public void setUseYn(String useYn) {
-        this.useYn = useYn;
-    }
 }
 

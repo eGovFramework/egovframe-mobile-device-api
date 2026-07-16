@@ -18,17 +18,21 @@ package egovframework.hyb.mbl.acl.service;
 import java.io.Serializable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
-/**  
+/**
  * @Class Name : AcceleratorAPIVO.java
  * @Description : 통합 Accelerator API VO Class (Android/iOS 공통)
- * @Modification Information  
+ * @Modification Information
  * @
  * @ 수정일               수정자              수정내용
  * @ ----------   ---------   -------------------------------
  *   2025.10.28   통합개발팀          Android/iOS 패키지 통합
- * 
+ *
  */
+@Getter
+@Setter
 @Schema(description = "가속도계 API VO")
 public class AcceleratorAPIVO implements Serializable {
 
@@ -54,60 +58,4 @@ public class AcceleratorAPIVO implements Serializable {
 
     /** 사용여부 */
     private String useYn;
-
-    public int getSn() {
-        return sn;
-    }
-
-    public void setSn(int sn) {
-        this.sn = sn;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getXaxis() {
-        return xaxis;
-    }
-
-    public void setXaxis(String xaxis) {
-        this.xaxis = xaxis;
-    }
-
-    public String getYaxis() {
-        return yaxis;
-    }
-
-    public void setYaxis(String yaxis) {
-        this.yaxis = yaxis;
-    }
-
-    public String getZaxis() {
-        return zaxis;
-    }
-
-    public void setZaxis(String zaxis) {
-        this.zaxis = zaxis;
-    }
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getUseYn() {
-        return useYn;
-    }
-
-    public void setUseYn(String useYn) {
-        this.useYn = useYn;
-    }
 }

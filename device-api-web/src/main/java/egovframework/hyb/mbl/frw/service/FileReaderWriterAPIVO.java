@@ -18,17 +18,21 @@ package egovframework.hyb.mbl.frw.service;
 import java.io.Serializable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
-/**  
+/**
  * @Class Name : FileReaderWriterAPIVO.java
  * @Description : 통합 FileReaderWriter API VO Class (Android/iOS 공통)
- * @Modification Information  
+ * @Modification Information
  * @
  * @ 수정일               수정자              수정내용
  * @ ----------   ---------   -------------------------------
  *   2025.10.28   통합개발팀          Android/iOS 패키지 통합
- * 
+ *
  */
+@Getter
+@Setter
 @Schema(description = "파일 읽기/쓰기 API VO")
 public class FileReaderWriterAPIVO implements Serializable {
 
@@ -78,124 +82,4 @@ public class FileReaderWriterAPIVO implements Serializable {
 
     /** resultMessage */
     private String resultMessage;
-
-    public int getSn() {
-        return sn;
-    }
-
-    public void setSn(int sn) {
-        this.sn = sn;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public int getFileSn() {
-        return fileSn;
-    }
-
-    public void setFileSn(int fileSn) {
-        this.fileSn = fileSn;
-    }
-
-    public String getFileNm() {
-        return fileNm;
-    }
-
-    public void setFileNm(String fileNm) {
-        this.fileNm = fileNm;
-    }
-
-    public String getFileType() {
-        return fileType;
-    }
-
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
-    }
-
-    public String getUpdtDt() {
-        return updtDt;
-    }
-
-    public void setUpdtDt(String updtDt) {
-        this.updtDt = updtDt;
-    }
-
-    public String getUseYn() {
-        return useYn;
-    }
-
-    public void setUseYn(String useYn) {
-        this.useYn = useYn;
-    }
-
-    public String getFileStreCours() {
-        return fileStreCours;
-    }
-
-    public void setFileStreCours(String fileStreCours) {
-        this.fileStreCours = fileStreCours;
-    }
-
-    public String getStreFileNm() {
-        return streFileNm;
-    }
-
-    public void setStreFileNm(String streFileNm) {
-        this.streFileNm = streFileNm;
-    }
-
-    public String getOrignlFileNm() {
-        return orignlFileNm;
-    }
-
-    public void setOrignlFileNm(String orignlFileNm) {
-        this.orignlFileNm = orignlFileNm;
-    }
-
-    public String getFileExtsn() {
-        return fileExtsn;
-    }
-
-    public void setFileExtsn(String fileExtsn) {
-        this.fileExtsn = fileExtsn;
-    }
-
-    public String getFileCn() {
-        return fileCn;
-    }
-
-    public void setFileCn(String fileCn) {
-        this.fileCn = fileCn;
-    }
-
-    public String getFileSize() {
-        return fileSize;
-    }
-
-    public void setFileSize(String fileSize) {
-        this.fileSize = fileSize;
-    }
-
-    public String getResultState() {
-        return resultState;
-    }
-
-    public void setResultState(String resultState) {
-        this.resultState = resultState;
-    }
-
-    public String getResultMessage() {
-        return resultMessage;
-    }
-
-    public void setResultMessage(String resultMessage) {
-        this.resultMessage = resultMessage;
-    }
 }
