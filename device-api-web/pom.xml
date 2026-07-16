@@ -160,10 +160,18 @@
 		</dependency>
 
 		<!-- Apple APNS Push -->
+		<!-- CVE-2019-17571, CVE-2022-23302, CVE-2022-23305, CVE-2022-23307: javapns-jdk16이 물고오는
+		구버전 log4j 1.2.12 제외. log4j-over-slf4j가 동일 API를 대체 제공 -->
 		<dependency>
 			<groupId>com.github.fernandospr</groupId>
 			<artifactId>javapns-jdk16</artifactId>
 			<version>${javapns-jdk16.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- FCM(Firebase Cloud Messaging) 구성 시작  -->
 		<dependency>
