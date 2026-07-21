@@ -12,7 +12,7 @@ import org.springframework.web.multipart.support.StandardServletMultipartResolve
 public class FileUploadConfig {
 
     @Bean
-    public MultipartResolver multipartResolver() {
+    MultipartResolver multipartResolver() {
         StandardServletMultipartResolver resolver = new StandardServletMultipartResolver();
         return resolver;
     }

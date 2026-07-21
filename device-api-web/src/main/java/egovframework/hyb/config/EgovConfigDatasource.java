@@ -31,7 +31,7 @@ public class EgovConfigDatasource {
 	 * XML의 destroy-method="close"와 동일 (Spring Boot는 자동으로 close 메서드 인식)
 	 */
 	@Bean(name = "dataSource-mysql", destroyMethod = "close")
-	public DataSource dataSourceMysql() {
+	DataSource dataSourceMysql() {
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(driverClassName);
 		dataSource.setUrl(url);
@@ -44,7 +44,7 @@ public class EgovConfigDatasource {
 	 * Oracle DataSource
 	 */
 	@Bean(name = "dataSource-oracle", destroyMethod = "close")
-	public DataSource dataSourceOracle() {
+	DataSource dataSourceOracle() {
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(driverClassName);
 		dataSource.setUrl(url);
@@ -57,7 +57,7 @@ public class EgovConfigDatasource {
 	 * Altibase DataSource
 	 */
 	@Bean(name = "dataSource-altibase", destroyMethod = "close")
-	public DataSource dataSourceAltibase() {
+	DataSource dataSourceAltibase() {
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(driverClassName);
 		dataSource.setUrl(url);
@@ -70,7 +70,7 @@ public class EgovConfigDatasource {
 	 * Tibero DataSource
 	 */
 	@Bean(name = "dataSource-tibero", destroyMethod = "close")
-	public DataSource dataSourceTibero() {
+	DataSource dataSourceTibero() {
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(driverClassName);
 		dataSource.setUrl(url);
@@ -83,7 +83,7 @@ public class EgovConfigDatasource {
 	 * Cubrid DataSource
 	 */
 	@Bean(name = "dataSource-cubrid", destroyMethod = "close")
-	public DataSource dataSourceCubrid() {
+	DataSource dataSourceCubrid() {
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(driverClassName);
 		dataSource.setUrl(url);
@@ -98,7 +98,7 @@ public class EgovConfigDatasource {
 	 */
 	@Bean(name = "dataSource")
 	@Primary
-	public DataSource dataSource() {
+	DataSource dataSource() {
 		switch (dbType.toLowerCase()) {
 			case "mysql":
 				return dataSourceMysql();
