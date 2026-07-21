@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 import egovframework.hyb.mbl.fop.service.EgovFileOpenerDeviceAPIService;
 import egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIVO;
-import egovframework.hyb.utils.FileVO;
 import jakarta.annotation.Resource;
 
 
@@ -36,6 +35,7 @@ import jakarta.annotation.Resource;
  * @  수정일       수정자                   수정내용
  * @ ---------   ---------   -------------------------------
  * @ 2016.07.11   장성호                   최초생성
+ *   2026.07.21  이백행          [2026년 컨트리뷰션] 사용하지 않는 import 제거
  * 
  * @author 디바이스 API 실행환경 개발팀
  * @since 2016. 07.11
