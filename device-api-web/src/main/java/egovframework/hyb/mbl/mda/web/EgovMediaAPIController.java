@@ -228,12 +228,4 @@ public class EgovMediaAPIController {
         }
     }
 
-    // 파일 확장자 추출
-    private String getFileExtension(String filename) {
-        if (filename == null || filename.lastIndexOf(".") == -1) {
-            return "";
-        }
-        return filename.substring(filename.lastIndexOf("."));
-    }
-
 }
