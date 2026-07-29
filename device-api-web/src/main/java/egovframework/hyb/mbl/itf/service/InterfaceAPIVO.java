@@ -21,17 +21,21 @@ import egovframework.hyb.validation.EgovNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
-/**  
+/**
  * @Class Name : InterfaceAPIVO.java
  * @Description : 통합 Interface API VO Class (Android/iOS 공통)
- * @Modification Information  
+ * @Modification Information
  * @
  * @ 수정일               수정자              수정내용
  * @ ----------   ---------   -------------------------------
  *   2025.10.28   통합개발팀          Android/iOS 패키지 통합
- * 
+ *
  */
+@Getter
+@Setter
 @Schema(description = "인터페이스 API VO")
 public class InterfaceAPIVO implements Serializable {
 
@@ -64,60 +68,4 @@ public class InterfaceAPIVO implements Serializable {
 
     /** resultMessage */
     private String resultMessage;
-
-    public int getSn() {
-        return sn;
-    }
-
-    public void setSn(int sn) {
-        this.sn = sn;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserPw() {
-        return userPw;
-    }
-
-    public void setUserPw(String userPw) {
-        this.userPw = userPw;
-    }
-
-    public String getEmails() {
-        return emails;
-    }
-
-    public void setEmails(String emails) {
-        this.emails = emails;
-    }
-
-    public String getResultState() {
-        return resultState;
-    }
-
-    public void setResultState(String resultState) {
-        this.resultState = resultState;
-    }
-
-    public String getResultMessage() {
-        return resultMessage;
-    }
-
-    public void setResultMessage(String resultMessage) {
-        this.resultMessage = resultMessage;
-    }
 }

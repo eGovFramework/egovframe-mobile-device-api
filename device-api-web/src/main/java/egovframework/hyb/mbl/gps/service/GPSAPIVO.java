@@ -18,17 +18,21 @@ package egovframework.hyb.mbl.gps.service;
 import java.io.Serializable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
-/**  
+/**
  * @Class Name : GPSAPIVO.java
  * @Description : 통합 GPS API VO Class (Android/iOS 공통)
- * @Modification Information  
+ * @Modification Information
  * @
  * @ 수정일               수정자              수정내용
  * @ ----------   ---------   -------------------------------
  *   2025.10.28   통합개발팀          Android/iOS 패키지 통합
- * 
+ *
  */
+@Getter
+@Setter
 @Schema(description = "GPS API VO")
 public class GPSAPIVO implements Serializable {
 
@@ -57,68 +61,4 @@ public class GPSAPIVO implements Serializable {
 
     /** 결과 메시지 */
     private String resultMessage;
-
-    public int getSn() {
-        return sn;
-    }
-
-    public void setSn(int sn) {
-        this.sn = sn;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getLat() {
-        return lat;
-    }
-
-    public void setLat(String lat) {
-        this.lat = lat;
-    }
-
-    public String getLon() {
-        return lon;
-    }
-
-    public void setLon(String lon) {
-        this.lon = lon;
-    }
-
-    public String getAccrcy() {
-        return accrcy;
-    }
-
-    public void setAccrcy(String accrcy) {
-        this.accrcy = accrcy;
-    }
-
-    public String getUseYn() {
-        return useYn;
-    }
-
-    public void setUseYn(String useYn) {
-        this.useYn = useYn;
-    }
-
-    public String getResultState() {
-        return resultState;
-    }
-
-    public void setResultState(String resultState) {
-        this.resultState = resultState;
-    }
-
-    public String getResultMessage() {
-        return resultMessage;
-    }
-
-    public void setResultMessage(String resultMessage) {
-        this.resultMessage = resultMessage;
-    }
 }

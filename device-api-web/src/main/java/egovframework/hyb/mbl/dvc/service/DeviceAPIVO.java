@@ -18,17 +18,21 @@ package egovframework.hyb.mbl.dvc.service;
 import java.io.Serializable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
-/**  
+/**
  * @Class Name : DeviceAPIVO.java
  * @Description : 통합 Device API VO Class
- * @Modification Information  
+ * @Modification Information
  * @
  * @ 수정일               수정자              수정내용
  * @ ----------   ---------   -------------------------------
  *   2025.10.28   통합개발팀          Android/iOS 패키지 통합
- * 
+ *
  */
+@Getter
+@Setter
 @Schema(description = "디바이스 API VO")
 public class DeviceAPIVO implements Serializable {
 
@@ -60,76 +64,4 @@ public class DeviceAPIVO implements Serializable {
 
     /** 활성화 여부 */
     private String useYn;
-
-    public int getSn() {
-        return sn;
-    }
-
-    public void setSn(int sn) {
-        this.sn = sn;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getOs() {
-        return os;
-    }
-
-    public void setOs(String os) {
-        this.os = os;
-    }
-
-    public String getTelno() {
-        return telno;
-    }
-
-    public void setTelno(String telno) {
-        this.telno = telno;
-    }
-
-    public String getStrgeInfo() {
-        return strgeInfo;
-    }
-
-    public void setStrgeInfo(String strgeInfo) {
-        this.strgeInfo = strgeInfo;
-    }
-
-    public String getNtwrkDeviceInfo() {
-        return ntwrkDeviceInfo;
-    }
-
-    public void setNtwrkDeviceInfo(String ntwrkDeviceInfo) {
-        this.ntwrkDeviceInfo = ntwrkDeviceInfo;
-    }
-
-    public String getPgVer() {
-        return pgVer;
-    }
-
-    public void setPgVer(String pgVer) {
-        this.pgVer = pgVer;
-    }
-
-    public String getDeviceNm() {
-        return deviceNm;
-    }
-
-    public void setDeviceNm(String deviceNm) {
-        this.deviceNm = deviceNm;
-    }
-
-    public String getUseYn() {
-        return useYn;
-    }
-
-    public void setUseYn(String useYn) {
-        this.useYn = useYn;
-    }
 }

@@ -19,17 +19,21 @@ import java.io.Serializable;
 
 import egovframework.hyb.utils.FileVO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
-/**  
+/**
  * @Class Name : MediaAPIVO.java
  * @Description : 통합 Media API VO Class
- * @Modification Information  
+ * @Modification Information
  * @
  * @ 수정일               수정자              수정내용
  * @ ----------   ---------   -------------------------------
  *   2025.10.28   통합개발팀          Android/iOS 패키지 통합
- * 
+ *
  */
+@Getter
+@Setter
 @Schema(description = "미디어 API VO")
 public class MediaAPIVO extends FileVO implements Serializable {
 
@@ -55,60 +59,4 @@ public class MediaAPIVO extends FileVO implements Serializable {
 
     /** 재생횟수 */
     private String revivCo;
-
-    public int getSn() {
-        return sn;
-    }
-
-    public void setSn(int sn) {
-        this.sn = sn;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public int getFileSn() {
-        return fileSn;
-    }
-
-    public void setFileSn(int fileSn) {
-        this.fileSn = fileSn;
-    }
-
-    public String getMdCode() {
-        return mdCode;
-    }
-
-    public void setMdCode(String mdCode) {
-        this.mdCode = mdCode;
-    }
-
-    public String getMdSj() {
-        return mdSj;
-    }
-
-    public void setMdSj(String mdSj) {
-        this.mdSj = mdSj;
-    }
-
-    public String getUseyn() {
-        return useyn;
-    }
-
-    public void setUseyn(String useyn) {
-        this.useyn = useyn;
-    }
-
-    public String getRevivCo() {
-        return revivCo;
-    }
-
-    public void setRevivCo(String revivCo) {
-        this.revivCo = revivCo;
-    }
 }

@@ -5,6 +5,8 @@ import java.io.Serializable;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 /**  
  * @Class Name : FileOpenerDeviceAPIVO.java
@@ -23,6 +25,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * 
  *  Copyright (C) by MOPAS All right reserved.
  */
+@Getter
+@Setter
 @Schema(description = "파일 오프너 디바이스 API VO")
 public class FileOpenerDeviceAPIVO implements Serializable {
 
@@ -48,62 +52,6 @@ public class FileOpenerDeviceAPIVO implements Serializable {
 	
 	@Schema(description = "파일번호")
     private int fileSn = 0;
-  	
-	public String getSn() {
-		return sn;
-	}
-
-	public void setSn(String sn) {
-		this.sn = sn;
-	}
-
-	public String getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
-
-	public String getStreFileNm() {
-		return streFileNm;
-	}
-
-	public void setStreFileNm(String streFileNm) {
-		this.streFileNm = streFileNm;
-	}
-
-	public String getOrignlFileNm() {
-		return orignlFileNm;
-	}
-
-	public void setOrignlFileNm(String orignlFileNm) {
-		this.orignlFileNm = orignlFileNm;
-	}
-
-	public String getUpdDt() {
-		return updDt;
-	}
-
-	public void setUpdDt(String updDt) {
-		this.updDt = updDt;
-	}
-
-	public String getFileSize() {
-		return fileSize;
-	}
-
-	public void setFileSize(String fileSize) {
-		this.fileSize = fileSize;
-	}
-	
-	public int getFileSn() {
-		return fileSn;
-	}
-	
-	public void setFileSn(int fileSn) {
-		this.fileSn = fileSn;
-	}
 
 	/** String 타입의 값을 반환한다. */
     public String toString() {
