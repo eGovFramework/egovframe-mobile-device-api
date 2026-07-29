@@ -18,7 +18,7 @@ Clean Architecture 패턴을 적용했으며, GPS·가속도·미디어·파일�
 - [WebServer 실행](/docs/webserver.md)
 - [애뮬레이터 설치 및 실행](/docs/emulator.md)
 - [실기기에 Build 및 실행](/docs/device_build.md)
-- 어플리케이션 9종 안내
+- 애플리케이션 9종 안내
   - [가속도계(Accelerator)](/docs/applications/accelerator.md)
   - [파일 관리(File Management)](/docs/applications/file_management.md)
   - [기기 정보(Device Info)](/docs/applications/device_info.md)

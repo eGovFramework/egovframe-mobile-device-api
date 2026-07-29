@@ -110,9 +110,9 @@ public class EgovNetworkAPIServiceImpl extends EgovAbstractServiceImpl implement
     }
     
     /**
-     * 네트워크 정보 총 갯수를 조회한다.
+     * 네트워크 정보 총 개수를 조회한다.
      * @param vo - 조회할 정보가 담긴 VO
-     * @return 네트워크 정보 총 갯수
+     * @return 네트워크 정보 총 개수
      * @exception
      */
     public int selectNetworkInfoListTotCnt(Object vo) {

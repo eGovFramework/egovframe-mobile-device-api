@@ -87,9 +87,9 @@ public class NetworkAPIDAO extends EgovAbstractMapper {
     }
 
     /**
-     * 네트워크 정보 총 갯수를 조회한다.
+     * 네트워크 정보 총 개수를 조회한다.
      * @param  vo - 조회할 정보가 담긴 NetworkAPIVO 또는 NetworkAPIDefaultVO
-     * @return 네트워크 정보 총 갯수
+     * @return 네트워크 정보 총 개수
      */
     public int selectNetworkInfoListTotCnt(Object vo) {
         return (Integer) selectOne("networkAPIDAO.selectNetworkInfoListTotCnt", vo);
