@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class EgovConfigIdGeneration {
 
 	@Bean
-	public EgovIdGnrStrategyImpl mixPrefixSample() {
+	EgovIdGnrStrategyImpl mixPrefixSample() {
 		EgovIdGnrStrategyImpl egovIdGnrStrategyImpl = new EgovIdGnrStrategyImpl();
 		egovIdGnrStrategyImpl.setPrefix("SAMPLE-");
 		egovIdGnrStrategyImpl.setCipers(5);
@@ -21,7 +21,7 @@ public class EgovConfigIdGeneration {
 	}
 
 	@Bean(destroyMethod="destroy")
-	public EgovTableIdGnrServiceImpl egovIdGnrService(@Qualifier("dataSource") DataSource dataSource) {
+	EgovTableIdGnrServiceImpl egovIdGnrService(@Qualifier("dataSource") DataSource dataSource) {
 		EgovTableIdGnrServiceImpl egovTableIdGnrServiceImpl = new EgovTableIdGnrServiceImpl();
 		egovTableIdGnrServiceImpl.setDataSource(dataSource);
 		egovTableIdGnrServiceImpl.setStrategy(mixPrefixSample());
@@ -33,14 +33,14 @@ public class EgovConfigIdGeneration {
 	
 	// FILEUPLOAD IDGENERATION
 	@Bean
-	public EgovIdGnrStrategyImpl filePrefix() {
+	EgovIdGnrStrategyImpl filePrefix() {
 		EgovIdGnrStrategyImpl egovIdGnrStrategyImpl = new EgovIdGnrStrategyImpl();
 		egovIdGnrStrategyImpl.setCipers(10);
 		return egovIdGnrStrategyImpl;
 	}
 	
 	@Bean(name= "egovFileIdGnrService", destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovFileIdGnrService(@Qualifier("dataSource") DataSource dataSource) {
+	EgovTableIdGnrServiceImpl egovFileIdGnrService(@Qualifier("dataSource") DataSource dataSource) {
 		EgovTableIdGnrServiceImpl egovTableIdGnrServiceImpl = new EgovTableIdGnrServiceImpl();
 		egovTableIdGnrServiceImpl.setDataSource(dataSource);
 		egovTableIdGnrServiceImpl.setStrategy(filePrefix());

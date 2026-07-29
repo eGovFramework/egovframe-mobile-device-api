@@ -40,7 +40,7 @@ public class EgovConfigWeb implements WebMvcConfigurer, ApplicationContextAware 
 	}
 
 	@Bean
-	public SpringResourceTemplateResolver templateResolver() {
+	SpringResourceTemplateResolver templateResolver() {
 		SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
 		templateResolver.setApplicationContext(this.applicationContext);
 		templateResolver.setPrefix("classpath:/templates/thymeleaf/");
@@ -51,7 +51,7 @@ public class EgovConfigWeb implements WebMvcConfigurer, ApplicationContextAware 
 	}
 
 	@Bean
-	public SpringTemplateEngine templateEngine() {
+	SpringTemplateEngine templateEngine() {
 		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
 		templateEngine.setTemplateResolver(templateResolver());
 		templateEngine.setEnableSpringELCompiler(true);
@@ -59,7 +59,7 @@ public class EgovConfigWeb implements WebMvcConfigurer, ApplicationContextAware 
 	}
 
 	@Bean
-	public ThymeleafViewResolver thymeleafViewResolver() {
+	ThymeleafViewResolver thymeleafViewResolver() {
 		ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
 		viewResolver.setCharacterEncoding("UTF-8");
 		viewResolver.setTemplateEngine(templateEngine());
@@ -83,12 +83,12 @@ public class EgovConfigWeb implements WebMvcConfigurer, ApplicationContextAware 
 	}
 
 	@Bean
-	public SessionLocaleResolver localeResolver() {
+	SessionLocaleResolver localeResolver() {
 		return new SessionLocaleResolver();
 	}
 
 	@Bean
-	public LocaleChangeInterceptor localeChangeInterceptor() {
+	LocaleChangeInterceptor localeChangeInterceptor() {
 		LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
 		interceptor.setParamName("language");
 		return interceptor;

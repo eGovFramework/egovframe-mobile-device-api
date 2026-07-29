@@ -20,7 +20,7 @@ import io.swagger.v3.oas.models.info.License;
 public class SpringDocConfig {
 
 	@Bean
-	public OpenAPI openAPI() {
+	OpenAPI openAPI() {
 		return new OpenAPI().info(
 				new Info()
 				.title("표준프레임워크 DeviceAPI 연계서비스 (Hybrid App)")
@@ -32,7 +32,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi newsApiAll() {
+	GroupedOpenApi newsApiAll() {
 		return GroupedOpenApi.builder()
 				.group("00. All Device API REST Service")
 				.pathsToMatch("/**")
@@ -40,7 +40,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi acceleratorApi() {
+	GroupedOpenApi acceleratorApi() {
 		return GroupedOpenApi.builder()
 				.group("01. Accelerator Guide Program Service")
 				.pathsToMatch("/acl/**")
@@ -49,7 +49,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi cameraApi() {
+	GroupedOpenApi cameraApi() {
 		return GroupedOpenApi.builder()
 				.group("02. Camera Guide Program Service")
 				.pathsToMatch("/cmr/**")
@@ -57,7 +57,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi compassApi() {
+	GroupedOpenApi compassApi() {
 		return GroupedOpenApi.builder()
 				.group("03. Compass Guide Program Service")
 				.pathsToMatch("/cps/**")
@@ -65,7 +65,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi contactsApi() {
+	GroupedOpenApi contactsApi() {
 		return GroupedOpenApi.builder()
 				.group("04. Contacts Guide Program Service")
 				.pathsToMatch("/ctt/**")
@@ -73,7 +73,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi deviceApi() {
+	GroupedOpenApi deviceApi() {
 		return GroupedOpenApi.builder()
 				.group("05. DeviceInfo Guide Program Service")
 				.pathsToMatch("/dvc/**")
@@ -81,7 +81,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi fileReaderWriterApi() {
+	GroupedOpenApi fileReaderWriterApi() {
 		return GroupedOpenApi.builder()
 				.group("06. FileReaderWriter Guide Program Service")
 				.pathsToMatch("/frw/**")
@@ -89,7 +89,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi gpsApi() {
+	GroupedOpenApi gpsApi() {
 		return GroupedOpenApi.builder()
 				.group("07. GPS Guide Program Service")
 				.pathsToMatch("/gps/**")
@@ -97,7 +97,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi interfaceApi() {
+	GroupedOpenApi interfaceApi() {
 		return GroupedOpenApi.builder()
 				.group("08. Interface Guide Program Service")
 				.pathsToMatch("/itf/**")
@@ -105,7 +105,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi mediaApi() {
+	GroupedOpenApi mediaApi() {
 		return GroupedOpenApi.builder()
 				.group("09. Media Guide Program Service")
 				.pathsToMatch("/mda/**")
@@ -113,7 +113,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi networkApi() {
+	GroupedOpenApi networkApi() {
 		return GroupedOpenApi.builder()
 				.group("10. Network Guide Program Service")
 				.pathsToMatch("/nwk/**")
@@ -121,7 +121,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi vibratorApi() {
+	GroupedOpenApi vibratorApi() {
 		return GroupedOpenApi.builder()
 				.group("11. Vibrator Guide Program Service")
 				.pathsToMatch("/vbr/**")
@@ -129,7 +129,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi pushApi() {
+	GroupedOpenApi pushApi() {
 		return GroupedOpenApi.builder()
 				.group("12. PushNotifications Guide Program Service")
 				.pathsToMatch("/pus/**")
@@ -137,7 +137,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi fileOpenerApi() {
+	GroupedOpenApi fileOpenerApi() {
 		return GroupedOpenApi.builder()
 				.group("13. FileOpener Guide Program Service")
 				.pathsToMatch("/fop/**")
@@ -145,7 +145,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi streamingMediaApi() {
+	GroupedOpenApi streamingMediaApi() {
 		return GroupedOpenApi.builder()
 				.group("14. StreamingMedia Guide Program Service")
 				.pathsToMatch("/stm/**")
@@ -153,7 +153,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi barcodeScannerApi() {
+	GroupedOpenApi barcodeScannerApi() {
 		return GroupedOpenApi.builder()
 				.group("15. Barcodescanner Guide Program Service")
 				.pathsToMatch("/bar/**")
@@ -161,7 +161,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi resourceUpdateApi() {
+	GroupedOpenApi resourceUpdateApi() {
 		return GroupedOpenApi.builder()
 				.group("16. WebResourceUpdate Guide Program Service")
 				.pathsToMatch("/upd/**")
@@ -169,7 +169,7 @@ public class SpringDocConfig {
 	}
 
 	@Bean
-	public GroupedOpenApi jailbreakDetectionApi() {
+	GroupedOpenApi jailbreakDetectionApi() {
 		return GroupedOpenApi.builder()
 				.group("17. JailbreakDetection Guide Program Service")
 				.pathsToMatch("/jai/**")
