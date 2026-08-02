@@ -7,10 +7,10 @@ import java.util.List;
  */
 public interface EgovAcceleratorAPIService {
 
-    List<?> selectAcceleratorInfoList(AcceleratorAPIVO searchVO) throws Exception;
+    List<AcceleratorAPIVO> selectAcceleratorInfoList(AcceleratorAPIVO searchVO);
 
-	int insertAcceleratorInfo(AcceleratorAPIVO vo) throws Exception;
+	int insertAcceleratorInfo(AcceleratorAPIVO vo);
 
-    int deleteAcceleratorInfo(AcceleratorAPIVO vo) throws Exception;
+    int deleteAcceleratorInfo(AcceleratorAPIVO vo);
 
 }
