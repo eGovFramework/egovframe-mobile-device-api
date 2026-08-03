@@ -7,13 +7,13 @@ import java.util.List;
  */
 public interface EgovDeviceAPIService {
 
-    int insertDeviceInfo(DeviceAPIVO vo) throws Exception;
+    int insertDeviceInfo(DeviceAPIVO vo);
 
-    int deleteDeviceInfo(DeviceAPIVO vo) throws Exception;
+    int deleteDeviceInfo(DeviceAPIVO vo);
 
-    DeviceAPIVO selectDeviceInfo(DeviceAPIVO vo) throws Exception;
+    DeviceAPIVO selectDeviceInfo(DeviceAPIVO vo);
 
-    List<?> selectDeviceInfoList(DeviceAPIVO searchVO) throws Exception;
+    List<DeviceAPIVO> selectDeviceInfoList(DeviceAPIVO searchVO);
 
-    int selectDeviceInfoListTotCnt(DeviceAPIVO searchVO) throws Exception;
+    int selectDeviceInfoListTotCnt(DeviceAPIVO searchVO);
 }

@@ -10,26 +10,26 @@ import egovframework.hyb.mbl.dvc.service.DeviceAPIVO;
 /**
  * 통합 Device API DAO
  */
-@Repository("DeviceAPIDAO")
+@Repository
 public class DeviceAPIDAO extends EgovAbstractMapper {
 
     public int insertDeviceInfo(DeviceAPIVO vo) {
-        return (Integer) insert("deviceAPIDAO.insertDeviceInfo", vo);
+        return insert("deviceAPIDAO.insertDeviceInfo", vo);
     }
 
     public int deleteDeviceInfo(DeviceAPIVO vo) {
-        return (Integer) delete("deviceAPIDAO.deleteDeviceInfo", vo);
+        return delete("deviceAPIDAO.deleteDeviceInfo", vo);
     }
 
     public DeviceAPIVO selectDeviceInfo(DeviceAPIVO vo) {
-        return (DeviceAPIVO) selectOne("deviceAPIDAO.selectDeviceInfo", vo);
+        return selectOne("deviceAPIDAO.selectDeviceInfo", vo);
     }
 
-    public List<?> selectDeviceInfoList(DeviceAPIVO searchVO) {
+    public List<DeviceAPIVO> selectDeviceInfoList(DeviceAPIVO searchVO) {
         return selectList("deviceAPIDAO.selectDeviceInfoList", searchVO);
     }
 
     public int selectDeviceInfoListTotCnt(DeviceAPIVO searchVO) {
-        return (Integer) selectOne("deviceAPIDAO.selectDeviceInfoListTotCnt", searchVO);
+        return selectOne("deviceAPIDAO.selectDeviceInfoListTotCnt", searchVO);
     }
 }
