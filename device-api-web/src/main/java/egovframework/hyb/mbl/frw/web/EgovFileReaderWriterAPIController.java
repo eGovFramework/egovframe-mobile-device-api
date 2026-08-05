@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -113,9 +115,9 @@ public class EgovFileReaderWriterAPIController {
     }
     
     @Operation(summary = "파일 업로드", description = "파일을 업로드합니다. (단일 또는 여러 파일 지원, 확장자 제한 없음)")
-    @RequestMapping(value="/frw/fileupload.do", method = RequestMethod.POST)
+    @RequestMapping(value="/frw/fileupload.do", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadFile(
-            @Parameter(description = "업로드할 파일") @RequestParam("files") MultipartFile[] files,
+            @Parameter(description = "업로드할 파일") @RequestPart("files") MultipartFile[] files,
             @Parameter(description = "기기 식별코드") @RequestParam("uuid") String uuid,
             HttpServletRequest request) throws Exception {
     	

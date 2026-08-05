@@ -25,6 +25,9 @@ import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -230,13 +233,12 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 			
 			// MIME 타입 설정
 			if (response != null) {
-				String originalFileName = fileVO.getOrignlFileNm();
-				response.setContentType("application/octet-stream");
+				response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
 				
 				// 파일명 인코딩
-				String encodedFileName = URLEncoder.encode(originalFileName, StandardCharsets.UTF_8).replace("+", "%20");
-				response.setHeader("Content-Disposition", 
-						"attachment; filename=\"" + originalFileName.replace("\"", "\\\"") + "\"; filename*=UTF-8''" + encodedFileName);
+				ContentDisposition contentDisposition = ContentDisposition.attachment()
+						.filename(fileVO.getOrignlFileNm(), StandardCharsets.UTF_8).build();
+				response.setHeader(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString());
 			}
 			
 			buffer = new byte[(int) file.length()];
