@@ -4,49 +4,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import egovframework.hyb.mbl.gps.service.EgovGPSAPIService;
 import egovframework.hyb.mbl.gps.service.GPSAPIVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 통합 GPS API Controller
  */
 @Controller
+@RequiredArgsConstructor
+@Slf4j
 @Tag(name = "07. GPS Guide Program Service", description = "GPS API 관리")
 public class EgovGPSAPIController {
 
-    @Resource(name = "EgovGPSAPIService")
-    private EgovGPSAPIService egovGPSAPIService;
-
-    @Resource(name = "propertiesService")
-    protected EgovPropertyService propertiesService;
+    private final EgovGPSAPIService egovGPSAPIService;
 
     @Operation(summary = "GPS 정보 목록 조회", description = "GPS 정보 목록을 조회합니다.")
-    @RequestMapping(value = "/gps/selectGPSInfoList.do", method = RequestMethod.GET)
-    public ResponseEntity<?> selectGPSInfoList(@ModelAttribute("searchVO") GPSAPIVO searchVO, ModelMap model) throws Exception {
+    @GetMapping("/gps/selectGPSInfoList.do")
+    public ResponseEntity<Map<String, Object>> selectGPSInfoList(GPSAPIVO searchVO) {
+        log.debug("uuid={}", searchVO.getUuid());
         Map<String, Object> response = new HashMap<>();
-        List<?> gpsInfoList = egovGPSAPIService.selectGPSInfoList(searchVO);
+        List<GPSAPIVO> gpsInfoList = egovGPSAPIService.selectGPSInfoList(searchVO);
         response.put("gpsInfoList", gpsInfoList);
         response.put("resultState", "OK");
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "GPS 정보 등록", description = "GPS 정보를 등록합니다.")
-    @RequestMapping(value = "/gps/insertGPSInfo.do", method = RequestMethod.POST)
-    public ResponseEntity<?> insertGPSInfo(GPSAPIVO gpsVO, BindingResult bindingResult, Model model, SessionStatus status) throws Exception {
+    @PostMapping("/gps/insertGPSInfo.do")
+    public ResponseEntity<Map<String, Object>> insertGPSInfo(GPSAPIVO gpsVO) {
         Map<String, Object> response = new HashMap<>();
         
         int cnt = egovGPSAPIService.insertGPSInfo(gpsVO);
@@ -61,8 +56,8 @@ public class EgovGPSAPIController {
     }
 
     @Operation(summary = "GPS 정보 삭제", description = "GPS 정보를 삭제합니다.")
-    @RequestMapping(value = "/gps/deleteGPSInfo.do", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteGPSInfo(GPSAPIVO sampleVO, @ModelAttribute("searchVO") GPSAPIVO searchVO, SessionStatus status) throws Exception {
+    @DeleteMapping("/gps/deleteGPSInfo.do")
+    public ResponseEntity<Map<String, Object>> deleteGPSInfo(GPSAPIVO sampleVO) {
     	Map<String, Object> response = new HashMap<>();
     	int cnt = egovGPSAPIService.deleteGPSInfo(sampleVO);
     	if(cnt > 0) {

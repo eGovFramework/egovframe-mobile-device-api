@@ -10,22 +10,22 @@ import egovframework.hyb.mbl.gps.service.GPSAPIVO;
 /**
  * 통합 GPS API DAO
  */
-@Repository("GPSAPIDAO")
+@Repository
 public class GPSAPIDAO extends EgovAbstractMapper {
 
     public int insertGPSInfo(GPSAPIVO vo) {
-        return (Integer) insert("gpsAPIDAO.insertGPSInfo", vo);
+        return insert("gpsAPIDAO.insertGPSInfo", vo);
     }
 
     public int deleteGPSInfo(GPSAPIVO vo) {
-        return (Integer) delete("gpsAPIDAO.deleteGPSInfo", vo);
+        return delete("gpsAPIDAO.deleteGPSInfo", vo);
     }
 
-    public List<?> selectGPSInfoList(GPSAPIVO searchVO) {
+    public List<GPSAPIVO> selectGPSInfoList(GPSAPIVO searchVO) {
         return selectList("gpsAPIDAO.selectGPSInfoList", searchVO);
     }
 
     public int selectGPSInfoListTotCnt(GPSAPIVO searchVO) {
-        return (Integer) selectOne("gpsAPIDAO.selectGPSInfoListTotCnt", searchVO);
+        return selectOne("gpsAPIDAO.selectGPSInfoListTotCnt", searchVO);
     }
 }

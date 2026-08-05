@@ -7,11 +7,11 @@ import java.util.List;
  */
 public interface EgovGPSAPIService {
 
-    int insertGPSInfo(GPSAPIVO vo) throws Exception;
+    int insertGPSInfo(GPSAPIVO vo);
 
-    int deleteGPSInfo(GPSAPIVO vo) throws Exception;
+    int deleteGPSInfo(GPSAPIVO vo);
 
-    List<?> selectGPSInfoList(GPSAPIVO searchVO) throws Exception;
+    List<GPSAPIVO> selectGPSInfoList(GPSAPIVO searchVO);
 
-    int selectGPSInfoListTotCnt(GPSAPIVO searchVO) throws Exception;
+    int selectGPSInfoListTotCnt(GPSAPIVO searchVO);
 }
