@@ -7,15 +7,15 @@ import java.util.List;
  */
 public interface EgovInterfaceAPIService {
 
-    int insertInterfaceInfo(InterfaceAPIVO vo) throws Exception;
+    int insertInterfaceInfo(InterfaceAPIVO vo);
 
-    int updateInterfaceInfo(InterfaceAPIVO vo) throws Exception;
+    int updateInterfaceInfo(InterfaceAPIVO vo);
 
-    int deleteInterfaceInfo(InterfaceAPIVO vo) throws Exception;
+    int deleteInterfaceInfo(InterfaceAPIVO vo);
 
-    InterfaceAPIVO selectInterfaceInfo(InterfaceAPIVO vo) throws Exception;
+    InterfaceAPIVO selectInterfaceInfo(InterfaceAPIVO vo);
 
-    List<?> selectInterfaceInfoList(InterfaceAPIVO searchVO) throws Exception;
+    List<InterfaceAPIVO> selectInterfaceInfoList(InterfaceAPIVO searchVO);
 
-    int selectInterfaceInfoListTotCnt(InterfaceAPIVO searchVO) throws Exception;
+    int selectInterfaceInfoListTotCnt(InterfaceAPIVO searchVO);
 }

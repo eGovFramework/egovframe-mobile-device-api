@@ -10,30 +10,30 @@ import egovframework.hyb.mbl.itf.service.InterfaceAPIVO;
 /**
  * 통합 Interface API DAO
  */
-@Repository("InterfaceAPIDAO")
+@Repository
 public class InterfaceAPIDAO extends EgovAbstractMapper {
 
     public int insertInterfaceInfo(InterfaceAPIVO vo) {
-        return (Integer) insert("interfaceAPIDAO.insertInterfaceInfo", vo);
+        return insert("interfaceAPIDAO.insertInterfaceInfo", vo);
     }
 
     public int updateInterfaceInfo(InterfaceAPIVO vo) {
-        return (Integer) update("interfaceAPIDAO.updateInterfaceInfo", vo);
+        return update("interfaceAPIDAO.updateInterfaceInfo", vo);
     }
 
     public int deleteInterfaceInfo(InterfaceAPIVO vo) {
-        return (Integer) delete("interfaceAPIDAO.deleteInterfaceInfo", vo);
+        return delete("interfaceAPIDAO.deleteInterfaceInfo", vo);
     }
 
     public InterfaceAPIVO selectInterfaceInfo(InterfaceAPIVO vo) {
         return (InterfaceAPIVO) selectOne("interfaceAPIDAO.selectInterfaceInfo", vo);
     }
 
-    public List<?> selectInterfaceInfoList(InterfaceAPIVO searchVO) {
+    public List<InterfaceAPIVO> selectInterfaceInfoList(InterfaceAPIVO searchVO) {
         return selectList("interfaceAPIDAO.selectInterfaceInfoList", searchVO);
     }
 
     public int selectInterfaceInfoListTotCnt(InterfaceAPIVO searchVO) {
-        return (Integer) selectOne("interfaceAPIDAO.selectInterfaceInfoListTotCnt", searchVO);
+        return selectOne("interfaceAPIDAO.selectInterfaceInfoListTotCnt", searchVO);
     }
 }

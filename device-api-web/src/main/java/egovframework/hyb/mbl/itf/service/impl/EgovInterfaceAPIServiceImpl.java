@@ -7,39 +7,42 @@ import org.springframework.stereotype.Service;
 
 import egovframework.hyb.mbl.itf.service.EgovInterfaceAPIService;
 import egovframework.hyb.mbl.itf.service.InterfaceAPIVO;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 통합 Interface API ServiceImpl.
  * 비밀번호는 앱에서 1차 해시(SHA-256+userId, Base64)한 값을 그대로 DB에 저장·비교한다.
  */
-@Service("EgovInterfaceAPIService")
+@Service
+@RequiredArgsConstructor
+@Slf4j
 public class EgovInterfaceAPIServiceImpl extends EgovAbstractServiceImpl implements EgovInterfaceAPIService {
 
-    @Resource(name="InterfaceAPIDAO")
-    private InterfaceAPIDAO interfaceAPIDAO;
+    private final InterfaceAPIDAO interfaceAPIDAO;
 
-    public int insertInterfaceInfo(InterfaceAPIVO vo) throws Exception {
-        return (Integer) interfaceAPIDAO.insertInterfaceInfo(vo);
+    public int insertInterfaceInfo(InterfaceAPIVO vo) {
+        return interfaceAPIDAO.insertInterfaceInfo(vo);
     }
 
-    public int updateInterfaceInfo(InterfaceAPIVO vo) throws Exception {
-        return (Integer) interfaceAPIDAO.updateInterfaceInfo(vo);
+    public int updateInterfaceInfo(InterfaceAPIVO vo) {
+        return interfaceAPIDAO.updateInterfaceInfo(vo);
     }
 
-    public int deleteInterfaceInfo(InterfaceAPIVO vo) throws Exception {
-        return (Integer) interfaceAPIDAO.deleteInterfaceInfo(vo);
+    public int deleteInterfaceInfo(InterfaceAPIVO vo) {
+        return interfaceAPIDAO.deleteInterfaceInfo(vo);
     }
 
-    public InterfaceAPIVO selectInterfaceInfo(InterfaceAPIVO vo) throws Exception {
-        return (InterfaceAPIVO) interfaceAPIDAO.selectInterfaceInfo(vo);
+    public InterfaceAPIVO selectInterfaceInfo(InterfaceAPIVO vo) {
+        return interfaceAPIDAO.selectInterfaceInfo(vo);
     }
 
-    public List<?> selectInterfaceInfoList(InterfaceAPIVO searchVO) throws Exception {
+    public List<InterfaceAPIVO> selectInterfaceInfoList(InterfaceAPIVO searchVO) {
+        log.debug("userId={}", searchVO.getUserId());
         return interfaceAPIDAO.selectInterfaceInfoList(searchVO);
     }
 
-    public int selectInterfaceInfoListTotCnt(InterfaceAPIVO searchVO) throws Exception {
-        return (Integer) interfaceAPIDAO.selectInterfaceInfoListTotCnt(searchVO);
+    public int selectInterfaceInfoListTotCnt(InterfaceAPIVO searchVO) {
+        return interfaceAPIDAO.selectInterfaceInfoListTotCnt(searchVO);
     }
 }
