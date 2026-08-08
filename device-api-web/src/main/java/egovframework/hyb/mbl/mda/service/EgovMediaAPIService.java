@@ -7,15 +7,15 @@ import java.util.List;
  */
 public interface EgovMediaAPIService {
 
-    int insertMediaInfo(MediaAPIVO vo) throws Exception;
+    int insertMediaInfo(MediaAPIVO vo);
 
-    int updateMediaInfo(MediaAPIVO vo) throws Exception;
+    int updateMediaInfo(MediaAPIVO vo);
 
-    int deleteMediaInfo(MediaAPIVO vo) throws Exception;
+    int deleteMediaInfo(MediaAPIVO vo);
 
-    MediaAPIVO selectMediaInfo(MediaAPIVO vo) throws Exception;
+    MediaAPIVO selectMediaInfo(MediaAPIVO vo);
 
-    List<?> selectMediaInfoList(MediaAPIVO searchVO) throws Exception;
+    List<MediaAPIVO> selectMediaInfoList(MediaAPIVO searchVO);
 
-    int selectMediaInfoListTotCnt(MediaAPIVO searchVO) throws Exception;
+    int selectMediaInfoListTotCnt(MediaAPIVO searchVO);
 }

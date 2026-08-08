@@ -10,20 +10,26 @@ import java.util.Map;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.hyb.mbl.mda.service.EgovMediaAPIService;
 import egovframework.hyb.mbl.mda.service.MediaAPIVO;
+import egovframework.hyb.mbl.mda.service.impl.EgovMediaAPIServiceImpl;
 import egovframework.hyb.utils.EgovFileMngUtil;
 import egovframework.hyb.utils.EgovFileService;
 import egovframework.hyb.utils.FileVO;
@@ -33,18 +39,19 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 통합 Media API Controller
  */
 @Controller
+@RequiredArgsConstructor
+@Slf4j
 @Tag(name = "09. Media Guide Program Service", description = "미디어 API 관리")
 public class EgovMediaAPIController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EgovMediaAPIController.class);
-
-    @Resource(name = "EgovMediaAPIService")
-    private EgovMediaAPIService egovMediaAPIService;
+    private final EgovMediaAPIService egovMediaAPIService;
     
     @Resource(name = "EgovFileService")
     private EgovFileService egovFileService;
@@ -52,24 +59,22 @@ public class EgovMediaAPIController {
     @Resource(name = "egovFileMngUtil")
     private EgovFileMngUtil fileMngUtil;
 
-    @Resource(name = "propertiesService")
-    protected EgovPropertyService propertiesService;
-
     @Operation(summary = "미디어 정보 목록 조회", description = "미디어 정보 목록을 조회합니다.")
-    @RequestMapping(value = "/mda/selectMediaInfoList.do", method = RequestMethod.GET)
-    public ResponseEntity<?> selectMediaInfoList(@ModelAttribute("searchVO") MediaAPIVO searchVO, ModelMap model) throws Exception {
+    @GetMapping("/mda/selectMediaInfoList.do")
+    public ResponseEntity<Map<String, Object>> selectMediaInfoList(MediaAPIVO searchVO) {
+        log.debug("uuid={}", searchVO.getUuid());
         Map<String, Object> response = new HashMap<>();
-        List<?> mediaInfoList = egovMediaAPIService.selectMediaInfoList(searchVO);
+        List<MediaAPIVO> mediaInfoList = egovMediaAPIService.selectMediaInfoList(searchVO);
         //List<?> mediaInfoList = egovMediaAPIService.selectMediaInfoList(searchVO);
         response.put("mediaInfoList", mediaInfoList);
-        LOGGER.debug("Media info list retrieved: {} items", mediaInfoList != null ? mediaInfoList.size() : 0);
+        log.debug("Media info list retrieved: {} items", mediaInfoList != null ? mediaInfoList.size() : 0);
         response.put("resultState", "OK");
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "미디어 정보 등록", description = "미디어 정보를 등록합니다.")
-    @RequestMapping(value = "/mda/insertMediaInfo.do", method = RequestMethod.POST)
-    public ResponseEntity<?> insertMediaInfo(MediaAPIVO mediaVO, BindingResult bindingResult, Model model, SessionStatus status) throws Exception {
+    @PostMapping("/mda/insertMediaInfo.do")
+    public ResponseEntity<Map<String, Object>> insertMediaInfo(MediaAPIVO mediaVO) {
         Map<String, Object> response = new HashMap<>();
         mediaVO.setMdCode("MLT03");
         mediaVO.setUseyn("Y");
@@ -86,8 +91,8 @@ public class EgovMediaAPIController {
     }
 
     @Operation(summary = "미디어 정보 삭제", description = "미디어 정보를 삭제합니다.")
-    @RequestMapping(value = "/mda/deleteMediaInfo.do", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteMediaInfo(MediaAPIVO mediaVO, BindingResult bindingResult, Model model, SessionStatus status) throws Exception {
+    @DeleteMapping("/mda/deleteMediaInfo.do")
+    public ResponseEntity<Map<String, Object>> deleteMediaInfo(MediaAPIVO mediaVO) {
         Map<String, Object> response = new HashMap<>();
         int cnt = egovMediaAPIService.deleteMediaInfo(mediaVO);
         if(cnt > 0) {
@@ -101,12 +106,11 @@ public class EgovMediaAPIController {
     }
 
     @Operation(summary = "미디어 파일 업로드", description = "미디어 파일을 업로드합니다. (단일 또는 여러 파일 지원)")
-    @RequestMapping(value = "/mda/uploadMediaFile.do", method = RequestMethod.POST)
-    public ResponseEntity<?> uploadMediaFile(
-            @Parameter(description = "업로드할 파일(들)") @RequestParam("files") MultipartFile[] files,
-            @Parameter(description = "기기 식별코드") @RequestParam("uuid") String uuid,
-            @Parameter(description = "시작 SN") @RequestParam(value = "startSn", required = false, defaultValue = "1") int startSn,
-            HttpServletRequest request) throws Exception {
+    @PostMapping(value = "/mda/uploadMediaFile.do", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Map<String, Object>> uploadMediaFile(
+            @Parameter(description = "업로드할 파일(들)") @RequestPart MultipartFile[] files,
+            @Parameter(description = "기기 식별코드") @RequestParam String uuid,
+            @Parameter(description = "시작 SN") @RequestParam(required = false, defaultValue = "1") int startSn) {
        
         Map<String, Object> response = new HashMap<>();
         
@@ -203,10 +207,10 @@ public class EgovMediaAPIController {
     }
 
     @Operation(summary = "미디어 파일 다운로드", description = "기기 UUID 소유권을 검증한 뒤 미디어 파일을 다운로드합니다.")
-    @RequestMapping(value = "/mda/downloadMediaFile.do", method = RequestMethod.GET)
+    @GetMapping("/mda/downloadMediaFile.do")
     public void downloadMediaFile(
-            @Parameter(description = "파일 일련번호") @RequestParam("fileSn") int fileSn,
-            @Parameter(description = "기기 식별코드") @RequestParam("uuid") String uuid,
+            @Parameter(description = "파일 일련번호") @RequestParam int fileSn,
+            @Parameter(description = "기기 식별코드") @RequestParam String uuid,
             HttpServletResponse response) throws Exception {
         try {
         	byte[] fileData = fileMngUtil.fileDownload(response, fileSn, uuid);
