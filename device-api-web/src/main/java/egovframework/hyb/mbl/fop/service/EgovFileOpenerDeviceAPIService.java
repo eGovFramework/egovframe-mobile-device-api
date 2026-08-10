@@ -40,8 +40,7 @@ public interface EgovFileOpenerDeviceAPIService {
 	 * Push Device 정보 목록을 조회한다.
 	 * @param VO - 조회할 정보가 담긴 PushDeviceAPIDefaultVO
 	 * @return 네트워크 정보 목록
-	 * @exception Exception
 	 */
-	List<?> selectFileOpenerList(FileOpenerDeviceAPIVO searchVO) throws Exception;
+	List<FileOpenerDeviceAPIVO> selectFileOpenerList(FileOpenerDeviceAPIVO searchVO);
 	
 }
