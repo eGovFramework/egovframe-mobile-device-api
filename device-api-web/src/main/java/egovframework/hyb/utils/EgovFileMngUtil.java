@@ -258,7 +258,9 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 	public void deleteFile(FileVO fileVO) throws Exception {
 
 		// 2022.11.11 시큐어코딩 처리 - 경로 검증 추가
-		String deleteFilePath = EgovWebUtil.filePathBlackList(filePath + File.separator + fileVO.getStreFileNm());
+		// 저장·다운로드와 동일하게 확장자를 포함해야 실제 저장 파일을 가리킨다.
+		String deleteFilePath = EgovWebUtil.filePathBlackList(
+				filePath + File.separator + fileVO.getStreFileNm() + "." + fileVO.getFileExtsn());
 		File file = new File(deleteFilePath);
 
 		if (!file.exists()) {
