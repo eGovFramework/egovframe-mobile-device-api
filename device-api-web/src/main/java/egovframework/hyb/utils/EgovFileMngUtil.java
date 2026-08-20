@@ -124,7 +124,6 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 		}
 		
 		// 검증 통과 후 일괄 처리
-		int fileKey = 1;
 		for (MultipartFile file : files) {
 			String originFileName = file.getOriginalFilename();
 			if (StringUtils.isEmpty(originFileName)) {
@@ -136,7 +135,10 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 			if (StringUtils.isNotEmpty(originFileName)) {
 				fileExt = FilenameUtils.getExtension(originFileName);
 			}
-			String newName = "File_" + getTimeStamp() + "_" + fileKey;
+			// 저장명에는 파일 일련번호를 쓴다. 타임스탬프는 초 단위여서
+			// 서로 다른 요청이 같은 초에 올리면 이름이 겹친다.
+			int fileSn = egovFileIdGnrService.getNextIntegerId();
+			String newName = "File_" + getTimeStamp() + "_" + fileSn;
 			
 			FileVO fileVO = new FileVO();
 			fileVO.setFileStreCours(filePath);
@@ -144,7 +146,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 			fileVO.setStreFileNm(newName);
 			fileVO.setFileExtsn(fileExt);
 			fileVO.setFileSize(Long.toString(file.getSize()));
-			fileVO.setFileSn(egovFileIdGnrService.getNextIntegerId());
+			fileVO.setFileSn(fileSn);
 			
 			if (!file.isEmpty()) {
 				File cFile = new File(EgovWebUtil.filePathBlackList(filePath));
@@ -175,8 +177,6 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 				// DB 저장 실패해도 파일은 저장되었으므로 결과에 포함
 				result.add(fileVO);
 			}
-			
-			fileKey++;
 		}
 		
 		return result;
