@@ -7,34 +7,37 @@ import org.springframework.stereotype.Service;
 
 import egovframework.hyb.mbl.dvc.service.DeviceAPIVO;
 import egovframework.hyb.mbl.dvc.service.EgovDeviceAPIService;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 통합 Device API ServiceImpl
  */
-@Service("EgovDeviceAPIService")
+@Service
+@RequiredArgsConstructor
+@Slf4j
 public class EgovDeviceAPIServiceImpl extends EgovAbstractServiceImpl implements EgovDeviceAPIService {
 
-    @Resource(name="DeviceAPIDAO")
-    private DeviceAPIDAO deviceAPIDAO;
+    private final DeviceAPIDAO deviceAPIDAO;
 
-    public int insertDeviceInfo(DeviceAPIVO vo) throws Exception {
-        return (Integer) deviceAPIDAO.insertDeviceInfo(vo);
+    public int insertDeviceInfo(DeviceAPIVO vo) {
+        return deviceAPIDAO.insertDeviceInfo(vo);
     }
 
-    public int deleteDeviceInfo(DeviceAPIVO vo) throws Exception {
-        return (Integer) deviceAPIDAO.deleteDeviceInfo(vo);
+    public int deleteDeviceInfo(DeviceAPIVO vo) {
+        return deviceAPIDAO.deleteDeviceInfo(vo);
     }
 
-    public DeviceAPIVO selectDeviceInfo(DeviceAPIVO vo) throws Exception {
-        return (DeviceAPIVO) deviceAPIDAO.selectDeviceInfo(vo);
+    public DeviceAPIVO selectDeviceInfo(DeviceAPIVO vo) {
+        return deviceAPIDAO.selectDeviceInfo(vo);
     }
 
-    public List<?> selectDeviceInfoList(DeviceAPIVO searchVO) throws Exception {
+    public List<DeviceAPIVO> selectDeviceInfoList(DeviceAPIVO searchVO) {
+        log.debug("uuid={}", searchVO.getUuid());
         return deviceAPIDAO.selectDeviceInfoList(searchVO);
     }
 
-    public int selectDeviceInfoListTotCnt(DeviceAPIVO searchVO) throws Exception {
-        return (Integer) deviceAPIDAO.selectDeviceInfoListTotCnt(searchVO);
+    public int selectDeviceInfoListTotCnt(DeviceAPIVO searchVO) {
+        return deviceAPIDAO.selectDeviceInfoListTotCnt(searchVO);
     }
 }

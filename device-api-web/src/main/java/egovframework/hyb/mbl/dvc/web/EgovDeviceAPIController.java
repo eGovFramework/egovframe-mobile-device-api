@@ -4,49 +4,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import egovframework.hyb.mbl.dvc.service.DeviceAPIVO;
 import egovframework.hyb.mbl.dvc.service.EgovDeviceAPIService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 통합 Device API Controller
  */
 @Controller
+@RequiredArgsConstructor
+@Slf4j
 @Tag(name = "05. DeviceInfo Guide Program Service", description = "디바이스 API 관리")
 public class EgovDeviceAPIController {
 
-    @Resource(name = "EgovDeviceAPIService")
-    private EgovDeviceAPIService egovDeviceAPIService;
-
-    @Resource(name = "propertiesService")
-    protected EgovPropertyService propertiesService;
+    private final EgovDeviceAPIService egovDeviceAPIService;
 
     @Operation(summary = "디바이스 정보 목록 조회", description = "디바이스 정보 목록을 조회합니다.")
-    @RequestMapping(value = "/dvc/selectDeviceInfoList.do", method = RequestMethod.GET)
-    public ResponseEntity<?> selectDeviceInfoList(@ModelAttribute("searchVO") DeviceAPIVO searchVO, ModelMap model) throws Exception {
+    @GetMapping("/dvc/selectDeviceInfoList.do")
+    public ResponseEntity<Map<String, Object>> selectDeviceInfoList(DeviceAPIVO searchVO) {
+        log.debug("uuid={}", searchVO.getUuid());
         Map<String, Object> response = new HashMap<>();
-        List<?> deviceInfoList = egovDeviceAPIService.selectDeviceInfoList(searchVO);
+        List<DeviceAPIVO> deviceInfoList = egovDeviceAPIService.selectDeviceInfoList(searchVO);
         response.put("deviceInfoList", deviceInfoList);
         response.put("resultState", "OK");
         return ResponseEntity.ok(response);
     }
     
     @Operation(summary = "디바이스 정보 상세 조회", description = "디바이스 정보를 조회합니다.")
-    @RequestMapping(value = "/dvc/selectDeviceInfo.do", method = RequestMethod.GET)
-    public ResponseEntity<?> selectDeviceInfo(@ModelAttribute("searchVO") DeviceAPIVO searchVO, ModelMap model) throws Exception {
+    @GetMapping("/dvc/selectDeviceInfo.do")
+    public ResponseEntity<Map<String, Object>> selectDeviceInfo(DeviceAPIVO searchVO) {
         Map<String, Object> response = new HashMap<>();
         searchVO = egovDeviceAPIService.selectDeviceInfo(searchVO);
         response.put("deviceInfo", searchVO);
@@ -55,8 +50,8 @@ public class EgovDeviceAPIController {
     }
 
     @Operation(summary = "디바이스 정보 등록", description = "디바이스 정보를 등록합니다.")
-    @RequestMapping(value = "/dvc/insertDeviceInfo.do", method = RequestMethod.POST)
-    public ResponseEntity<?> insertDeviceInfo(DeviceAPIVO deviceVO, BindingResult bindingResult, Model model, SessionStatus status) throws Exception {
+    @PostMapping("/dvc/insertDeviceInfo.do")
+    public ResponseEntity<Map<String, Object>> insertDeviceInfo(DeviceAPIVO deviceVO) {
         Map<String, Object> response = new HashMap<>();
         int cnt = egovDeviceAPIService.insertDeviceInfo(deviceVO);
         if(cnt > 0) {
@@ -70,8 +65,8 @@ public class EgovDeviceAPIController {
     }
 
     @Operation(summary = "디바이스 정보 삭제", description = "디바이스 정보를 삭제합니다.")
-    @RequestMapping(value = "/dvc/deleteDeviceInfo.do", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteDeviceInfo(DeviceAPIVO deviceVO, BindingResult bindingResult, Model model, SessionStatus status) throws Exception {
+    @DeleteMapping("/dvc/deleteDeviceInfo.do")
+    public ResponseEntity<Map<String, Object>> deleteDeviceInfo(DeviceAPIVO deviceVO) {
         Map<String, Object> response = new HashMap<>();
         int cnt = egovDeviceAPIService.deleteDeviceInfo(deviceVO);
         if(cnt > 0) {
