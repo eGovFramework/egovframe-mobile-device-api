@@ -7,29 +7,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egovframe.rte.fdl.property.EgovPropertyService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.hyb.mbl.mda.service.EgovMediaAPIService;
 import egovframework.hyb.mbl.mda.service.MediaAPIVO;
-import egovframework.hyb.mbl.mda.service.impl.EgovMediaAPIServiceImpl;
 import egovframework.hyb.utils.EgovFileMngUtil;
 import egovframework.hyb.utils.EgovFileService;
 import egovframework.hyb.utils.FileVO;
@@ -37,7 +25,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -108,9 +95,9 @@ public class EgovMediaAPIController {
     @Operation(summary = "미디어 파일 업로드", description = "미디어 파일을 업로드합니다. (단일 또는 여러 파일 지원)")
     @PostMapping(value = "/mda/uploadMediaFile.do", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> uploadMediaFile(
-            @Parameter(description = "업로드할 파일(들)") @RequestPart MultipartFile[] files,
-            @Parameter(description = "기기 식별코드") @RequestParam String uuid,
-            @Parameter(description = "시작 SN") @RequestParam(required = false, defaultValue = "1") int startSn) {
+            @Parameter(description = "업로드할 파일(들)") @RequestParam("files") MultipartFile[] files,
+            @Parameter(description = "기기 식별코드") @RequestParam("uuid") String uuid,
+            @Parameter(description = "시작 SN") @RequestParam(value = "startSn", required = false, defaultValue = "1") int startSn) {
        
         Map<String, Object> response = new HashMap<>();
         
