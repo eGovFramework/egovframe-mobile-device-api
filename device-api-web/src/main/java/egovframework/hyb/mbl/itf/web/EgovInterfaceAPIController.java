@@ -72,7 +72,7 @@ public class EgovInterfaceAPIController {
     }
     
     @Operation(summary = "인터페이스 정보 조회", description = "인터페이스 정보를 조회한다.")
-    @GetMapping("/itf/selectInterfaceInfo.do")
+    @PostMapping("/itf/selectInterfaceInfo.do")
     public ResponseEntity<Map<String, Object>> selectInterfaceInfo(
             @Valid InterfaceAPIVO searchVO,
             BindingResult bindingResult) {

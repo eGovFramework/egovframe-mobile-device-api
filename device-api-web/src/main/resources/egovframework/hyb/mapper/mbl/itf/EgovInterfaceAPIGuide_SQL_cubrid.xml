@@ -52,7 +52,7 @@
 	<select id="selectInterfaceInfoList" parameterType="egovframework.hyb.mbl.itf.service.InterfaceAPIVO" resultMap="interfaceInfo">
 		SELECT
 			SN, UUID, EMAILS, 
-				USER_ID, USER_PW
+				USER_ID
 		FROM INTERFACE_EGOV
 		WHERE USER_ID = #{userId}
 		ORDER BY SN DESC
