@@ -10,19 +10,19 @@ import egovframework.hyb.mbl.acl.service.AcceleratorAPIVO;
 /**
  * 통합 Accelerator API DAO
  */
-@Repository("AcceleratorAPIDAO")
+@Repository
 public class AcceleratorAPIDAO extends EgovAbstractMapper {
 
-    public List<?> selectAcceleratorInfoList(AcceleratorAPIVO searchVO) {
+    public List<AcceleratorAPIVO> selectAcceleratorInfoList(AcceleratorAPIVO searchVO) {
         return selectList("acceleratorAPIDAO.selectAcceleratorInfoList", searchVO);
     }
 
     public int insertAcceleratorInfo(AcceleratorAPIVO vo) {
-        return (Integer) insert("acceleratorAPIDAO.insertAcceleratorInfo", vo);
+        return insert("acceleratorAPIDAO.insertAcceleratorInfo", vo);
     }
 
     public int deleteAcceleratorInfo(AcceleratorAPIVO vo) {
-        return (Integer) delete("acceleratorAPIDAO.deleteAcceleratorInfo", vo);
+        return delete("acceleratorAPIDAO.deleteAcceleratorInfo", vo);
     }
 
 }
