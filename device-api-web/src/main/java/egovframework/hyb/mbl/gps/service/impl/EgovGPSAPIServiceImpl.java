@@ -7,30 +7,33 @@ import org.springframework.stereotype.Service;
 
 import egovframework.hyb.mbl.gps.service.EgovGPSAPIService;
 import egovframework.hyb.mbl.gps.service.GPSAPIVO;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 통합 GPS API ServiceImpl
  */
-@Service("EgovGPSAPIService")
+@Service
+@RequiredArgsConstructor
+@Slf4j
 public class EgovGPSAPIServiceImpl extends EgovAbstractServiceImpl implements EgovGPSAPIService {
 
-    @Resource(name="GPSAPIDAO")
-    private GPSAPIDAO gpsAPIDAO;
+    private final GPSAPIDAO gpsAPIDAO;
 
-    public int insertGPSInfo(GPSAPIVO vo) throws Exception {
-        return (Integer) gpsAPIDAO.insertGPSInfo(vo);
+    public int insertGPSInfo(GPSAPIVO vo) {
+        return gpsAPIDAO.insertGPSInfo(vo);
     }
 
-    public int deleteGPSInfo(GPSAPIVO vo) throws Exception {
-        return (Integer) gpsAPIDAO.deleteGPSInfo(vo);
+    public int deleteGPSInfo(GPSAPIVO vo) {
+        return gpsAPIDAO.deleteGPSInfo(vo);
     }
 
-    public List<?> selectGPSInfoList(GPSAPIVO searchVO) throws Exception {
+    public List<GPSAPIVO> selectGPSInfoList(GPSAPIVO searchVO) {
+        log.debug("uuid={}", searchVO.getUuid());
         return gpsAPIDAO.selectGPSInfoList(searchVO);
     }
 
-    public int selectGPSInfoListTotCnt(GPSAPIVO searchVO) throws Exception {
-        return (Integer) gpsAPIDAO.selectGPSInfoListTotCnt(searchVO);
+    public int selectGPSInfoListTotCnt(GPSAPIVO searchVO) {
+        return gpsAPIDAO.selectGPSInfoListTotCnt(searchVO);
     }
 }
