@@ -368,14 +368,26 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 	 * @see
 	 */
 	private String getTimeStamp() {
+		return getTimeStamp(System.currentTimeMillis());
+	}
+
+	/**
+	 * 지정한 시각(epoch milliseconds)으로 TIMESTAMP 문자열을 구한다.
+	 * 24시간제(HH)를 사용해 오전(01시)과 오후(13시)가 같은 문자열로 겹치지 않도록 한다.
+	 * 테스트에서 시각을 주입할 수 있도록 분리했다.
+	 *
+	 * @param epochMillis 기준 시각(1970-01-01 UTC 이후 밀리초)
+	 * @return TIMESTAMP 값
+	 */
+	String getTimeStamp(long epochMillis) {
 
 		String rtnStr = null;
 
 		// 문자열로 변환하기 위한 패턴 설정(연도-월-일 시:분:초)
-		String pattern = "yyyyMMddhhmmss";
+		String pattern = "yyyyMMddHHmmss";
 
 		SimpleDateFormat sdfCurrent = new SimpleDateFormat(pattern, Locale.KOREA);
-		Timestamp ts = new Timestamp(System.currentTimeMillis());
+		Timestamp ts = new Timestamp(epochMillis);
 
 		rtnStr = sdfCurrent.format(ts.getTime());
 
