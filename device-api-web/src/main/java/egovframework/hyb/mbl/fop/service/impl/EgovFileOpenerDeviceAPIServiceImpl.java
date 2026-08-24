@@ -18,13 +18,12 @@ package egovframework.hyb.mbl.fop.service.impl;
 import java.util.List;
 
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import egovframework.hyb.mbl.fop.service.EgovFileOpenerDeviceAPIService;
 import egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIVO;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 /**  
@@ -45,23 +44,21 @@ import jakarta.annotation.Resource;
  *  Copyright (C) by Ministry of Interior All right reserved.
  */
 
-@Service("EgovFileOpenerDeviceAPIService")
+@Service
+@RequiredArgsConstructor
+@Slf4j
 public class EgovFileOpenerDeviceAPIServiceImpl extends EgovAbstractServiceImpl implements EgovFileOpenerDeviceAPIService {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovFileOpenerDeviceAPIServiceImpl.class);
-
 	/** FileOpenerDeviceAPIDAO */
-    @Resource(name="FileOpenerDeviceAPIDAO")
-    private FileOpenerDeviceAPIDAO fileOpenerDeviceAPIDAO;
+    private final FileOpenerDeviceAPIDAO fileOpenerDeviceAPIDAO;
 
     /**
 	 * 문서목록을 조회한다.
 	 * @param VO - 조회할 정보가 담긴 FileOpenerDeviceAPIVO
 	 * @return 문서 조회 목록 
-	 * @exception Exception
 	 */
-    public List<?> selectFileOpenerList(FileOpenerDeviceAPIVO searchVO) throws Exception {
-		// TODO Auto-generated method stub
+    public List<FileOpenerDeviceAPIVO> selectFileOpenerList(FileOpenerDeviceAPIVO searchVO) {
+		log.debug("uuid={}", searchVO.getUuid());
 		return fileOpenerDeviceAPIDAO.selectFileOpenerList(searchVO);
 	}
     

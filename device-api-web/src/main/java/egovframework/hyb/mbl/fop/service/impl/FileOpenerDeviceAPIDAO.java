@@ -41,7 +41,7 @@ import egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIVO;
  *  Copyright (C) by Ministry of Interior All right reserved.
  */
 
-@Repository("FileOpenerDeviceAPIDAO")
+@Repository
 public class FileOpenerDeviceAPIDAO extends EgovAbstractMapper {
 
     /**
@@ -49,7 +49,7 @@ public class FileOpenerDeviceAPIDAO extends EgovAbstractMapper {
 	 * @param vo - 조회할 정보가 담긴 PushDeviceAPIDefaultVO
 	 * @return Push Device 정보 목록
 	 */
-    public List<?> selectFileOpenerList(FileOpenerDeviceAPIVO searchVO) {
+    public List<FileOpenerDeviceAPIVO> selectFileOpenerList(FileOpenerDeviceAPIVO searchVO) {
         return selectList("fileOpenerDeviceAPIDAO.selectDocumentListInfo", searchVO);
     }
 
