@@ -10,30 +10,30 @@ import egovframework.hyb.mbl.mda.service.MediaAPIVO;
 /**
  * 통합 Media API DAO
  */
-@Repository("MediaAPIDAO")
+@Repository
 public class MediaAPIDAO extends EgovAbstractMapper {
 
     public int insertMediaInfo(MediaAPIVO vo) {
-        return (Integer) insert("mediaAPIDAO.insertMediaInfo", vo);
+        return insert("mediaAPIDAO.insertMediaInfo", vo);
     }
 
     public int updateMediaInfo(MediaAPIVO vo) {
-        return (Integer) update("mediaAPIDAO.updateMediaInfo", vo);
+        return update("mediaAPIDAO.updateMediaInfo", vo);
     }
 
     public int deleteMediaInfo(MediaAPIVO vo) {
-        return (Integer) delete("mediaAPIDAO.deleteMediaInfo", vo);
+        return delete("mediaAPIDAO.deleteMediaInfo", vo);
     }
 
     public MediaAPIVO selectMediaInfo(MediaAPIVO vo) {
-        return (MediaAPIVO) selectOne("mediaAPIDAO.selectMediaInfo", vo);
+        return selectOne("mediaAPIDAO.selectMediaInfo", vo);
     }
 
-    public List<?> selectMediaInfoList(MediaAPIVO searchVO) {
+    public List<MediaAPIVO> selectMediaInfoList(MediaAPIVO searchVO) {
         return selectList("mediaAPIDAO.selectMediaInfoList", searchVO);
     }
 
     public int selectMediaInfoListTotCnt(MediaAPIVO searchVO) {
-        return (Integer) selectOne("mediaAPIDAO.selectMediaInfoListTotCnt", searchVO);
+        return selectOne("mediaAPIDAO.selectMediaInfoListTotCnt", searchVO);
     }
 }
