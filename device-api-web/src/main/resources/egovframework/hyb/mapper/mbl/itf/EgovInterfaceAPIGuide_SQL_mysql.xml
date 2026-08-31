@@ -49,6 +49,15 @@
 		
 	</select>
 
+	<select id="selectInterfaceInfoList" parameterType="egovframework.hyb.mbl.itf.service.InterfaceAPIVO" resultMap="interfaceInfo">
+		SELECT
+			SN, UUID, EMAILS, 
+				USER_ID
+		FROM INTERFACE_EGOV
+		WHERE USER_ID = #{userId}
+		ORDER BY SN DESC
+	</select>
+
 	<select id="selectInterfaceInfoListTotCnt" parameterType="egovframework.hyb.mbl.itf.service.InterfaceAPIVO" resultType="int">
 			SELECT COUNT(*)
 			FROM INTERFACE_EGOV
