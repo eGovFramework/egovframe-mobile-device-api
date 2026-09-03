@@ -10,7 +10,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -21,6 +20,8 @@ import java.util.Locale;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.exception.BaseRuntimeException;
+import org.egovframe.rte.fdl.cmmn.exception.FdlException;
 import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,9 +92,8 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 	 * @param files - 업로드할 파일 목록
 	 * @param checkMediaFileExtension - 미디어 파일 확장자 검증 여부 (true: 미디어 파일만, false: 확장자 제한 없음)
 	 * @return List<FileVO> - 업로드된 파일 정보 목록
-	 * @exception Exception
 	 */
-	public List<FileVO> writeUploadedFile(List<MultipartFile> files, boolean checkMediaFileExtension) throws Exception {
+	public List<FileVO> writeUploadedFile(List<MultipartFile> files, boolean checkMediaFileExtension) {
 		List<FileVO> result = new ArrayList<FileVO>();
 		long maxSize = getMaxFileSizeInBytes();
 		
@@ -140,7 +140,12 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 			}
 			// 저장명에는 파일 일련번호를 쓴다. 타임스탬프는 초 단위여서
 			// 서로 다른 요청이 같은 초에 올리면 이름이 겹친다.
-			int fileSn = egovFileIdGnrService.getNextIntegerId();
+			int fileSn;
+			try {
+				fileSn = egovFileIdGnrService.getNextIntegerId();
+			} catch (FdlException e) {
+				throw new BaseRuntimeException(e);
+			}
 			String newName = "File_" + getTimeStamp() + "_" + fileSn;
 			
 			FileVO fileVO = new FileVO();
@@ -158,7 +163,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 						LOGGER.debug("[file.mkdirs] saveFolder : Creation Success ");
 					} else {
 						LOGGER.error("[file.mkdirs] saveFolder : Creation Fail ");
-						throw new IOException("Directory creation Failed ");
+						throw new BaseRuntimeException("Directory creation Failed ");
 					}
 				}
 				
@@ -168,6 +173,8 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 				try (InputStream stream = file.getInputStream(); 
 						OutputStream bos = new FileOutputStream(writeFilePath);) {
 					FileCopyUtils.copy(stream, bos);
+				} catch (IOException e) {
+					throw new BaseRuntimeException(e);
 				}
 			}
 			
@@ -201,19 +208,19 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 	 * @param fileSn   파일 일련번호
 	 * @param uuid     기기 식별코드
 	 */
-	public byte[] fileDownload(HttpServletResponse response, int fileSn, String uuid) throws Exception {
+	public byte[] fileDownload(HttpServletResponse response, int fileSn, String uuid) {
 		if (!fileService.isFileOwnedByUuid(fileSn, uuid)) {
 			throw new SecurityException("파일 접근 권한이 없습니다.");
 		}
 		return fileDownload(response, fileSn);
 	}
 
-	public byte[] fileDownload(HttpServletResponse response, int fileSn) throws Exception {
+	public byte[] fileDownload(HttpServletResponse response, int fileSn) {
 		
 		FileVO fileVO = new FileVO();
 		fileVO = fileService.selectFileDetailInfo(fileSn);
 		if (fileVO == null) {
-			throw new FileNotFoundException("File not found for fileSn: " + fileSn);
+			throw new BaseRuntimeException("File not found for fileSn: " + fileSn);
 		}
 		
 		// 2022.11.11 시큐어코딩 처리 - 경로 검증 추가
@@ -245,9 +252,8 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 			fis.read(buffer);
 			return buffer;
 			
-		} catch (Exception e) {
-			LOGGER.error("File download error: {}", e.getMessage());
-			throw e;
+		} catch (IOException e) {
+			throw new BaseRuntimeException(e);
 		}
 	}
 
@@ -257,7 +263,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 	 * @param fileVO - 파일 정보가 담긴 FileVO
 	 * @exception Exception
 	 */
-	public void deleteFile(FileVO fileVO) throws Exception {
+	public void deleteFile(FileVO fileVO) {
 
 		// 2022.11.11 시큐어코딩 처리 - 경로 검증 추가
 		// 저장·다운로드와 동일하게 확장자를 포함해야 실제 저장 파일을 가리킨다.

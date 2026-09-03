@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egovframe.rte.fdl.cmmn.exception.BaseRuntimeException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -100,96 +101,80 @@ public class EgovMediaAPIController {
             @Parameter(description = "시작 SN") @RequestParam(value = "startSn", required = false, defaultValue = "1") int startSn) {
        
         Map<String, Object> response = new HashMap<>();
-        
-        try {
-            if (files == null || files.length == 0) {
-                response.put("resultState", "FAIL");
-                response.put("resultMessage", "업로드할 파일이 없습니다.");
-                return ResponseEntity.ok(response);
-            }
-            
-            // MultipartFile 배열을 List로 변환
-            List<MultipartFile> fileList = new ArrayList<>();
-            for (MultipartFile file : files) {
-                if (file != null && !file.isEmpty()) {
-                    fileList.add(file);
-                }
-            }
-            
-            if (fileList.isEmpty()) {
-                response.put("resultState", "FAIL");
-                response.put("resultMessage", "유효한 파일이 없습니다.");
-                return ResponseEntity.ok(response);
-            }
-            
-            // 일괄 업로드 처리 (미디어 파일 확장자 검증 포함)
-            List<FileVO> uploadedFiles = fileMngUtil.writeUploadedFile(fileList, true);
-            
-            // 각 파일에 대해 미디어 정보 등록
-            List<Map<String, Object>> fileResults = new ArrayList<>();
-            int currentSn = startSn;
-            int successCount = 0;
-            int failCount = 0;
-            
-            for (FileVO fileVO : uploadedFiles) {
-                try {
-                    MediaAPIVO mediaVO = new MediaAPIVO();
-                    mediaVO.setSn(currentSn);
-                    mediaVO.setUuid(uuid);
-                    mediaVO.setFileSn(fileVO.getFileSn());
-                    mediaVO.setMdSj(fileVO.getOrignlFileNm());
-                    mediaVO.setMdCode("MLT03");
-                    mediaVO.setUseyn("Y");
-                    mediaVO.setRevivCo("0");
-                    
-                    int cnt = egovMediaAPIService.insertMediaInfo(mediaVO);
-                    if (cnt > 0) {
-                        successCount++;
-                        Map<String, Object> result = new LinkedHashMap<>();
-                        result.put("fileSn", fileVO.getFileSn());
-                        result.put("fileName", fileVO.getOrignlFileNm());
-                        result.put("status", "SUCCESS");
-                        fileResults.add(result);
-                    } else {
-                        failCount++;
-                        Map<String, Object> result = new LinkedHashMap<>();
-                        result.put("fileSn", fileVO.getFileSn());
-                        result.put("fileName", fileVO.getOrignlFileNm());
-                        result.put("status", "FAIL");
-                        result.put("message", "미디어 정보 등록 실패");
-                        fileResults.add(result);
-                    }
-                    currentSn++;
-                } catch (Exception e) {
-                    failCount++;
-                    Map<String, Object> result = new LinkedHashMap<>();
-                    result.put("fileSn", fileVO.getFileSn());
-                    result.put("fileName", fileVO.getOrignlFileNm());
-                    result.put("status", "FAIL");
-                    result.put("message", "오류: " + e.getMessage());
-                    fileResults.add(result);
-                }
-            }
-            
-            // 단일 파일인 경우 기존 형식과 호환되도록 응답 구성
-            if (uploadedFiles.size() == 1 && successCount == 1) {
-                FileVO fileVO = uploadedFiles.get(0);
-                response.put("resultState", "OK");
-                response.put("fileVO", fileVO);
-                response.put("fileSn", fileVO.getFileSn());
-            } else {
-                response.put("resultState", failCount == 0 ? "OK" : "PARTIAL");
-                response.put("totalFiles", uploadedFiles.size());
-                response.put("successCount", successCount);
-                response.put("failCount", failCount);
-                response.put("fileResults", fileResults);
-            }
-            
-        } catch (Exception e) {
+
+        if (files == null || files.length == 0) {
             response.put("resultState", "FAIL");
-            response.put("resultMessage", "업로드 실패: " + e.getMessage());
+            response.put("resultMessage", "업로드할 파일이 없습니다.");
+            return ResponseEntity.ok(response);
         }
         
+        // MultipartFile 배열을 List로 변환
+        List<MultipartFile> fileList = new ArrayList<>();
+        for (MultipartFile file : files) {
+            if (file != null && !file.isEmpty()) {
+                fileList.add(file);
+            }
+        }
+        
+        if (fileList.isEmpty()) {
+            response.put("resultState", "FAIL");
+            response.put("resultMessage", "유효한 파일이 없습니다.");
+            return ResponseEntity.ok(response);
+        }
+        
+        // 일괄 업로드 처리 (미디어 파일 확장자 검증 포함)
+        List<FileVO> uploadedFiles = fileMngUtil.writeUploadedFile(fileList, true);
+        
+        // 각 파일에 대해 미디어 정보 등록
+        List<Map<String, Object>> fileResults = new ArrayList<>();
+        int currentSn = startSn;
+        int successCount = 0;
+        int failCount = 0;
+        
+        for (FileVO fileVO : uploadedFiles) {
+            MediaAPIVO mediaVO = new MediaAPIVO();
+            mediaVO.setSn(currentSn);
+            mediaVO.setUuid(uuid);
+            mediaVO.setFileSn(fileVO.getFileSn());
+            mediaVO.setMdSj(fileVO.getOrignlFileNm());
+            mediaVO.setMdCode("MLT03");
+            mediaVO.setUseyn("Y");
+            mediaVO.setRevivCo("0");
+            
+            int cnt = egovMediaAPIService.insertMediaInfo(mediaVO);
+            if (cnt > 0) {
+                successCount++;
+                Map<String, Object> result = new LinkedHashMap<>();
+                result.put("fileSn", fileVO.getFileSn());
+                result.put("fileName", fileVO.getOrignlFileNm());
+                result.put("status", "SUCCESS");
+                fileResults.add(result);
+            } else {
+                failCount++;
+                Map<String, Object> result = new LinkedHashMap<>();
+                result.put("fileSn", fileVO.getFileSn());
+                result.put("fileName", fileVO.getOrignlFileNm());
+                result.put("status", "FAIL");
+                result.put("message", "미디어 정보 등록 실패");
+                fileResults.add(result);
+            }
+            currentSn++;
+        }
+        
+        // 단일 파일인 경우 기존 형식과 호환되도록 응답 구성
+        if (uploadedFiles.size() == 1 && successCount == 1) {
+            FileVO fileVO = uploadedFiles.get(0);
+            response.put("resultState", "OK");
+            response.put("fileVO", fileVO);
+            response.put("fileSn", fileVO.getFileSn());
+        } else {
+            response.put("resultState", failCount == 0 ? "OK" : "PARTIAL");
+            response.put("totalFiles", uploadedFiles.size());
+            response.put("successCount", successCount);
+            response.put("failCount", failCount);
+            response.put("fileResults", fileResults);
+        }
+
         return ResponseEntity.ok(response);
     }
 
@@ -198,7 +183,7 @@ public class EgovMediaAPIController {
     public void downloadMediaFile(
             @Parameter(description = "파일 일련번호") @RequestParam int fileSn,
             @Parameter(description = "기기 식별코드") @RequestParam String uuid,
-            HttpServletResponse response) throws Exception {
+            HttpServletResponse response) {
         try {
         	byte[] fileData = fileMngUtil.fileDownload(response, fileSn, uuid);
              
@@ -212,10 +197,18 @@ public class EgovMediaAPIController {
             
         } catch (SecurityException e) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("파일 접근 권한이 없습니다.");
+            try {
+				response.getWriter().write("파일 접근 권한이 없습니다.");
+			} catch (IOException e1) {
+				throw new BaseRuntimeException(e);
+			}
         } catch (IOException e) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            response.getWriter().write("파일을 찾을 수 없습니다.");
+            try {
+				response.getWriter().write("파일을 찾을 수 없습니다.");
+			} catch (IOException e1) {
+				throw new BaseRuntimeException(e);
+			}
         }
     }
 

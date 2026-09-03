@@ -12,17 +12,17 @@ public class EgovFileServiceImpl extends EgovAbstractServiceImpl implements Egov
 	private EgovFileDAO fileDAO;
 
 	@Override
-	public FileVO selectFileDetailInfo(int fileSn) throws Exception {
+	public FileVO selectFileDetailInfo(int fileSn ) {
 		return fileDAO.selectFileDetailInfo(fileSn);
 	}
 
 	@Override
-	public int insertFileDetailInfo(FileVO fileVO) throws Exception {
+	public int insertFileDetailInfo(FileVO fileVO ) {
 		return fileDAO.insertFileDetailInfo(fileVO);
 	}
 
 	@Override
-	public boolean isFileOwnedByUuid(int fileSn, String uuid) throws Exception {
+	public boolean isFileOwnedByUuid(int fileSn, String uuid ) {
 		if (uuid == null || uuid.isBlank()) {
 			return false;
 		}
@@ -30,7 +30,7 @@ public class EgovFileServiceImpl extends EgovAbstractServiceImpl implements Egov
 	}
 
 	@Override
-	public boolean isFileRegistered(int fileSn) throws Exception {
+	public boolean isFileRegistered(int fileSn ) {
 		return fileDAO.countFileRegistration(fileSn) > 0;
 	}
 

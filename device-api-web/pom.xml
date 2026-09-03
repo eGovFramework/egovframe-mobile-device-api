@@ -6,7 +6,6 @@
 	<groupId>egovframework.lab</groupId>
 	<artifactId>egovframe-mobile-deviceapi</artifactId>
 	<packaging>jar</packaging>
-	<version>5.0.0</version>
 	<name>egovframe-mobile-deviceapi</name>
 	<url>http://www.egovframe.go.kr</url>
 
@@ -115,7 +114,6 @@
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
-			<version>${jakarta.servlet.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
