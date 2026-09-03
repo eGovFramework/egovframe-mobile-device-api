@@ -1,22 +1,28 @@
 package egovframework.hyb.utils;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.egovframe.rte.fdl.cmmn.exception.BaseRuntimeException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 class EgovFileMngUtilDeleteTest {
 
     @Test
-    void deleteFile_저장확장자를_포함해_실제파일을_삭제한다(@TempDir Path tempDir) throws Exception {
+    void deleteFile_저장확장자를_포함해_실제파일을_삭제한다(@TempDir Path tempDir) {
         // 업로드 저장 로직은 streFileNm(확장자 없음) + "." + fileExtsn 으로 파일을 만든다.
         String streFileNm = "File_20260809_1";
         String fileExtsn = "jpg";
         Path stored = tempDir.resolve(streFileNm + "." + fileExtsn);
-        Files.writeString(stored, "img");
+        try {
+			Files.writeString(stored, "img");
+		} catch (IOException e) {
+			throw new BaseRuntimeException(e);
+		}
         assertThat(Files.exists(stored)).isTrue();
 
         EgovFileMngUtil util = new EgovFileMngUtil();

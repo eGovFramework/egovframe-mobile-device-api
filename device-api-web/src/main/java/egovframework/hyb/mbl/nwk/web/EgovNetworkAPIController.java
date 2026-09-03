@@ -10,9 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.support.SessionStatus;
 
 import egovframework.hyb.mbl.nwk.service.EgovNetworkAPIService;
@@ -39,8 +40,8 @@ public class EgovNetworkAPIController {
 	@Resource(name = "propertiesService")
 	protected EgovPropertyService propertiesService;
 
-	@RequestMapping("/nwk/htmlLoad.do")
-	public ResponseEntity<?> htmlLoad(ModelMap model) throws Exception {
+	@GetMapping("/nwk/htmlLoad.do")
+	public ResponseEntity<?> htmlLoad(ModelMap model) {
 		Map<String, Object> response = new HashMap<>();
 		response.put("serverUrl", propertiesService.getString("serverContext"));
 		response.put("resultState","OK");
@@ -48,8 +49,8 @@ public class EgovNetworkAPIController {
 	}
 
 	@Operation(summary = "네트워크 정보 목록 조회", description = "네트워크 정보 목록을 조회합니다.")
-	@RequestMapping(value = "/nwk/selectNetworkInfoList.do", method = RequestMethod.GET)
-	public ResponseEntity<?> selectNetworkInfoList(@ModelAttribute("searchNetworkVO") NetworkAPIVO searchNetworkVO, ModelMap model) throws Exception {
+	@GetMapping("/nwk/selectNetworkInfoList.do")
+	public ResponseEntity<?> selectNetworkInfoList(@ModelAttribute("searchNetworkVO") NetworkAPIVO searchNetworkVO, ModelMap model) {
 		Map<String, Object> response = new HashMap<>();
 		List<?> networkInfoList = egovNetworkAPIService.selectNetworkInfoList(searchNetworkVO);
 		response.put("networkInfoList", networkInfoList);
@@ -58,8 +59,8 @@ public class EgovNetworkAPIController {
 	}
 
 	@Operation(summary = "네트워크 세부정보 등록", description = "네트워크 세부정보를 등록합니다.")
-	@RequestMapping(value = "/nwk/insertNetworkInfo.do", method = RequestMethod.POST)
-	public ResponseEntity<?> insertNetworkInfo(NetworkAPIVO networkVO, BindingResult bindingResult, Model model, SessionStatus status) throws Exception {
+	@PostMapping("/nwk/insertNetworkInfo.do")
+	public ResponseEntity<?> insertNetworkInfo(NetworkAPIVO networkVO, BindingResult bindingResult, Model model, SessionStatus status) {
 		Map<String, Object> response = new HashMap<>();
 		int cnt = egovNetworkAPIService.insertNetworkInfo(networkVO);
 		if(cnt > 0) {
@@ -73,8 +74,8 @@ public class EgovNetworkAPIController {
 	}
 
 	@Operation(summary = "네트워크 세부정보 삭제", description = "네트워크 세부정보를 삭제합니다.")
-	@RequestMapping(value = "/nwk/deleteNetworkInfo.do", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteNetworkInfo(NetworkAPIVO networkVO, SessionStatus status) throws Exception {
+	@DeleteMapping("/nwk/deleteNetworkInfo.do")
+	public ResponseEntity<?> deleteNetworkInfo(NetworkAPIVO networkVO, SessionStatus status) {
 		Map<String, Object> response = new HashMap<>();
 		int cnt = egovNetworkAPIService.deleteNetworkInfo(networkVO);
 		if(cnt > 0) {

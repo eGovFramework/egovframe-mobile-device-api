@@ -32,32 +32,28 @@ public interface EgovNetworkAPIService {
      * 네트워크 정보를 등록한다.
      * @param vo - 등록할 정보가 담긴 NetworkAPIVO
      * @return 등록 결과
-     * @exception Exception
      */
-    int insertNetworkInfo(NetworkAPIVO vo) throws Exception;
+    int insertNetworkInfo(NetworkAPIVO vo);
 
     /**
      * 네트워크 정보를 삭제한다.
      * @param vo - 삭제할 정보가 담긴 NetworkAPIVO
      * @return 삭제 결과
-     * @exception Exception
      */
-    int deleteNetworkInfo(NetworkAPIVO vo) throws Exception;
+    int deleteNetworkInfo(NetworkAPIVO vo);
 
 
     /**
      * 네트워크 정보 목록을 조회한다.
      * @param vo - 조회할 정보가 담긴 VO (NetworkAPIVO 또는 NetworkAPIDefaultVO)
      * @return 네트워크 정보 목록
-     * @exception Exception
      */
-    List<?> selectNetworkInfoList(Object vo) throws Exception;
+    List<?> selectNetworkInfoList(Object vo);
 
     /**
      * 네트워크 정보 총 개수를 조회한다.
      * @param vo - 조회할 정보가 담긴 VO
      * @return 네트워크 정보 총 개수
-     * @exception
      */
     int selectNetworkInfoListTotCnt(Object vo);
 

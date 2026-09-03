@@ -5,6 +5,7 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.egovframe.rte.fdl.cmmn.aspect.ExceptionTransfer;
+import org.egovframe.rte.fdl.cmmn.exception.BaseRuntimeException;
 
 @Aspect
 public class EgovAopExceptionTransfer {
@@ -19,7 +20,7 @@ public class EgovAopExceptionTransfer {
 	private void exceptionTransferService() {}
 
 	@AfterThrowing(pointcut="exceptionTransferService()", throwing="ex")
-	public void doAfterThrowingExceptionTransferService(JoinPoint thisJoinPoint, Exception ex) throws Exception {
+	public void doAfterThrowingExceptionTransferService(JoinPoint thisJoinPoint, Exception ex) throws BaseRuntimeException, Exception {
 		exceptionTransfer.transfer(thisJoinPoint, ex);
 	}
 

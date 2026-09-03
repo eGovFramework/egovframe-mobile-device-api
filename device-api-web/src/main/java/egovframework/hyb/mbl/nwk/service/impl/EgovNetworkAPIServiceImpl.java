@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.exception.BaseRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -60,9 +61,8 @@ public class EgovNetworkAPIServiceImpl extends EgovAbstractServiceImpl implement
      * 네트워크 정보를 등록한다.
      * @param vo - 등록할 정보가 담긴 NetworkAPIVO
      * @return 등록 결과
-     * @exception Exception
      */
-    public int insertNetworkInfo(NetworkAPIVO vo) throws Exception {    
+    public int insertNetworkInfo(NetworkAPIVO vo) {    
         return (Integer)networkAPIDAO.insertNetworkInfo(vo);  
     }
 
@@ -70,9 +70,8 @@ public class EgovNetworkAPIServiceImpl extends EgovAbstractServiceImpl implement
      * 네트워크 정보를 수정한다.
      * @param vo - 수정할 정보가 담긴 NetworkAPIVO
      * @return 수정 결과
-     * @exception Exception
      */
-    public int updateNetworkInfo(NetworkAPIVO vo) throws Exception {
+    public int updateNetworkInfo(NetworkAPIVO vo) {
         return (Integer)networkAPIDAO.updateNetworkInfo(vo);
     }
 
@@ -80,9 +79,8 @@ public class EgovNetworkAPIServiceImpl extends EgovAbstractServiceImpl implement
      * 네트워크 정보를 삭제한다.
      * @param vo - 삭제할 정보가 담긴 NetworkAPIVO
      * @return 삭제 결과
-     * @exception Exception
      */
-    public int deleteNetworkInfo(NetworkAPIVO vo) throws Exception {
+    public int deleteNetworkInfo(NetworkAPIVO vo) {
         return (Integer)networkAPIDAO.deleteNetworkInfo(vo);
     }
 
@@ -90,12 +88,14 @@ public class EgovNetworkAPIServiceImpl extends EgovAbstractServiceImpl implement
      * 네트워크 정보를 조회한다.
      * @param vo - 조회할 정보가 담긴 NetworkAPIVO
      * @return 조회한 네트워크 정보
+     * @exception BaseRuntimeException
      * @exception Exception
      */
-    public NetworkAPIVO selectNetworkInfo(NetworkAPIVO vo) throws Exception {
+    public NetworkAPIVO selectNetworkInfo(NetworkAPIVO vo) throws BaseRuntimeException, Exception {
         NetworkAPIVO resultVO = networkAPIDAO.selectNetworkInfo(vo);
-        if (resultVO == null)
+        if (resultVO == null) {
             throw processException("info.nodata.msg");
+        }
         return resultVO;
     }
 
@@ -105,7 +105,7 @@ public class EgovNetworkAPIServiceImpl extends EgovAbstractServiceImpl implement
      * @return 네트워크 정보 목록
      * @exception Exception
      */
-    public List<?> selectNetworkInfoList(Object vo) throws Exception {
+    public List<?> selectNetworkInfoList(Object vo) {
         return networkAPIDAO.selectNetworkInfoList(vo);
     }
     
@@ -126,7 +126,7 @@ public class EgovNetworkAPIServiceImpl extends EgovAbstractServiceImpl implement
      * @return 처리 결과
      * @exception Exception
      */
-    public boolean selectMediaFileInf(HttpServletResponse response, String mp3FilePath) throws Exception {
+    public boolean selectMediaFileInf(HttpServletResponse response, String mp3FilePath) {
         File file = null;
         FileInputStream fis = null;
     
@@ -156,18 +156,12 @@ public class EgovNetworkAPIServiceImpl extends EgovAbstractServiceImpl implement
             response.getOutputStream().close();
         } catch(IOException e){
         	LOGGER.error("["+e.getClass()+"] Try/Catch...file : " , e.getMessage());
-        } catch(Exception e) {
-        	LOGGER.error("["+e.getClass()+"] Try/Catch... : " + e.getMessage());
-            errorFlag = false;
         } finally {
             if (bStream != null) {
                 try {
                     bStream.close();
                 } catch(IOException e){
                 	LOGGER.error("["+e.getClass()+"] Try/Catch...bStream : " , e.getMessage());
-                } catch(Exception e) {
-                	LOGGER.error("["+e.getClass()+"] Try/Catch... : " + e.getMessage());
-                    errorFlag = false;
                 }
             }
             if (in != null) {
@@ -175,9 +169,6 @@ public class EgovNetworkAPIServiceImpl extends EgovAbstractServiceImpl implement
                     in.close();
                 } catch(IOException e){
                 	LOGGER.error("["+e.getClass()+"] Try/Catch...in : " , e.getMessage());
-                } catch(Exception e) {
-                	LOGGER.error("["+e.getClass()+"] Try/Catch... : " + e.getMessage());
-                    errorFlag = false;
                 }
             }
             if (fis != null) {
@@ -185,9 +176,6 @@ public class EgovNetworkAPIServiceImpl extends EgovAbstractServiceImpl implement
                     fis.close();
                 } catch(IOException e){
                 	LOGGER.error("["+e.getClass()+"] Try/Catch...fis : " , e.getMessage());
-                } catch(Exception e) {
-                	LOGGER.error("["+e.getClass()+"] Try/Catch... : " + e.getMessage());
-                    errorFlag = false;
                 }
             }
         }

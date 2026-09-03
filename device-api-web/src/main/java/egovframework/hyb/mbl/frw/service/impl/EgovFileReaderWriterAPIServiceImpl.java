@@ -18,27 +18,27 @@ public class EgovFileReaderWriterAPIServiceImpl extends EgovAbstractServiceImpl 
     @Resource(name="FileReaderWriterAPIDAO")
     private FileReaderWriterAPIDAO fileReaderWriterAPIDAO;
 
-    public int insertFileReaderWriterInfo(FileReaderWriterAPIVO vo) throws Exception {
+    public int insertFileReaderWriterInfo(FileReaderWriterAPIVO vo) {
         return (Integer) fileReaderWriterAPIDAO.insertFileReaderWriterInfo(vo);
     }
 
-    public int updateFileReaderWriterInfo(FileReaderWriterAPIVO vo) throws Exception {
+    public int updateFileReaderWriterInfo(FileReaderWriterAPIVO vo) {
         return (Integer) fileReaderWriterAPIDAO.updateFileReaderWriterInfo(vo);
     }
 
-    public int deleteFileReaderWriterInfo(FileReaderWriterAPIVO vo) throws Exception {
+    public int deleteFileReaderWriterInfo(FileReaderWriterAPIVO vo) {
         return (Integer) fileReaderWriterAPIDAO.deleteFileReaderWriterInfo(vo);
     }
 
-    public FileReaderWriterAPIVO selectFileReaderWriterInfo(FileReaderWriterAPIVO vo) throws Exception {
+    public FileReaderWriterAPIVO selectFileReaderWriterInfo(FileReaderWriterAPIVO vo) {
         return (FileReaderWriterAPIVO) fileReaderWriterAPIDAO.selectFileReaderWriterInfo(vo);
     }
 
-    public List<?> selectFileReaderWriterInfoList(FileReaderWriterAPIVO searchVO) throws Exception {
+    public List<?> selectFileReaderWriterInfoList(FileReaderWriterAPIVO searchVO) {
         return fileReaderWriterAPIDAO.selectFileReaderWriterInfoList(searchVO);
     }
 
-    public int selectFileReaderWriterInfoListTotCnt(FileReaderWriterAPIVO searchVO) throws Exception {
+    public int selectFileReaderWriterInfoListTotCnt(FileReaderWriterAPIVO searchVO) {
         return (Integer) fileReaderWriterAPIDAO.selectFileReaderWriterInfoListTotCnt(searchVO);
     }
 }

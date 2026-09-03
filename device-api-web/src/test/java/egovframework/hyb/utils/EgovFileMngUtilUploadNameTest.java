@@ -2,7 +2,6 @@ package egovframework.hyb.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.File;
 import java.lang.reflect.Proxy;
 import java.nio.file.Path;
 import java.util.List;
@@ -35,7 +34,7 @@ class EgovFileMngUtilUploadNameTest {
     Path storage;
 
     @Test
-    void 같은_초에_들어온_두_요청의_저장파일이_서로_덮어쓰지_않는다() throws Exception {
+    void 같은_초에_들어온_두_요청의_저장파일이_서로_덮어쓰지_않는다() {
         for (int attempt = 0; attempt < 50; attempt++) {
             EgovFileMngUtil util = newUtil();
 
@@ -63,7 +62,7 @@ class EgovFileMngUtilUploadNameTest {
         return storedName.split("_")[1];
     }
 
-    private String upload(EgovFileMngUtil util, String originalName) throws Exception {
+    private String upload(EgovFileMngUtil util, String originalName) {
         MultipartFile file = new MockMultipartFile("file", originalName, "application/pdf",
                 "hello".getBytes(java.nio.charset.StandardCharsets.UTF_8));
         return util.writeUploadedFile(List.of(file), false).get(0).getStreFileNm();
