@@ -11,10 +11,10 @@
 
 	<insert id="insertFileReaderWriterInfo">
 		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
-		   SELECT (IFNULL(MAX(SN), 0)+1) sn from FILE_READER_WRITER WHERE UUID = #{uuid}
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from FILE_READER_WRITE WHERE UUID = #{uuid}
 		</selectKey>
 		
-		INSERT INTO FILE_READER_WRITER 
+		INSERT INTO FILE_READER_WRITE 
 			( SN
 			  , UUID
 			  , USEYN )
@@ -26,13 +26,13 @@
 	<select id="selectFileReaderWriterInfoList" parameterType="egovframework.hyb.mbl.frw.service.FileReaderWriterAPIVO" resultMap="fileReaderWriterInfo">
 		SELECT
 			SN, UUID, USEYN
-		FROM FILE_READER_WRITER
+		FROM FILE_READER_WRITE
 		WHERE USEYN='Y' AND UUID = #{uuid}
 		ORDER BY SN DESC
 	</select>
 	
 	<delete id="deleteFileReaderWriterInfo">
-		UPDATE FILE_READER_WRITER 
+		UPDATE FILE_READER_WRITE 
 		SET USEYN='N'
 		WHERE SN = #{sn} AND UUID = #{uuid}
 	</delete>
