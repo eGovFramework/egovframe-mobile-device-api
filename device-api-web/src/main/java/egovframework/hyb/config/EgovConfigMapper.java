@@ -6,6 +6,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.egovframe.rte.fdl.cmmn.exception.BaseRuntimeException;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
@@ -25,7 +26,7 @@ public class EgovConfigMapper {
 	private String dbType;
 
 	@Bean(name = "sqlSession")
-	SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource) throws Exception {
+	SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource) throws BaseRuntimeException, Exception {
 		PathMatchingResourcePatternResolver pmrpr = new PathMatchingResourcePatternResolver();
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 		sqlSessionFactoryBean.setDataSource(dataSource);
