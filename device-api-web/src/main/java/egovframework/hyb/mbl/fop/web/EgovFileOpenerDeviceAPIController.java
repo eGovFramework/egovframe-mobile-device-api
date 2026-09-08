@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egovframe.rte.fdl.cmmn.exception.BaseRuntimeException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,7 +60,7 @@ public class EgovFileOpenerDeviceAPIController {
 	public void fileDownload(
 			@Parameter(description = "기기 식별코드") @RequestParam String uuid,
 			@Parameter(description = "파일 일련번호") @RequestParam int fileSn,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response) {
         try {
       	byte[] fildData = egovFileMngUtil.fileDownload(response, fileSn, uuid);
            
@@ -71,10 +72,18 @@ public class EgovFileOpenerDeviceAPIController {
           
       } catch (SecurityException e) {
           response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-          response.getWriter().write("파일 접근 권한이 없습니다.");
+          try {
+			response.getWriter().write("파일 접근 권한이 없습니다.");
+		} catch (IOException e1) {
+			throw new BaseRuntimeException(e1);
+		}
       } catch (IOException e) {
           response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-          response.getWriter().write("파일을 찾을 수 없습니다.");
+          try {
+			response.getWriter().write("파일을 찾을 수 없습니다.");
+		} catch (IOException e1) {
+			throw new BaseRuntimeException(e1);
+		}
       }
 	}
 
