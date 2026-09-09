@@ -55,6 +55,7 @@
 				USER_ID
 		FROM INTERFACE_EGOV
 		WHERE USER_ID = #{userId}
+		AND USER_PW = #{userPw}
 		ORDER BY SN DESC
 	</select>
 
