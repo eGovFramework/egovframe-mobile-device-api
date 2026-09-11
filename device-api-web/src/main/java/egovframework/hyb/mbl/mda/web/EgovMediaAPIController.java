@@ -96,8 +96,7 @@ public class EgovMediaAPIController {
     @PostMapping(value = "/mda/uploadMediaFile.do", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> uploadMediaFile(
             @Parameter(description = "업로드할 파일(들)") @RequestParam("files") MultipartFile[] files,
-            @Parameter(description = "기기 식별코드") @RequestParam("uuid") String uuid,
-            @Parameter(description = "시작 SN") @RequestParam(value = "startSn", required = false, defaultValue = "1") int startSn) {
+            @Parameter(description = "기기 식별코드") @RequestParam("uuid") String uuid) {
        
         Map<String, Object> response = new HashMap<>();
         
@@ -127,14 +126,12 @@ public class EgovMediaAPIController {
             
             // 각 파일에 대해 미디어 정보 등록
             List<Map<String, Object>> fileResults = new ArrayList<>();
-            int currentSn = startSn;
             int successCount = 0;
             int failCount = 0;
             
             for (FileVO fileVO : uploadedFiles) {
                 try {
                     MediaAPIVO mediaVO = new MediaAPIVO();
-                    mediaVO.setSn(currentSn);
                     mediaVO.setUuid(uuid);
                     mediaVO.setFileSn(fileVO.getFileSn());
                     mediaVO.setMdSj(fileVO.getOrignlFileNm());
@@ -159,7 +156,6 @@ public class EgovMediaAPIController {
                         result.put("message", "미디어 정보 등록 실패");
                         fileResults.add(result);
                     }
-                    currentSn++;
                 } catch (Exception e) {
                     failCount++;
                     Map<String, Object> result = new LinkedHashMap<>();
