@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -191,28 +192,20 @@ public class EgovMediaAPIController {
 
     @Operation(summary = "미디어 파일 다운로드", description = "기기 UUID 소유권을 검증한 뒤 미디어 파일을 다운로드합니다.")
     @GetMapping("/mda/downloadMediaFile.do")
-    public void downloadMediaFile(
+    public ResponseEntity<?> downloadMediaFile(
             @Parameter(description = "파일 일련번호") @RequestParam int fileSn,
             @Parameter(description = "기기 식별코드") @RequestParam String uuid,
-            HttpServletResponse response) throws Exception {
-        try {
-        	byte[] fileData = fileMngUtil.fileDownload(response, fileSn, uuid);
-             
-            if (response.getContentType() == null) {
-                response.setContentType("application/octet-stream");
-            }
-            response.setContentLength(fileData.length);
-            
-            response.getOutputStream().write(fileData);
-            response.getOutputStream().flush();
-            
-        } catch (SecurityException e) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("파일 접근 권한이 없습니다.");
-        } catch (IOException e) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            response.getWriter().write("파일을 찾을 수 없습니다.");
-        }
+            HttpServletResponse response) {
+		try {
+			byte[] fileData = fileMngUtil.fileDownload(response, fileSn, uuid);
+
+			return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).contentLength(fileData.length)
+					.body(fileData);
+		} catch (SecurityException e) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("파일 접근 권한이 없습니다.");
+		} catch (IOException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("파일을 찾을 수 없습니다.");
+		}
     }
 
 }
