@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egovframe.rte.fdl.property.EgovPropertyService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,13 +36,13 @@ public class EgovNetworkAPIController {
 	@Resource(name = "EgovNetworkAPIService")
 	private EgovNetworkAPIService egovNetworkAPIService;
 
-	@Resource(name = "propertiesService")
-	protected EgovPropertyService propertiesService;
+	@Value("${Globals.serverContext}")
+	private String serverContext;
 
 	@RequestMapping("/nwk/htmlLoad.do")
 	public ResponseEntity<?> htmlLoad(ModelMap model) throws Exception {
 		Map<String, Object> response = new HashMap<>();
-		response.put("serverUrl", propertiesService.getString("serverContext"));
+		response.put("serverUrl", serverContext);
 		response.put("resultState","OK");
 		return ResponseEntity.ok(response);
 	}
