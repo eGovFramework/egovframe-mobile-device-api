@@ -106,6 +106,11 @@ public class EgovInterfaceAPIController {
             response.put("resultMessage", "이메일은 필수 입력값입니다.");
             return ResponseEntity.ok(response);
         }
+        if (egovInterfaceAPIService.selectInterfaceInfoListTotCnt(interfaceVO) > 0) {
+            response.put("resultState", "FAIL");
+            response.put("resultMessage", "이미 존재하는 아이디입니다.");
+            return ResponseEntity.ok(response);
+        }
         int cnt = egovInterfaceAPIService.insertInterfaceInfo(interfaceVO);
         if(cnt > 0) {
 			response.put("resultState","OK");
