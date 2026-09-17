@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,20 +56,26 @@ public class EgovFileOpenerDeviceAPIController {
 	 */
     @Operation(summary = "파일 오프너 파일 다운로드", description = "기기 UUID 소유권을 검증한 뒤 파일을 다운로드합니다.")
     @GetMapping("/fop/fileDownload.do")
-	public ResponseEntity<?> fileDownload(
+	public void fileDownload(
 			@Parameter(description = "기기 식별코드") @RequestParam String uuid,
 			@Parameter(description = "파일 일련번호") @RequestParam int fileSn,
-			HttpServletResponse response) {
-		try {
-			byte[] fileData = egovFileMngUtil.fileDownload(response, fileSn, uuid);
-
-			return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).contentLength(fileData.length)
-					.body(fileData);
-		} catch (SecurityException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("파일 접근 권한이 없습니다.");
-		} catch (IOException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("파일을 찾을 수 없습니다.");
-		}
+			HttpServletResponse response) throws IOException {
+        try {
+      	byte[] fildData = egovFileMngUtil.fileDownload(response, fileSn, uuid);
+           
+          response.setContentType("application/octet-stream");
+          response.setContentLength(fildData.length);
+          
+          response.getOutputStream().write(fildData);
+          response.getOutputStream().flush();
+          
+      } catch (SecurityException e) {
+          response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+          response.getWriter().write("파일 접근 권한이 없습니다.");
+      } catch (IOException e) {
+          response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+          response.getWriter().write("파일을 찾을 수 없습니다.");
+      }
 	}
 
 
