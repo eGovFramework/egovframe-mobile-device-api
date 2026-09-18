@@ -59,7 +59,7 @@ public class EgovFileOpenerDeviceAPIController {
 	public void fileDownload(
 			@Parameter(description = "기기 식별코드") @RequestParam String uuid,
 			@Parameter(description = "파일 일련번호") @RequestParam int fileSn,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response) throws IOException {
         try {
       	byte[] fildData = egovFileMngUtil.fileDownload(response, fileSn, uuid);
            

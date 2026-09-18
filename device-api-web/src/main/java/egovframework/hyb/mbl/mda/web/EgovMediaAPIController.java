@@ -194,7 +194,7 @@ public class EgovMediaAPIController {
     public void downloadMediaFile(
             @Parameter(description = "파일 일련번호") @RequestParam int fileSn,
             @Parameter(description = "기기 식별코드") @RequestParam String uuid,
-            HttpServletResponse response) throws Exception {
+            HttpServletResponse response) throws IOException {
         try {
         	byte[] fileData = fileMngUtil.fileDownload(response, fileSn, uuid);
              

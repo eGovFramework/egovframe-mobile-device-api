@@ -10,7 +10,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -201,14 +200,14 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 	 * @param fileSn   파일 일련번호
 	 * @param uuid     기기 식별코드
 	 */
-	public byte[] fileDownload(HttpServletResponse response, int fileSn, String uuid) throws Exception {
+	public byte[] fileDownload(HttpServletResponse response, int fileSn, String uuid) throws IOException {
 		if (!fileService.isFileOwnedByUuid(fileSn, uuid)) {
 			throw new SecurityException("파일 접근 권한이 없습니다.");
 		}
 		return fileDownload(response, fileSn);
 	}
 
-	public byte[] fileDownload(HttpServletResponse response, int fileSn) throws Exception {
+	private byte[] fileDownload(HttpServletResponse response, int fileSn) throws IOException {
 		
 		FileVO fileVO = new FileVO();
 		fileVO = fileService.selectFileDetailInfo(fileSn);
@@ -244,10 +243,6 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 			buffer = new byte[(int) file.length()];
 			fis.read(buffer);
 			return buffer;
-			
-		} catch (Exception e) {
-			LOGGER.error("File download error: {}", e.getMessage());
-			throw e;
 		}
 	}
 

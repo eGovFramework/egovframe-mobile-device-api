@@ -1,5 +1,6 @@
 package egovframework.hyb.mbl.frw.web;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -199,7 +200,7 @@ public class EgovFileReaderWriterAPIController {
     public void fileDownload(
             @Parameter(description = "기기 식별코드") @RequestParam("uuid") String uuid,
             @Parameter(description = "파일 일련번호") @RequestParam("fileSn") int fileSn,
-            HttpServletResponse response) throws Exception {
+            HttpServletResponse response) throws IOException {
         try {
             byte[] fileData = fileMngUtil.fileDownload(response, fileSn, uuid);
             response.setContentType("application/octet-stream");
@@ -209,7 +210,7 @@ public class EgovFileReaderWriterAPIController {
         } catch (SecurityException e) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.getWriter().write("파일 접근 권한이 없습니다.");
-        } catch (Exception e) {
+        } catch (IOException e) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             response.getWriter().write("파일을 찾을 수 없습니다.");
         }
