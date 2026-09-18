@@ -137,8 +137,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 			if (StringUtils.isNotEmpty(originFileName)) {
 				fileExt = FilenameUtils.getExtension(originFileName);
 			}
-			// 저장명에는 파일 일련번호를 쓴다. 타임스탬프는 초 단위여서
-			// 서로 다른 요청이 같은 초에 올리면 이름이 겹친다.
+			// 저장명에는 파일 일련번호를 사용. 
 			int fileSn = egovFileIdGnrService.getNextIntegerId();
 			String newName = "File_" + getTimeStamp() + "_" + fileSn;
 			
@@ -247,7 +246,28 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 	}
 
 	/**
-	 * 선택된 파일에 대한 삭제 기능을 처리한다. (기존 코드 호환성)
+	 * 다운로드 오류를 응답한다.
+	 *
+	 * @param response 서블릿 응답
+	 * @param status   HTTP 상태 코드
+	 * @param message  오류 문구. null이거나 비어 있으면 본문을 쓰지 않는다.
+	 */
+	public void writeDownloadError(HttpServletResponse response, int status, String message) throws IOException {
+		if (response.isCommitted()) {
+			return;
+		}
+		response.reset();
+		response.setStatus(status);
+		if (message == null || message.isEmpty()) {
+			return;
+		}
+		response.setContentType("text/plain;charset=UTF-8");
+		response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+		response.getWriter().write(message);
+	}
+
+	/**
+	 * 선택된 파일에 대한 삭제 기능을 처리한다.
 	 * 
 	 * @param fileVO - 파일 정보가 담긴 FileVO
 	 * @exception Exception
@@ -371,7 +391,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl {
 	/**
 	 * 지정한 시각(epoch milliseconds)으로 TIMESTAMP 문자열을 구한다.
 	 * 24시간제(HH)를 사용해 오전(01시)과 오후(13시)가 같은 문자열로 겹치지 않도록 한다.
-	 * 테스트에서 시각을 주입할 수 있도록 분리했다.
+	 * 테스트에서 시각을 주입할 수 있도록 분리.
 	 *
 	 * @param epochMillis 기준 시각(1970-01-01 UTC 이후 밀리초)
 	 * @return TIMESTAMP 값

@@ -60,22 +60,25 @@ public class EgovFileOpenerDeviceAPIController {
 			@Parameter(description = "기기 식별코드") @RequestParam String uuid,
 			@Parameter(description = "파일 일련번호") @RequestParam int fileSn,
 			HttpServletResponse response) throws IOException {
-        try {
-      	byte[] fildData = egovFileMngUtil.fileDownload(response, fileSn, uuid);
-           
-          response.setContentType("application/octet-stream");
-          response.setContentLength(fildData.length);
-          
-          response.getOutputStream().write(fildData);
-          response.getOutputStream().flush();
-          
-      } catch (SecurityException e) {
-          response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-          response.getWriter().write("파일 접근 권한이 없습니다.");
-      } catch (IOException e) {
-          response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-          response.getWriter().write("파일을 찾을 수 없습니다.");
-      }
+		byte[] fildData;
+		try {
+			fildData = egovFileMngUtil.fileDownload(response, fileSn, uuid);
+		} catch (SecurityException e) {
+			egovFileMngUtil.writeDownloadError(response, HttpServletResponse.SC_FORBIDDEN, "파일 접근 권한이 없습니다.");
+			return;
+		} catch (IOException e) {
+			egovFileMngUtil.writeDownloadError(response, HttpServletResponse.SC_NOT_FOUND, "파일을 찾을 수 없습니다.");
+			return;
+		}
+
+		response.setContentType("application/octet-stream");
+		response.setContentLength(fildData.length);
+		try {
+			response.getOutputStream().write(fildData);
+			response.getOutputStream().flush();
+		} catch (IOException e) {
+			egovFileMngUtil.writeDownloadError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null);
+		}
 	}
 
 
