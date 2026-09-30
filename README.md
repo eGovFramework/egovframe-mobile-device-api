@@ -14,8 +14,6 @@
 | JDK | 17 |
 | Spring Boot | 3.5.6 |
 | Maven | 3.9.9 |
-| Ollama | 0.16.0 |
-| Docker | 28.0.4 |
 
 ## 프로젝트 구성
 
