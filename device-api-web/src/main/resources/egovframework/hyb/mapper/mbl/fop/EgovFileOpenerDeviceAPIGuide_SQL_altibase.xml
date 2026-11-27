@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="fileOpenerDeviceAPIDAO">
+<mapper namespace="egovframework.hyb.mbl.fop.service.impl.FileOpenerDeviceAPIDAO">
 
 	<resultMap id="documentList" type="egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIVO">
 		<result property="sn" column="SN"/>
@@ -13,7 +13,7 @@
 		<result property="fileSn" column="FILE_SN"/>
 	</resultMap>
 	
-	<select id="selectDocumentListInfo" parameterType="egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIVO" resultMap="documentList">
+	<select id="selectFileOpenerList" parameterType="egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIVO" resultMap="documentList">
 		SELECT
 			a.SN,
 			a.UUID,
@@ -29,5 +29,15 @@
 			AND a.UUID = #{uuid}
     	ORDER BY a.UPD_DT DESC
 	</select>
+
+	<insert id="insertFileOpenerList">
+		<selectKey keyProperty="sn" resultType="string" order="BEFORE">
+			SELECT (NVL(MAX(SN), 0)+1) sn FROM FILE_OPENER_LIST
+		</selectKey>
+		INSERT INTO FILE_OPENER_LIST
+			(SN, UUID, USE_YN, UPD_DT, FILE_SN)
+		VALUES
+			(#{sn}, #{uuid}, 'Y', SYSDATE, #{fileSn})
+	</insert>
 
 </mapper>

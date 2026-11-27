@@ -1,28 +1,25 @@
 package egovframework.hyb.mbl.acl.service.impl;
 
+import org.egovframe.rte.psl.dataaccess.mapper.EgovMapper;
+
 import java.util.List;
 
-import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
-import org.springframework.stereotype.Repository;
 
 import egovframework.hyb.mbl.acl.service.AcceleratorAPIVO;
 
 /**
  * 통합 Accelerator API DAO
  */
-@Repository
-public class AcceleratorAPIDAO extends EgovAbstractMapper {
+@EgovMapper("AcceleratorAPIDAO")
+public interface AcceleratorAPIDAO {
 
-    public List<AcceleratorAPIVO> selectAcceleratorInfoList(AcceleratorAPIVO searchVO) {
-        return selectList("acceleratorAPIDAO.selectAcceleratorInfoList", searchVO);
-    }
+    public List<AcceleratorAPIVO> selectAcceleratorInfoList(AcceleratorAPIVO searchVO);
 
-    public int insertAcceleratorInfo(AcceleratorAPIVO vo) {
-        return insert("acceleratorAPIDAO.insertAcceleratorInfo", vo);
-    }
 
-    public int deleteAcceleratorInfo(AcceleratorAPIVO vo) {
-        return delete("acceleratorAPIDAO.deleteAcceleratorInfo", vo);
-    }
+    public int insertAcceleratorInfo(AcceleratorAPIVO vo);
+
+
+    public int deleteAcceleratorInfo(AcceleratorAPIVO vo);
+
 
 }

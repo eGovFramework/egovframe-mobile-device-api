@@ -7,18 +7,16 @@ import org.springframework.stereotype.Service;
 
 import egovframework.hyb.mbl.gps.service.EgovGPSAPIService;
 import egovframework.hyb.mbl.gps.service.GPSAPIVO;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.annotation.Resource;
 
 /**
  * 통합 GPS API ServiceImpl
  */
-@Service
-@RequiredArgsConstructor
-@Slf4j
+@Service("EgovGPSAPIService")
 public class EgovGPSAPIServiceImpl extends EgovAbstractServiceImpl implements EgovGPSAPIService {
 
-    private final GPSAPIDAO gpsAPIDAO;
+    @Resource(name="GPSAPIDAO")
+    private GPSAPIDAO gpsAPIDAO;
 
     public int insertGPSInfo(GPSAPIVO vo) {
         return gpsAPIDAO.insertGPSInfo(vo);
@@ -29,7 +27,6 @@ public class EgovGPSAPIServiceImpl extends EgovAbstractServiceImpl implements Eg
     }
 
     public List<GPSAPIVO> selectGPSInfoList(GPSAPIVO searchVO) {
-        log.debug("uuid={}", searchVO.getUuid());
         return gpsAPIDAO.selectGPSInfoList(searchVO);
     }
 

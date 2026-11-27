@@ -49,27 +49,27 @@
 
 ## 아키텍처 구조
 
+서버·SQLite 연결이 **없는** 로컬 전용 기능입니다. UI 정본은 Face Mesh / AI Chat과 같이 `view` / `widgets` / `view_model` / `state` 를 씁니다.
+
 ### Domain Layer
 
-- **Entity**: 파일 시스템 엔티티 (File, Directory)
-
-- **Repository**: `FileManagementRepository` (인터페이스)
+- **Entity**: `FileMgmtInitResult`, `FileMgmtDirectoryResult`, `FileMgmtOperationResult`
+- **Repository**: `FileMgmtRepository` (인터페이스)
+- **UseCase**: `FileMgmtUseCase` — 권한, Documents 경로, 목록, 생성, 복사/이동/삭제, 이름 변경
 
 ### Data Layer
 
-- **Service**: `FileManagementService`
-  - 파일 시스템 접근
-  - 파일/폴더 생성, 삭제, 복사, 이동
-  - 권한 관리
-
-- **Repository Implementation**: `FileManagementRepositoryImpl`
+- **Service**: `FileManagementService` — `dart:io` 파일 시스템 접근
+- **Repository Implementation**: `FileMgmtRepositoryImpl`
 
 ### Presentation Layer
 
-- **Screen**: `FileManagementScreen`
-  - 파일 목록 표시
-  - 다중 선택 기능
-  - 파일 작업 UI
+- **Page**: `FileMgmtPage` (`FeatureShell`, connection 바 없음)
+- **Overview / Card**: `FileMgmtOverview`, `FileMgmtFileCard`
+- **기능설명**: `FileFunctionPage` (l10n, Face Mesh와 동일 레이아웃)
+- **Controller**: `FileMgmtMain` — 경로 히스토리·선택 모드만 유지하고 파일 작업은 UseCase에 위임
+
+DI: `fileMgmtRepositoryProvider`, `fileMgmtUseCaseProvider` (`di/providers.dart`)
 
 ## 의존성
 
@@ -139,7 +139,8 @@
 - 삭제된 파일은 복구할 수 없으므로 신중하게 선택하세요
 - 앱의 문서 디렉토리 내에서만 작업이 가능합니다
 - 시스템 파일이나 다른 앱의 파일은 접근할 수 없습니다
-- Android 11 이상에서는 "모든 파일 관리" 권한이 필요할 수 있습니다
+- 저장소 권한이나 모든 파일 접근 권한을 요청하지 않습니다
+- 이 기능은 웹 서버(`/xxx`) 및 SQLite import와 연결하지 않습니다
 
 ## 기술적 특징
 
@@ -150,8 +151,8 @@
 - **다중 선택**: 체크박스를 통한 직관적인 다중 파일 선택
   - 길게 누르기(Long Press)로 선택 모드에 진입할 수 있습니다
 - **파일 복사/이동 로직**: 같은 디렉토리 내에서 복사 시 자동으로 "복사본" 이름을 생성하며, 중복 시 번호를 추가합니다
-- **권한 관리**: 저장소 권한 자동 요청 및 처리
-  - Android 11 이상에서는 "모든 파일 관리" 권한이 필요하며, 권한이 없을 경우 안내 다이얼로그를 표시합니다
+- **디렉터리**: `getApplicationDocumentsDirectory`만 사용합니다. 저장소 권한은 요청하지 않습니다
 - **사용자 친화적 UI**: 파일 타입별 아이콘 및 정보 표시
   - 폴더와 파일을 시각적으로 구분하여 표시합니다
-- **Clean Architecture**: 도메인, 데이터, 프레젠테이션 레이어 분리
+- **Clean Architecture**: Domain UseCase / Repository, Data Service, Presentation Page·Widget 분리
+- **UI 정본**: AI Chat / IoT / Face Mesh와 같은 `*Page` + Overview/Card + l10n 기능설명

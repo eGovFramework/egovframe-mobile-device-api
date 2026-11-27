@@ -1,6 +1,4 @@
-import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
-import 'package:egovframe_mobile_deviceapi_app/presentation/resources/text_style.dart';
-import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/modal.dart';
+import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/toast.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 
@@ -86,7 +84,6 @@ class ErrorHandler {
         }
         
       case ErrorType.unknown:
-      default:
         return '알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
     }
   }
@@ -122,11 +119,6 @@ class ErrorHandler {
     }
   }
 
-  /// 예외에 대한 사용자 친화적 메시지 반환
-  static String messageFor(Object error) {
-    return getErrorMessage(error, detectErrorType(error));
-  }
-
   /// 에러 다이얼로그 표시
   static Future<void> showErrorDialog(
     BuildContext context, 
@@ -135,7 +127,7 @@ class ErrorHandler {
     VoidCallback? onRetry,
     String? retryText,
   }) {
-    return showStatusDialog(
+    return showStatusToast(
       context,
       variant: StatusVariant.error,
       title: title ?? '오류',
@@ -143,109 +135,59 @@ class ErrorHandler {
     );
   }
 
-  /// 성공 다이얼로그 표시
+  /// 성공 토스트 표시
   static Future<void> showSuccessDialog(
     BuildContext context, 
     String message, {
     String? title,
   }) {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: EgovColor.white100,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          title: Row(
-            children: [
-              Icon(
-                Icons.check_circle_outline,
-                color: EgovColor.success50,
-                size: 24,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                title ?? '성공',
-                style: EgovText.title.copyWith(
-                  color: EgovColor.success60,
-                ),
-              ),
-            ],
-          ),
-          content: Text(
-            message,
-            style: EgovText.regular,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                '확인',
-                style: EgovText.regular.copyWith(
-                  color: EgovColor.primary50,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+    return showStatusToast(
+      context,
+      variant: StatusVariant.success,
+      title: title ?? '성공',
+      message: message,
     );
   }
 
-  /// 에러 다이얼로그 표시 (showStatusDialog 사용)
+  /// 에러 토스트 표시
   static void showErrorSnackBar(
     BuildContext context, 
     String message, {
     Duration duration = const Duration(seconds: 3),
   }) {
-    showStatusDialog(
+    showStatusToast(
       context,
       variant: StatusVariant.error,
       title: '오류',
       message: message,
+      duration: duration,
     );
   }
 
-  /// 성공 다이얼로그 표시 (showStatusDialog 사용)
+  /// 성공 토스트 표시
   static void showSuccessSnackBar(
     BuildContext context, 
     String message, {
     Duration duration = const Duration(seconds: 3),
   }) {
-    showStatusDialog(
+    showStatusToast(
       context,
       variant: StatusVariant.success,
       title: '성공',
       message: message,
+      duration: duration,
     );
   }
 
-  /// 에러 로깅 (디버그 빌드에서만 출력)
+  /// 에러 로깅 (debug 빌드에서만)
   static void logError(dynamic error, StackTrace? stackTrace, {String? context}) {
-    final prefix = context != null ? '[$context] ' : '';
-    AppLogger.e('${prefix}Error', error, stackTrace);
-  }
-
-  /// 예외를 로깅하고 사용자에게 다이얼로그로 표시
-  static Future<void> handleException(
-    BuildContext context,
-    Object error, {
-    StackTrace? stackTrace,
-    String? logContext,
-    String? title,
-    VoidCallback? onRetry,
-    String? retryText,
-  }) async {
-    logError(error, stackTrace, context: logContext);
-    final message = messageFor(error);
-    await showErrorDialog(
-      context,
-      message,
-      title: title,
-      onRetry: onRetry,
-      retryText: retryText,
-    );
+    final buffer = StringBuffer('ErrorHandler');
+    if (context != null) {
+      buffer.write(' [$context]');
+    }
+    appLogError(buffer.toString(), error);
+    if (stackTrace != null) {
+      appLog(stackTrace.toString());
+    }
   }
 }

@@ -7,30 +7,21 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.support.SessionStatus;
 
 import egovframework.hyb.mbl.nwk.service.EgovNetworkAPIService;
 import egovframework.hyb.mbl.nwk.service.NetworkAPIVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 /**
  * 통합 Network API Controller
- * @Modification Information
- * @
- * @ 수정일         수정자        수정내용
- * @ ----------   ---------   -----------------------------------------------------------
- *   2026.07.21  이백행          [2026년 컨트리뷰션] 사용하지 않는 import 제거
  */
 @Controller
-@Tag(name = "10. Network Guide Program Service", description = "네트워크 API 관리")
+@Tag(name = "09. Network Guide Program Service", description = "네트워크 API 관리")
 public class EgovNetworkAPIController {
 
 	@Resource(name = "EgovNetworkAPIService")
@@ -39,8 +30,8 @@ public class EgovNetworkAPIController {
 	@Value("${Globals.serverContext}")
 	private String serverContext;
 
-	@RequestMapping("/nwk/htmlLoad.do")
-	public ResponseEntity<?> htmlLoad(ModelMap model) throws Exception {
+	@GetMapping("/nwk/htmlLoad.do")
+	public ResponseEntity<Map<String, Object>> htmlLoad() throws Exception {
 		Map<String, Object> response = new HashMap<>();
 		response.put("serverUrl", serverContext);
 		response.put("resultState","OK");
@@ -48,18 +39,18 @@ public class EgovNetworkAPIController {
 	}
 
 	@Operation(summary = "네트워크 정보 목록 조회", description = "네트워크 정보 목록을 조회합니다.")
-	@RequestMapping(value = "/nwk/selectNetworkInfoList.do", method = RequestMethod.GET)
-	public ResponseEntity<?> selectNetworkInfoList(@ModelAttribute("searchNetworkVO") NetworkAPIVO searchNetworkVO, ModelMap model) throws Exception {
+	@GetMapping("/nwk/selectNetworkInfoList.do")
+	public ResponseEntity<Map<String, Object>> selectNetworkInfoList(NetworkAPIVO searchNetworkVO) throws Exception {
 		Map<String, Object> response = new HashMap<>();
-		List<?> networkInfoList = egovNetworkAPIService.selectNetworkInfoList(searchNetworkVO);
+		List<NetworkAPIVO> networkInfoList = egovNetworkAPIService.selectNetworkInfoList(searchNetworkVO);
 		response.put("networkInfoList", networkInfoList);
 		response.put("resultState","OK");
 		return ResponseEntity.ok(response);
 	}
 
 	@Operation(summary = "네트워크 세부정보 등록", description = "네트워크 세부정보를 등록합니다.")
-	@RequestMapping(value = "/nwk/insertNetworkInfo.do", method = RequestMethod.POST)
-	public ResponseEntity<?> insertNetworkInfo(NetworkAPIVO networkVO, BindingResult bindingResult, Model model, SessionStatus status) throws Exception {
+	@PostMapping("/nwk/insertNetworkInfo.do")
+	public ResponseEntity<Map<String, Object>> insertNetworkInfo(NetworkAPIVO networkVO) throws Exception {
 		Map<String, Object> response = new HashMap<>();
 		int cnt = egovNetworkAPIService.insertNetworkInfo(networkVO);
 		if(cnt > 0) {
@@ -73,8 +64,8 @@ public class EgovNetworkAPIController {
 	}
 
 	@Operation(summary = "네트워크 세부정보 삭제", description = "네트워크 세부정보를 삭제합니다.")
-	@RequestMapping(value = "/nwk/deleteNetworkInfo.do", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteNetworkInfo(NetworkAPIVO networkVO, SessionStatus status) throws Exception {
+	@DeleteMapping("/nwk/deleteNetworkInfo.do")
+	public ResponseEntity<Map<String, Object>> deleteNetworkInfo(NetworkAPIVO networkVO) throws Exception {
 		Map<String, Object> response = new HashMap<>();
 		int cnt = egovNetworkAPIService.deleteNetworkInfo(networkVO);
 		if(cnt > 0) {

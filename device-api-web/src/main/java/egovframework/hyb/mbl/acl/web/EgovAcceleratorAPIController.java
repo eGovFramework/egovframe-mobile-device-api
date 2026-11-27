@@ -14,24 +14,21 @@ import egovframework.hyb.mbl.acl.service.AcceleratorAPIVO;
 import egovframework.hyb.mbl.acl.service.EgovAcceleratorAPIService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.annotation.Resource;
 
 /**
  * 통합 Accelerator API Controller
  */
 @Controller
-@RequiredArgsConstructor
-@Slf4j
 @Tag(name = "01. Accelerator Guide Program Service", description = "가속도계 API 관리")
 public class EgovAcceleratorAPIController {
 
-    private final EgovAcceleratorAPIService egovAcceleratorAPIService;
+    @Resource(name = "EgovAcceleratorAPIService")
+    private EgovAcceleratorAPIService egovAcceleratorAPIService;
 
     @Operation(summary = "가속도계 정보 목록 조회", description = "가속도계 정보 목록을 조회합니다.")
     @GetMapping("/acl/selectAcceleratorInfoList.do")
     public ResponseEntity<Map<String, Object>> selectAcceleratorInfoList(AcceleratorAPIVO searchVO) {
-        log.debug("uuid={}", searchVO.getUuid());
     	Map<String, Object> response = new HashMap<>();
     	List<AcceleratorAPIVO> acceleratorInfoList = egovAcceleratorAPIService.selectAcceleratorInfoList(searchVO);
         response.put("acceleratorInfoList", acceleratorInfoList);

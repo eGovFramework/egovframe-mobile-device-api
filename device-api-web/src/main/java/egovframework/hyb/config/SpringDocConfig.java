@@ -10,170 +10,122 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 
 /**
- * SpringDoc OpenAPI 설정 클래스
- * 
- * @author 표준프레임워크센터
- * @since 2025. 06. 01
- * @version 1.0
+ * SpringDoc OpenAPI 설정. 그룹 이름은 컨트롤러 @Tag 이름과 맞춘다.
+ * 활성 여부는 springdoc.*.enabled 프로퍼티(local만 true)로 제어한다.
  */
 @Configuration
 public class SpringDocConfig {
 
+	private static final String API_PACKAGE = "egovframework.hyb.mbl";
+
 	@Bean
 	OpenAPI openAPI() {
-		return new OpenAPI().info(
-				new Info()
-				.title("표준프레임워크 DeviceAPI 연계서비스 (Hybrid App)")
-				.description("표준프레임워크 하이브리드앱 실행환경  - iOS / Android 하이브리드앱 Rest 서비스")
-				.version("5.0.0")
-				.contact(new Contact().name("표준프레임워크").email("egovframesupport@gmail.com"))
-				.license(new License().name("Apache License Version 2.0").url("https://www.egovframe.go.kr"))
-		);
+		return new OpenAPI().info(new Info()
+				.title("표준프레임워크 DeviceAPI 연계서비스 (Flutter)")
+				.description("Flutter 기반 표준프레임워크 DeviceAPI App / WEB Server")
+				.version("5.1.0")
+				.contact(new Contact().name("표준프레임워크 Email").email("egovframesupport@gmail.com"))
+				.license(new License().name("Apache License Version 2.0").url("https://www.apache.org/licenses/LICENSE-2.0")));
 	}
 
 	@Bean
-	GroupedOpenApi newsApiAll() {
+	GroupedOpenApi allApi() {
 		return GroupedOpenApi.builder()
 				.group("00. All Device API REST Service")
-				.pathsToMatch("/**")
+				.packagesToScan(API_PACKAGE)
 				.build();
 	}
 
 	@Bean
 	GroupedOpenApi acceleratorApi() {
-		return GroupedOpenApi.builder()
-				.group("01. Accelerator Guide Program Service")
-				.pathsToMatch("/acl/**")
-				.packagesToScan("egovframework.hyb.mbl.acl.web")
-				.build();
-	}
-
-	@Bean
-	GroupedOpenApi cameraApi() {
-		return GroupedOpenApi.builder()
-				.group("02. Camera Guide Program Service")
-				.pathsToMatch("/cmr/**")
-				.build();
+		return group("01. Accelerator Guide Program Service", "/acl/**");
 	}
 
 	@Bean
 	GroupedOpenApi compassApi() {
-		return GroupedOpenApi.builder()
-				.group("03. Compass Guide Program Service")
-				.pathsToMatch("/cps/**")
-				.build();
+		return group("02. Compass Guide Program Service", "/cps/**");
 	}
 
 	@Bean
 	GroupedOpenApi contactsApi() {
-		return GroupedOpenApi.builder()
-				.group("04. Contacts Guide Program Service")
-				.pathsToMatch("/ctt/**")
-				.build();
+		return group("03. Contacts Guide Program Service", "/ctt/**");
 	}
 
 	@Bean
 	GroupedOpenApi deviceApi() {
-		return GroupedOpenApi.builder()
-				.group("05. DeviceInfo Guide Program Service")
-				.pathsToMatch("/dvc/**")
-				.build();
+		return group("04. DeviceInfo Guide Program Service", "/dvc/**");
 	}
 
 	@Bean
 	GroupedOpenApi fileReaderWriterApi() {
-		return GroupedOpenApi.builder()
-				.group("06. FileReaderWriter Guide Program Service")
-				.pathsToMatch("/frw/**")
-				.build();
+		return group("05. FileReaderWriter Guide Program Service", "/frw/**");
 	}
 
 	@Bean
 	GroupedOpenApi gpsApi() {
-		return GroupedOpenApi.builder()
-				.group("07. GPS Guide Program Service")
-				.pathsToMatch("/gps/**")
-				.build();
+		return group("06. GPS Guide Program Service", "/gps/**");
 	}
 
 	@Bean
 	GroupedOpenApi interfaceApi() {
-		return GroupedOpenApi.builder()
-				.group("08. Interface Guide Program Service")
-				.pathsToMatch("/itf/**")
-				.build();
+		return group("07. Interface Guide Program Service", "/itf/**");
 	}
 
 	@Bean
 	GroupedOpenApi mediaApi() {
-		return GroupedOpenApi.builder()
-				.group("09. Media Guide Program Service")
-				.pathsToMatch("/mda/**")
-				.build();
+		return group("08. Media Guide Program Service", "/mda/**");
 	}
 
 	@Bean
 	GroupedOpenApi networkApi() {
-		return GroupedOpenApi.builder()
-				.group("10. Network Guide Program Service")
-				.pathsToMatch("/nwk/**")
-				.build();
-	}
-
-	@Bean
-	GroupedOpenApi vibratorApi() {
-		return GroupedOpenApi.builder()
-				.group("11. Vibrator Guide Program Service")
-				.pathsToMatch("/vbr/**")
-				.build();
+		return group("09. Network Guide Program Service", "/nwk/**");
 	}
 
 	@Bean
 	GroupedOpenApi pushApi() {
-		return GroupedOpenApi.builder()
-				.group("12. PushNotifications Guide Program Service")
-				.pathsToMatch("/pus/**")
-				.build();
+		return group("10. PushNotifications Guide Program Service", "/pus/**");
 	}
 
 	@Bean
 	GroupedOpenApi fileOpenerApi() {
-		return GroupedOpenApi.builder()
-				.group("13. FileOpener Guide Program Service")
-				.pathsToMatch("/fop/**")
-				.build();
+		return group("11. FileOpener Guide Program Service", "/fop/**");
+	}
+
+	@Bean
+	GroupedOpenApi socketApi() {
+		return group("12. SocketIO Guide Program Service", "/ws/**");
 	}
 
 	@Bean
 	GroupedOpenApi streamingMediaApi() {
-		return GroupedOpenApi.builder()
-				.group("14. StreamingMedia Guide Program Service")
-				.pathsToMatch("/stm/**")
-				.build();
+		return group("13. StreamingMedia Guide Program Service", "/stm/**");
 	}
 
 	@Bean
 	GroupedOpenApi barcodeScannerApi() {
-		return GroupedOpenApi.builder()
-				.group("15. Barcodescanner Guide Program Service")
-				.pathsToMatch("/bar/**")
-				.build();
+		return group("14. BarcodeScanner Guide Program Service", "/bar/**");
 	}
 
 	@Bean
-	GroupedOpenApi resourceUpdateApi() {
-		return GroupedOpenApi.builder()
-				.group("16. WebResourceUpdate Guide Program Service")
-				.pathsToMatch("/upd/**")
-				.build();
+	GroupedOpenApi faceMeshApi() {
+		return group("15. FaceMesh Guide Program Service", "/fms/**");
 	}
 
 	@Bean
-	GroupedOpenApi jailbreakDetectionApi() {
-		return GroupedOpenApi.builder()
-				.group("17. JailbreakDetection Guide Program Service")
-				.pathsToMatch("/jai/**")
-				.build();
+	GroupedOpenApi iotApi() {
+		return group("16. IoT MQTT Guide Program Service", "/iot/**");
 	}
 
+	@Bean
+	GroupedOpenApi aiChatApi() {
+		return group("17. AI Chat Guide Program Service", "/aic/**");
+	}
+
+	private static GroupedOpenApi group(String name, String path) {
+		return GroupedOpenApi.builder()
+				.group(name)
+				.packagesToScan(API_PACKAGE)
+				.pathsToMatch(path)
+				.build();
+	}
 }

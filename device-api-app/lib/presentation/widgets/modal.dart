@@ -1,11 +1,31 @@
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/text_style.dart';
+import 'package:egovframe_mobile_deviceapi_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-/// 상태 타입
+/// 상태 타입 (toast 등에서 사용)
 enum StatusVariant { success, error }
 
-/// HTML prompt처럼 제목/본문/확인/취소를 전달받아 표시하는 다이얼로그
+/// 모달 닫기 버튼 — 취소와 동일하게 동작
+class _ModalCloseButton extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const _ModalCloseButton({required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return IconButton(
+      icon: const Icon(Icons.close, color: EgovColor.gray90, size: 24),
+      tooltip: l10n.commonClose,
+      onPressed: onPressed,
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
+    );
+  }
+}
+
+/// 모달 구조(헤더·본문·푸터) 기반 확인/취소 다이얼로그
 class PromptDialog extends StatelessWidget {
   final String title;
   final String message;
@@ -18,177 +38,121 @@ class PromptDialog extends StatelessWidget {
     super.key,
     required this.title,
     required this.message,
-    this.confirmText = '확인',
-    this.cancelText = '취소',
+    this.confirmText = '',
+    this.cancelText = '',
     this.onConfirm,
     this.onCancel,
   });
 
+  void _dismiss(BuildContext context, {required bool confirmed}) {
+    Navigator.of(context).maybePop(confirmed);
+    if (confirmed) {
+      onConfirm?.call();
+    } else {
+      onCancel?.call();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final BorderRadius radius = BorderRadius.circular(12);
-
-    return AlertDialog(
+    final l10n = AppLocalizations.of(context)!;
+    final confirmLabel = confirmText.isEmpty ? l10n.commonConfirm : confirmText;
+    final cancelLabel = cancelText.isEmpty ? l10n.commonCancel : cancelText;
+    return Dialog(
       backgroundColor: EgovColor.white100,
       insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       shape: RoundedRectangleBorder(
-        borderRadius: radius,
+        borderRadius: BorderRadius.circular(12),
         side: const BorderSide(width: 1, color: EgovColor.gray20),
       ),
-      contentPadding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-      actionsPadding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-      content: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 160, maxWidth: 480),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 280, maxWidth: 480),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Title
-            Text(
-              title,
-              style: EgovText.title.copyWith(
-                fontSize: 22,
-                height: 1.5,
+            Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 48, 0),
+                  child: Text(
+                    title,
+                    style: EgovText.title.copyWith(fontSize: 22, height: 1.5),
+                  ),
+                ),
+                Positioned(
+                  top: 12,
+                  right: 12,
+                  child: _ModalCloseButton(
+                    onPressed: () => _dismiss(context, confirmed: false),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+              child: Text(
+                message,
+                style: EgovText.buttonText.copyWith(
+                  color: EgovColor.gray90,
+                  fontSize: 17,
+                  height: 1.5,
+                ),
               ),
             ),
-            const SizedBox(height: 12),
-            // Message
-            Text(
-              message,
-              style: EgovText.buttonText.copyWith(
-                color: EgovColor.gray90,
-                fontSize: 17,
-                height: 1.5,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(width: 1, color: EgovColor.gray60),
+                      foregroundColor: EgovColor.gray90,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 17,
+                        fontFamily: 'Pretendard GOV',
+                        fontWeight: FontWeight.w400,
+                        height: 1.5,
+                      ),
+                    ),
+                    onPressed: () => _dismiss(context, confirmed: false),
+                    child: Text(cancelLabel),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: EgovColor.primary50,
+                      foregroundColor: EgovColor.white100,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 17,
+                        fontFamily: 'Pretendard GOV',
+                        fontWeight: FontWeight.w400,
+                        height: 1.5,
+                      ),
+                    ),
+                    onPressed: () => _dismiss(context, confirmed: true),
+                    child: Text(confirmLabel),
+                  ),
+                ],
               ),
             ),
           ],
         ),
-      ),
-      actions: [
-        // 취소
-        OutlinedButton(
-          style: OutlinedButton.styleFrom(
-            side: const BorderSide(width: 1, color: EgovColor.gray60),
-            foregroundColor: EgovColor.gray90,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-            textStyle: const TextStyle(
-              fontSize: 17,
-              fontFamily: 'Pretendard GOV',
-              fontWeight: FontWeight.w400,
-              height: 1.5,
-            ),
-          ),
-          onPressed: () {
-            Navigator.of(context).maybePop(false);
-            onCancel?.call();
-          },
-          child: Text(cancelText),
-        ),
-        // 확인
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: EgovColor.primary50,
-            foregroundColor: EgovColor.white100,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-            textStyle: const TextStyle(
-              fontSize: 17,
-              fontFamily: 'Pretendard GOV',
-              fontWeight: FontWeight.w400,
-              height: 1.5,
-            ),
-          ),
-          onPressed: () {
-            Navigator.of(context).maybePop(true);
-            onConfirm?.call();
-          },
-          child: Text(confirmText),
-        ),
-      ],
-    );
-  }
-}
-
-/// 성공/오류 상태 알림 박스 (업로드 성공/삭제 실패 등)
-class StatusAlert extends StatelessWidget {
-  final StatusVariant variant;
-  final String title;
-  final String message;
-
-  const StatusAlert({
-    super.key,
-    required this.variant,
-    required this.title,
-    required this.message,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final bool isSuccess = variant == StatusVariant.success;
-
-    final Color textColor = isSuccess ? const Color(0xFF267337) : const Color(0xFFBD2C0F);
-    final String iconAsset = isSuccess
-        ? 'assets/images/icons/system-success.png'
-        : 'assets/images/icons/system-error.png';
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: const ShapeDecoration(
-        color: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.zero),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Left status icon (PNG)
-              SizedBox(
-                width: 24,
-                height: 24,
-                child: Image.asset(
-                  iconAsset,
-                  width: 24,
-                  height: 24,
-                  fit: BoxFit.contain,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    color: textColor,
-                    fontSize: 17,
-                    fontFamily: 'Pretendard GOV',
-                    fontWeight: FontWeight.w700,
-                    height: 1.5,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.only(left: 32),
-            child: Text(
-              message,
-              style: TextStyle(
-                color: textColor,
-                fontSize: 17,
-                fontFamily: 'Pretendard GOV',
-                fontWeight: FontWeight.w400,
-                height: 1.5,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -199,14 +163,15 @@ Future<bool?> showPromptDialog(
   BuildContext context, {
   required String title,
   required String message,
-  String confirmText = '확인',
-  String cancelText = '취소',
+  String confirmText = '',
+  String cancelText = '',
   VoidCallback? onConfirm,
   VoidCallback? onCancel,
 }) {
   return showDialog<bool>(
     context: context,
     barrierDismissible: false,
+    barrierColor: EgovColor.black50,
     builder: (_) => PromptDialog(
       title: title,
       message: message,
@@ -218,140 +183,162 @@ Future<bool?> showPromptDialog(
   );
 }
 
-/// 메시지를 간단한 형식으로 변환
-/// '<기능>가 성공적으로 완료되었습니다' -> '<기능> 완료 성공'
-/// '<기능>가 성공적으로 저장되었습니다' -> '<기능> 저장 성공'
-/// '<기능> 저장에 실패했습니다' -> '<기능> 저장 실패'
-String _simplifyMessage(String message, StatusVariant variant) {
-  // 성공 메시지 패턴: '<기능>가 성공적으로 (완료|저장|업로드|삭제|생성|수정)되었습니다'
-  final successPattern = RegExp(r'^(.+?)(가|이) 성공적으로 (완료|저장|업로드|삭제|생성|수정)되었습니다\.?$');
+/// 서버 등록 확인. true이면 등록 진행
+Future<bool> showServerRegisterConfirm(
+  BuildContext context, {
+  required String message,
+  String title = '',
+  String confirmText = '',
+  String cancelText = '',
+}) async {
+  final l10n = AppLocalizations.of(context)!;
+  final bool? result = await showPromptDialog(
+    context,
+    title: title.isEmpty ? l10n.commonRegisterConfirmTitle : title,
+    message: message,
+    confirmText: confirmText.isEmpty ? l10n.commonRegister : confirmText,
+    cancelText: cancelText.isEmpty ? l10n.commonCancel : cancelText,
+  );
+  return result == true;
+}
+
+/// 서버 삭제 확인. true이면 삭제 진행
+Future<bool> showServerDeleteConfirm(
+  BuildContext context, {
+  required String message,
+  String title = '',
+  String confirmText = '',
+  String cancelText = '',
+}) async {
+  final l10n = AppLocalizations.of(context)!;
+  final bool? result = await showPromptDialog(
+    context,
+    title: title.isEmpty ? l10n.commonDeleteConfirmTitle : title,
+    message: message,
+    confirmText: confirmText.isEmpty ? l10n.commonDelete : confirmText,
+    cancelText: cancelText.isEmpty ? l10n.commonCancel : cancelText,
+  );
+  return result == true;
+}
+
+/// 메시지를 토스트용 한 줄 형식으로 변환
+String simplifyStatusMessage(
+  String message,
+  StatusVariant variant,
+  AppLocalizations l10n,
+) {
+  final RegExp successPattern = RegExp(
+    r'^(.+?)(가|이) 성공적으로 (완료|저장|업로드|삭제|생성|수정)되었습니다\.?$',
+  );
   if (variant == StatusVariant.success && successPattern.hasMatch(message)) {
-    final match = successPattern.firstMatch(message);
+    final RegExpMatch? match = successPattern.firstMatch(message);
     if (match != null) {
-      final feature = match.group(1)?.trim() ?? '';
-      final action = match.group(3) ?? '저장';
-      return '$feature $action 성공';
+      final String feature = match.group(1)?.trim() ?? '';
+      final String action = _toastActionLabel(l10n, match.group(3));
+      return l10n.commonToastFeatureActionSuccess(feature, action);
     }
   }
-  
-  // 실패 메시지 패턴: '<기능> (저장|업로드|삭제|생성|수정)에 실패했습니다' 또는 '<기능> (저장|업로드|삭제|생성|수정) 중 오류가 발생했습니다'
-  final failPattern1 = RegExp(r'^(.+?)(가|이) (저장|업로드|삭제|생성|수정)에 실패했습니다\.?$');
-  final failPattern2 = RegExp(r'^(.+?)(가|이) (저장|업로드|삭제|생성|수정) 중 오류가 발생했습니다\.?.*$');
+
+  final RegExp failPattern1 = RegExp(
+    r'^(.+?)(가|이) (저장|업로드|삭제|생성|수정)에 실패했습니다\.?$',
+  );
+  final RegExp failPattern2 = RegExp(
+    r'^(.+?)(가|이) (저장|업로드|삭제|생성|수정) 중 오류가 발생했습니다\.?.*$',
+  );
   if (variant == StatusVariant.error) {
     if (failPattern1.hasMatch(message)) {
-      final match = failPattern1.firstMatch(message);
+      final RegExpMatch? match = failPattern1.firstMatch(message);
       if (match != null) {
-        final feature = match.group(1)?.trim() ?? '';
-        final action = match.group(3) ?? '저장';
-        return '$feature $action 실패';
+        final String feature = match.group(1)?.trim() ?? '';
+        final String action = _toastActionLabel(l10n, match.group(3));
+        return l10n.commonToastFeatureActionFailure(feature, action);
       }
     } else if (failPattern2.hasMatch(message)) {
-      final match = failPattern2.firstMatch(message);
+      final RegExpMatch? match = failPattern2.firstMatch(message);
       if (match != null) {
-        final feature = match.group(1)?.trim() ?? '';
-        final action = match.group(3) ?? '저장';
-        return '$feature $action 실패';
+        final String feature = match.group(1)?.trim() ?? '';
+        final String action = _toastActionLabel(l10n, match.group(3));
+        return l10n.commonToastFeatureActionFailure(feature, action);
       }
     }
   }
-  
+
   return message;
 }
 
-/// StatusAlert를 다이얼로그로 보여주는 헬퍼
-Future<void> showStatusDialog(
+/// Validation 등 단순 안내 알림 (기본: 확인·취소, showCancel=false면 확인만)
+Future<void> showInfoAlert(
   BuildContext context, {
-  required StatusVariant variant,
-  required String title,
   required String message,
-  String closeText = '닫기',
-  VoidCallback? onRetry,
-  String? retryText,
-}) {
-  final bool isSuccess = variant == StatusVariant.success;
-  final Color bgColor =
-      isSuccess ? EgovColor.success5 : EgovColor.danger5;
-  final Color borderColor =
-      isSuccess ? EgovColor.success10 : EgovColor.danger10;
-  final Color textColor =
-      isSuccess ? EgovColor.success60 : EgovColor.danger60;
-  
-  // 메시지를 간단한 형식으로 변환
-  final simplifiedMessage = _simplifyMessage(message, variant);
-
-  return showDialog<void>(
+  String title = '',
+  String confirmText = '',
+  bool showCancel = true,
+}) async {
+  final l10n = AppLocalizations.of(context)!;
+  final confirmLabel = confirmText.isEmpty ? l10n.commonConfirm : confirmText;
+  await showDialog<void>(
     context: context,
-    barrierDismissible: true,
-    builder: (ctx) => AlertDialog(
-      backgroundColor: bgColor,
+    barrierDismissible: false,
+    barrierColor: EgovColor.black50,
+    builder: (dialogContext) => Dialog(
+      backgroundColor: EgovColor.white100,
       insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(width: 1, color: borderColor),
+        side: const BorderSide(width: 1, color: EgovColor.gray20),
       ),
-      contentPadding: EdgeInsets.zero,
-      actionsPadding: onRetry != null
-          ? const EdgeInsets.fromLTRB(0, 0, 16, 12)
-          : EdgeInsets.zero,
-      content: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 480),
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-              child: StatusAlert(
-                variant: variant,
-                title: title,
-                message: simplifiedMessage,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 280, maxWidth: 480),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                title.isEmpty ? l10n.commonRegisterConfirmTitle : title,
+                style: EgovText.title.copyWith(fontSize: 22, height: 1.5),
               ),
-            ),
-            Positioned(
-              top: 12,
-              right: 12,
-              child: IconButton(
-                icon: Icon(
-                  Icons.close,
-                  color: textColor,
-                  size: 24,
+              const SizedBox(height: 12),
+              Text(
+                message,
+                style: EgovText.regular.copyWith(
+                  color: EgovColor.gray70,
+                  height: 1.5,
                 ),
-                onPressed: () => Navigator.of(ctx).maybePop(),
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (showCancel) ...[
+                    TextButton(
+                      onPressed: () => Navigator.of(dialogContext).pop(),
+                      child: Text(l10n.commonCancel),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                  TextButton(
+                    onPressed: () => Navigator.of(dialogContext).pop(),
+                    child: Text(confirmLabel),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
-      actions: onRetry != null
-          ? [
-              TextButton(
-                onPressed: () => Navigator.of(ctx).maybePop(),
-                child: Text(
-                  closeText,
-                  style: TextStyle(
-                    color: textColor,
-                    fontFamily: 'Pretendard GOV',
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(ctx).maybePop();
-                  onRetry();
-                },
-                child: Text(
-                  retryText ?? '다시 시도',
-                  style: TextStyle(
-                    color: textColor,
-                    fontFamily: 'Pretendard GOV',
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-            ]
-          : null,
     ),
   );
 }
 
+String _toastActionLabel(AppLocalizations l10n, String? action) {
+  return switch (action) {
+    '업로드' => l10n.commonActionUpload,
+    '삭제' => l10n.commonActionDelete,
+    '생성' => l10n.commonActionCreate,
+    '수정' => l10n.commonActionModify,
+    '완료' => l10n.commonActionComplete,
+    _ => l10n.commonActionSave,
+  };
+}

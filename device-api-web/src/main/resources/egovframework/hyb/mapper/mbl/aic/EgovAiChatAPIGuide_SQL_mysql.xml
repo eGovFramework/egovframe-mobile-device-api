@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.hyb.mbl.aic.service.impl.AiChatAPIDAO">
+
+	<resultMap id="aiChatInfo" type="egovframework.hyb.mbl.aic.service.AiChatAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="question" column="QUESTION"/>
+		<result property="answer" column="ANSWER"/>
+		<result property="chatMode" column="CHAT_MODE"/>
+		<result property="modelNm" column="MODEL_NM"/>
+		<result property="sessionId" column="SESSION_ID"/>
+		<result property="questionTimestamp" column="QUESTION_TIMESTAMP"/>
+		<result property="answerTimestamp" column="ANSWER_TIMESTAMP"/>
+		<result property="useYn" column="USEYN"/>
+	</resultMap>
+
+	<insert id="insertAiChatInfo">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from AI_CHAT_INFO WHERE UUID = #{uuid}
+		</selectKey>
+
+		INSERT INTO AI_CHAT_INFO
+			( SN
+			  , UUID
+			  , QUESTION
+			  , ANSWER
+			  , CHAT_MODE
+			  , MODEL_NM
+			  , SESSION_ID
+			  , QUESTION_TIMESTAMP
+			  , ANSWER_TIMESTAMP
+			  , USEYN )
+		VALUES ( #{sn}
+			  , #{uuid}
+			  , #{question}
+			  , #{answer}
+			  , #{chatMode}
+			  , #{modelNm}
+			  , #{sessionId}
+			  , #{questionTimestamp}
+			  , #{answerTimestamp}
+			  , #{useYn})
+	</insert>
+
+	<delete id="deleteAiChatInfo">
+		UPDATE AI_CHAT_INFO
+		SET USEYN='N'
+		WHERE SN = #{sn}
+		AND UUID = #{uuid}
+	</delete>
+
+	<select id="selectAiChatInfoList" parameterType="egovframework.hyb.mbl.aic.service.AiChatAPIVO" resultMap="aiChatInfo">
+		SELECT
+			SN, UUID, QUESTION, ANSWER, CHAT_MODE, MODEL_NM, SESSION_ID, QUESTION_TIMESTAMP, ANSWER_TIMESTAMP, USEYN
+		FROM AI_CHAT_INFO
+		WHERE USEYN='Y'
+			AND UUID = #{uuid}
+		ORDER BY SN DESC
+	</select>
+
+</mapper>

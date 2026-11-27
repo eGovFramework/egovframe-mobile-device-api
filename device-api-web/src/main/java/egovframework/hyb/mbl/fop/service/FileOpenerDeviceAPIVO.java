@@ -8,22 +8,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
-/**  
- * @Class Name : FileOpenerDeviceAPIVO.java
- * @Description : FileOpenerDeviceAPIVO Class
- * @Modification Information  
- * @
- * @ 수정일               수정자              수정내용
- * @ ----------   ---------   -------------------------------
- *   2016.07.14   장성호             최초생성
- *   2020.07.29   신용호             Swagger 적용
- * 
- * @author 디바이스 API 실행환경 개발팀
- * @since 2016. 07. 14
- * @version 1.0
- * @see
- * 
- *  Copyright (C) by MOPAS All right reserved.
+/**
+ * FileOpenerDeviceAPIVO
+ *
+ * 수정이력
+ * 2016.07.14 장성호 최초생성
+ * 2020.07.29 신용호 Swagger 적용
  */
 @Getter
 @Setter

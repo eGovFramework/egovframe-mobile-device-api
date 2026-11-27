@@ -18,27 +18,27 @@ public class EgovFileReaderWriterAPIServiceImpl extends EgovAbstractServiceImpl 
     @Resource(name="FileReaderWriterAPIDAO")
     private FileReaderWriterAPIDAO fileReaderWriterAPIDAO;
 
-    public int insertFileReaderWriterInfo(FileReaderWriterAPIVO vo) throws Exception {
-        return (Integer) fileReaderWriterAPIDAO.insertFileReaderWriterInfo(vo);
+    public int insertFileReaderWriterInfo(FileReaderWriterAPIVO vo) {
+        return fileReaderWriterAPIDAO.insertFileReaderWriterInfo(vo);
     }
 
-    public int updateFileReaderWriterInfo(FileReaderWriterAPIVO vo) throws Exception {
-        return (Integer) fileReaderWriterAPIDAO.updateFileReaderWriterInfo(vo);
+    public int updateFileReaderWriterInfo(FileReaderWriterAPIVO vo) {
+        return fileReaderWriterAPIDAO.updateFileReaderWriterInfo(vo);
     }
 
-    public int deleteFileReaderWriterInfo(FileReaderWriterAPIVO vo) throws Exception {
-        return (Integer) fileReaderWriterAPIDAO.deleteFileReaderWriterInfo(vo);
+    public int deleteFileReaderWriterInfo(FileReaderWriterAPIVO vo) {
+        return fileReaderWriterAPIDAO.deleteFileReaderWriterInfo(vo);
     }
 
-    public FileReaderWriterAPIVO selectFileReaderWriterInfo(FileReaderWriterAPIVO vo) throws Exception {
-        return (FileReaderWriterAPIVO) fileReaderWriterAPIDAO.selectFileReaderWriterInfo(vo);
+    public FileReaderWriterAPIVO selectFileReaderWriterInfo(FileReaderWriterAPIVO vo) {
+        return fileReaderWriterAPIDAO.selectFileReaderWriterInfo(vo);
     }
 
-    public List<?> selectFileReaderWriterInfoList(FileReaderWriterAPIVO searchVO) throws Exception {
+    public List<FileReaderWriterAPIVO> selectFileReaderWriterInfoList(FileReaderWriterAPIVO searchVO) {
         return fileReaderWriterAPIDAO.selectFileReaderWriterInfoList(searchVO);
     }
 
-    public int selectFileReaderWriterInfoListTotCnt(FileReaderWriterAPIVO searchVO) throws Exception {
-        return (Integer) fileReaderWriterAPIDAO.selectFileReaderWriterInfoListTotCnt(searchVO);
+    public int selectFileReaderWriterInfoListTotCnt(FileReaderWriterAPIVO searchVO) {
+        return fileReaderWriterAPIDAO.selectFileReaderWriterInfoListTotCnt(searchVO);
     }
 }

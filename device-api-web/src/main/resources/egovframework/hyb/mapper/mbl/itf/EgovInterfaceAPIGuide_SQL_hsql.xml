@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.hyb.mbl.itf.service.impl.InterfaceAPIDAO">
+
+	<resultMap id="interfaceInfo" type="egovframework.hyb.mbl.itf.service.InterfaceAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="emails" column="EMAILS"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="userPw" column="USER_PW"/>
+	</resultMap>
+
+	<insert id="insertInterfaceInfo">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (COALESCE(MAX(SN), 0)+1) sn from INTERFACE_EGOV WHERE UUID = #{uuid}		   
+		</selectKey>
+		
+			INSERT INTO INTERFACE_EGOV 
+				( SN
+				  , UUID
+				  , EMAILS
+				  , USER_ID 
+				  , USER_PW)
+			VALUES ( #{sn}
+				  , #{uuid}
+				  , #{emails}
+				  , #{userId}
+				  , #{userPw})
+		
+	</insert>
+	
+	<delete id="deleteInterfaceInfo">
+		
+			DELETE FROM INTERFACE_EGOV
+			WHERE USER_ID = #{userId}
+		
+	</delete>
+	
+	<select id="selectInterfaceInfo" resultMap="interfaceInfo">
+		
+			SELECT
+				SN, UUID, EMAILS, 
+				USER_ID, USER_PW
+			FROM INTERFACE_EGOV 
+			WHERE USER_ID = #{userId} 
+		
+	</select>
+
+	<select id="selectInterfaceInfoList" parameterType="egovframework.hyb.mbl.itf.service.InterfaceAPIVO" resultMap="interfaceInfo">
+		SELECT
+			SN, UUID, EMAILS, 
+				USER_ID
+		FROM INTERFACE_EGOV
+		WHERE USER_ID = #{userId}
+		ORDER BY SN DESC
+	</select>
+
+	<select id="selectInterfaceInfoListTotCnt" parameterType="egovframework.hyb.mbl.itf.service.InterfaceAPIVO" resultType="int">
+			SELECT COUNT(*)
+			FROM INTERFACE_EGOV
+			WHERE USER_ID = #{userId}
+	</select>
+
+</mapper>

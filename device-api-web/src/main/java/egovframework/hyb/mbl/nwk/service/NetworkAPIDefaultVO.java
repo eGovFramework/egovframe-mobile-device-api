@@ -21,19 +21,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @Class Name : NetworkAPIDefaultVO.java
- * @Description : 통합 Network API Default VO Class (Android/iOS 공통)
- * @Modification Information
- * @
- * @ 수정일               수정자              수정내용
- * @ ----------   ---------   -------------------------------
- *   2025.10.28   통합개발팀          Android/iOS 패키지 통합
+ * 통합 Network API Default VO Class (Android/iOS 공통)
  *
- * @author 디바이스 API 실행환경 팀
- * @since 2025. 10. 28.
- * @version 2.0
- * @see
- *
+ * 수정이력
+ * 2025.10.28 통합개발팀 Android/iOS 패키지 통합
  */
 @Getter
 @Setter
@@ -67,5 +58,77 @@ public class NetworkAPIDefaultVO implements Serializable {
 
     /** recordCountPerPage */
     private int recordCountPerPage = 10;
+
+    public String getSearchCondition() {
+        return searchCondition;
+    }
+
+    public void setSearchCondition(String searchCondition) {
+        this.searchCondition = searchCondition;
+    }
+
+    public String getSearchKeyword() {
+        return searchKeyword;
+    }
+
+    public void setSearchKeyword(String searchKeyword) {
+        this.searchKeyword = searchKeyword;
+    }
+
+    public String getSearchUseYn() {
+        return searchUseYn;
+    }
+
+    public void setSearchUseYn(String searchUseYn) {
+        this.searchUseYn = searchUseYn;
+    }
+
+    public int getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(int pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public int getPageUnit() {
+        return pageUnit;
+    }
+
+    public void setPageUnit(int pageUnit) {
+        this.pageUnit = pageUnit;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public int getFirstIndex() {
+        return firstIndex;
+    }
+
+    public void setFirstIndex(int firstIndex) {
+        this.firstIndex = firstIndex;
+    }
+
+    public int getLastIndex() {
+        return lastIndex;
+    }
+
+    public void setLastIndex(int lastIndex) {
+        this.lastIndex = lastIndex;
+    }
+
+    public int getRecordCountPerPage() {
+        return recordCountPerPage;
+    }
+
+    public void setRecordCountPerPage(int recordCountPerPage) {
+        this.recordCountPerPage = recordCountPerPage;
+    }
 }
 

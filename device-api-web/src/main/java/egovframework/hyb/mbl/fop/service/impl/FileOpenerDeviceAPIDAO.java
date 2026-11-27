@@ -15,42 +15,34 @@
  */
 package egovframework.hyb.mbl.fop.service.impl;
 
+import org.egovframe.rte.psl.dataaccess.mapper.EgovMapper;
+
 import java.util.List;
 
-import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
-import org.springframework.stereotype.Repository;
 
 import egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIVO;
 
 
-/**  
- * @Class Name : FileOpenerDeviceAPIDAO.java
- * @Description : FileOpener DAO Class
- * @Modification Information  
- * @
- * @  수정일      수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2016.07.11   장성호               최초생성
- * @ 2026.06.24   이백행               [2026년 컨트리뷰션] 불필요한 예외 제거
- * 
- * @author 디바이스 API 실행환경 개발팀
- * @since 2016. 07. 11
- * @version 1.0
- * @see
- * 
- *  Copyright (C) by Ministry of Interior All right reserved.
+/**
+ * FileOpener DAO
+ *
+ * 수정이력
+ * 2016.07.11 장성호 최초생성
+ * 2026.06.24 이백행 [2026년 컨트리뷰션] 불필요한 예외 제거
  */
 
-@Repository
-public class FileOpenerDeviceAPIDAO extends EgovAbstractMapper {
+@EgovMapper("FileOpenerDeviceAPIDAO")
+public interface FileOpenerDeviceAPIDAO {
 
     /**
 	 * Push Device 정보 목록을 조회한다.
 	 * @param vo - 조회할 정보가 담긴 PushDeviceAPIDefaultVO
 	 * @return Push Device 정보 목록
 	 */
-    public List<FileOpenerDeviceAPIVO> selectFileOpenerList(FileOpenerDeviceAPIVO searchVO) {
-        return selectList("fileOpenerDeviceAPIDAO.selectDocumentListInfo", searchVO);
-    }
+    public List<FileOpenerDeviceAPIVO> selectFileOpenerList(FileOpenerDeviceAPIVO searchVO);
+
+
+    public int insertFileOpenerList(FileOpenerDeviceAPIVO vo);
+
 
 }

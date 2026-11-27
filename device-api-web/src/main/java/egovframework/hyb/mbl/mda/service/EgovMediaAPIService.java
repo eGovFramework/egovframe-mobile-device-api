@@ -18,4 +18,10 @@ public interface EgovMediaAPIService {
     List<MediaAPIVO> selectMediaInfoList(MediaAPIVO searchVO);
 
     int selectMediaInfoListTotCnt(MediaAPIVO searchVO);
+
+    MediaAPIVO selectMediaInfoDetail(MediaAPIVO vo);
+
+    int updateMediaInfoRevivCo(MediaAPIVO vo);
+
+    int selectMediaFileSnBySn(MediaAPIVO vo);
 }

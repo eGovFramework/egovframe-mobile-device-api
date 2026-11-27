@@ -1,6 +1,7 @@
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/app_list.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/widgets/appbar.dart';
+import 'package:egovframe_mobile_deviceapi_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class ApplicationListMain extends StatefulWidget {
@@ -15,6 +16,7 @@ class ApplicationListMain extends StatefulWidget {
 class _ApplicationListMainState extends State<ApplicationListMain> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: CustomAppBar(title: widget.title),
       body: const AppList(),
@@ -22,15 +24,10 @@ class _ApplicationListMainState extends State<ApplicationListMain> {
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: const BoxDecoration(
           color: EgovColor.primary50,
-          border: Border(
-            top: BorderSide(
-              color: EgovColor.gray30,
-              width: 1,
-            ),
-          ),
+          border: Border(top: BorderSide(color: EgovColor.gray30, width: 1)),
         ),
-        child: const Text(
-          'Copyright 2025',
+        child: Text(
+          l10n.applicationListCopyright,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.white,
@@ -43,4 +40,3 @@ class _ApplicationListMainState extends State<ApplicationListMain> {
     );
   }
 }
-

@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title th:text="#{aic.title}">AI Chat RAG 문서 관리</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/component/output.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/egovframe.css}">
+    <script th:src="@{/js/component/ui-script.js}" defer></script>
+</head>
+
+<body>
+<div class="chat-layout">
+    <div id="container" class="contents">
+
+        <h2 class="heading-large" th:text="#{aic.title}">AI Chat RAG 문서 관리</h2>
+        <p class="page-desc">
+            <span th:text="#{aic.desc}">공통 RAG 문서를 서버 폴더에 넣고 재인덱싱합니다. 채팅 화면은 Flutter 앱에서 제공합니다.</span>
+            <a th:href="@{/swagger-ui.html}" target="_blank" th:attr="aria-label=#{aic.swagger.open}">Swagger</a>
+            <span th:text="#{aic.desc.api}">API는 Swagger의 /aic 에서도 호출할 수 있습니다.</span>
+        </p>
+
+        <div class="conts-wrap">
+            <h3 class="section-title" th:text="#{aic.section.path}">1. 저장 경로</h3>
+            <fieldset class="fieldset input-form">
+                <legend class="sr-only" th:text="#{aic.legend.path}">RAG 문서 저장 경로</legend>
+                <div class="form-group">
+                    <div class="form-tit">
+                        <label for="storedPath" th:text="#{aic.label.storePath}">ai-rag.fileStorePath</label>
+                    </div>
+                    <div class="form-conts">
+                        <input type="text" id="storedPath" class="krds-input" readonly
+                               th:value="${storedPath}">
+                    </div>
+                    <p class="form-hint">
+                        <span th:text="#{aic.hint.path}">ai-rag document.path와 같은 디렉터리여야 재인덱싱됩니다.</span>
+                        <span th:text="#{aic.hint.ext}">허용 확장자</span>:
+                        <code th:text="${allowedFileExtensions}">.md</code>
+                        / <span th:text="#{aic.hint.max}">파일당 최대</span>
+                        <code th:text="${maxFileSize}">100MB</code>
+                    </p>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="conts-wrap">
+            <h3 class="section-title" th:text="#{aic.section.upload}">2. 문서 업로드</h3>
+            <div class="fieldset input-form">
+                <div class="krds-file-upload" id="fileAtchFrm">
+                    <div class="form-tit" th:text="#{aic.label.files}">문서 파일</div>
+                    <div class="file-upload">
+                        <p class="txt" th:utext="#{aic.upload.drop}">첨부할 파일을 여기에 끌어다 놓거나,<br> 파일 선택 버튼을 눌러 파일을 직접 선택해주세요.</p>
+                        <div class="file-upload-btn-wrap">
+                            <input type="file" name="files" id="fileUpload" class="sr-only" multiple
+                                   th:attr="accept=${allowedFileExtensions}">
+                            <label for="fileUpload">
+                                <button type="button" class="krds-btn medium"><span th:text="#{aic.button.select}">파일 선택</span><i class="svg-icon ico-upload"></i></button>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="file-list" id="fileListWrap" style="display: none">
+                        <div class="total"><span class="current">0</span><span th:text="#{aic.selected.unit}">개 선택</span></div>
+                        <ul class="upload-list" id="upload-list" th:attr="aria-label=#{aic.list.selected}"></ul>
+                        <nav id="filePagination" class="krds-pagination w-page" hidden
+                             th:attr="aria-label=#{aic.pagination.label}" aria-controls="upload-list"></nav>
+                        <p id="filePageStatus" class="sr-only" aria-live="polite"></p>
+                    </div>
+                </div>
+                <div class="page-btn-wrap">
+                    <button type="button" id="btnUpload" class="krds-btn medium" th:text="#{aic.button.upload}">업로드 후 재인덱싱</button>
+                </div>
+                <p id="uploadStatus" class="form-hint" role="status" aria-live="polite"></p>
+            </div>
+        </div>
+
+        <div class="conts-wrap">
+            <h3 class="section-title" th:text="#{aic.section.status}">3. 재인덱싱 · 상태</h3>
+            <div class="search-wrap">
+                <div class="search-body">
+                    <span id="indexSummary" class="list-summary" th:text="#{aic.status.loading}">상태를 불러오는 중…</span>
+                </div>
+                <div class="page-btn-wrap">
+                    <button type="button" id="btnReloadStatus" class="krds-btn medium tertiary" th:text="#{aic.button.reload}">상태 새로고침</button>
+                    <button type="button" id="btnReindex" class="krds-btn medium" th:text="#{aic.button.reindex}">재인덱싱</button>
+                </div>
+            </div>
+            <p id="reindexStatus" class="form-hint" role="status" aria-live="polite"></p>
+            <div class="krds-table-wrap">
+                <table class="tbl data">
+                    <caption th:text="#{aic.table.caption}">저장된 RAG 문서 목록</caption>
+                    <thead>
+                    <tr>
+                        <th scope="col" th:text="#{aic.table.filename}">파일명</th>
+                    </tr>
+                    </thead>
+                    <tbody id="fileListBody">
+                    <tr>
+                        <td th:text="#{aic.table.empty}">목록 없음</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const API = {
+        upload: /*[[@{/aic/uploadAiRagDocument.do}]]*/ '/aic/uploadAiRagDocument.do',
+        reindex: /*[[@{/aic/reindexAiRagDocument.do}]]*/ '/aic/reindexAiRagDocument.do',
+        status: /*[[@{/aic/selectAiRagDocumentStatus.do}]]*/ '/aic/selectAiRagDocumentStatus.do'
+    };
+    const allowedExtensions = /*[[${allowedFileExtensions}]]*/ '.md,.pdf,.docx,.hwp,.hwpx';
+    const maxFileSizeLabel = /*[[${maxFileSize}]]*/ '100MB';
+    const MSG = {
+        ext: /*[[#{aic.msg.ext}]]*/ 'Allowed extensions are {0}.',
+        size: /*[[#{aic.msg.size}]]*/ 'File size must be {0} or less.',
+        select: /*[[#{aic.msg.select}]]*/ 'Select files to upload.',
+        uploading: /*[[#{aic.msg.uploading}]]*/ 'Uploading...',
+        saved: /*[[#{aic.msg.saved}]]*/ '{0} file(s) saved. {1}',
+        uploadFail: /*[[#{aic.msg.uploadFail}]]*/ 'Upload failed.',
+        reindexRequest: /*[[#{aic.msg.reindexRequest}]]*/ 'Requesting reindex...',
+        reindexDone: /*[[#{aic.msg.reindexDone}]]*/ 'Reindex has been processed.',
+        reindexFail: /*[[#{aic.msg.reindexFail}]]*/ 'Reindex failed.',
+        indexDone: /*[[#{aic.msg.indexDone}]]*/ 'Indexing finished.',
+        statusFail: /*[[#{aic.msg.statusFail}]]*/ 'Failed to check status.',
+        statusReloaded: /*[[#{aic.msg.statusReloaded}]]*/ 'Status refreshed.',
+        indexBusy: /*[[#{aic.msg.indexBusy}]]*/ 'Indexing is already in progress.',
+        indexLoadFail: /*[[#{aic.msg.indexLoadFail}]]*/ 'Failed to load status.',
+        noStored: /*[[#{aic.msg.noStored}]]*/ 'No stored documents.',
+        processing: /*[[#{aic.msg.processing}]]*/ 'Indexing in progress (processed {0} / total {1}, changed {2})',
+        idle: /*[[#{aic.msg.idle}]]*/ 'Idle (documents: {0}, total {1}, changed {2})',
+        hasDocs: /*[[#{aic.msg.hasDocs}]]*/ 'yes',
+        noDocs: /*[[#{aic.msg.noDocs}]]*/ 'no',
+        delete: /*[[#{aic.button.delete}]]*/ 'Delete',
+        pagePrev: /*[[#{aic.pagination.prev}]]*/ 'Previous',
+        pageNext: /*[[#{aic.pagination.next}]]*/ 'Next',
+        page: /*[[#{aic.pagination.page}]]*/ 'Page {0}',
+        pageLast: /*[[#{aic.pagination.last}]]*/ 'Last page, {0}',
+        pageCurrent: /*[[#{aic.pagination.current}]]*/ 'Current page',
+        pageStatus: /*[[#{aic.msg.pageStatus}]]*/ 'Page {0} of {1}. Showing {2} files, {3} selected in total.'
+    };
+
+    const PAGE_UNIT = 5;
+    const PAGE_SIZE = 5;
+    let statusTimer = null;
+    const selectedFiles = [];
+    let filePageIndex = 1;
+    let pendingPaginationFocus = null;
+    let pendingDeleteFocusIndex = null;
+    let announcePageChange = false;
+
+    function formatMsg(template) {
+        const args = Array.prototype.slice.call(arguments, 1);
+        return String(template || '').replace(/\{(\d+)\}/g, function (_, i) {
+            return args[i] == null ? '' : args[i];
+        });
+    }
+
+    function setHint(id, text, isError) {
+        const el = document.getElementById(id);
+        if (!el) {
+            return;
+        }
+        el.textContent = text || '';
+        el.style.color = isError ? '#c0392b' : '';
+    }
+
+    function escapeHtml(value) {
+        if (value == null) {
+            return '';
+        }
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function formatBytes(bytes, decimals) {
+        if (bytes === 0) {
+            return '0 Bytes';
+        }
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : (decimals === undefined ? 2 : decimals);
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+
+    function parseSizeLabel(label) {
+        if (!label) {
+            return 100 * 1024 * 1024;
+        }
+        const text = String(label).trim().toUpperCase();
+        const match = text.match(/^(\d+(?:\.\d+)?)\s*(KB|MB|GB|B)?$/);
+        if (!match) {
+            return 100 * 1024 * 1024;
+        }
+        const amount = parseFloat(match[1]);
+        const unit = match[2] || 'B';
+        const multiplier = unit === 'GB' ? 1024 * 1024 * 1024
+            : unit === 'MB' ? 1024 * 1024
+                : unit === 'KB' ? 1024
+                    : 1;
+        return amount * multiplier;
+    }
+
+    function fileExtension(name) {
+        const dot = name.lastIndexOf('.');
+        return dot < 0 ? '' : name.substring(dot).toLowerCase();
+    }
+
+    function isAllowedExtension(name) {
+        const ext = fileExtension(name);
+        if (!ext) {
+            return false;
+        }
+        return String(allowedExtensions).split(',').some(function (token) {
+            return token.trim().toLowerCase() === ext;
+        });
+    }
+
+    function addFiles(fileListLike) {
+        const maxSize = parseSizeLabel(maxFileSizeLabel);
+        Array.from(fileListLike).forEach(function (file) {
+            if (!isAllowedExtension(file.name)) {
+                setHint('uploadStatus', formatMsg(MSG.ext, allowedExtensions), true);
+                return;
+            }
+            if (file.size > maxSize) {
+                setHint('uploadStatus', formatMsg(MSG.size, maxFileSizeLabel), true);
+                return;
+            }
+            const duplicated = selectedFiles.some(function (item) {
+                return item.name === file.name && item.size === file.size;
+            });
+            if (duplicated) {
+                return;
+            }
+            selectedFiles.push(file);
+        });
+        filePageIndex = Math.max(1, Math.ceil(selectedFiles.length / PAGE_UNIT));
+        renderSelectedFiles();
+    }
+
+    function clampFilePage() {
+        const pages = Math.ceil(selectedFiles.length / PAGE_UNIT);
+        if (pages <= 0) {
+            filePageIndex = 1;
+            return;
+        }
+        if (filePageIndex > pages) {
+            filePageIndex = pages;
+        }
+        if (filePageIndex < 1) {
+            filePageIndex = 1;
+        }
+    }
+
+    function linkFilePage(pageIndex) {
+        const next = Number(pageIndex);
+        const prev = filePageIndex;
+        if (!next || next === prev) {
+            return;
+        }
+        pendingPaginationFocus = {
+            containerId: 'filePagination',
+            nav: next === prev - 1 ? 'prev' : (next === prev + 1 ? 'next' : null),
+            page: next
+        };
+        filePageIndex = next;
+        announcePageChange = true;
+        renderSelectedFiles();
+    }
+
+    function focusPaginationControl() {
+        const pending = pendingPaginationFocus;
+        pendingPaginationFocus = null;
+        if (!pending) {
+            return;
+        }
+        const root = document.getElementById(pending.containerId);
+        if (!root) {
+            return;
+        }
+        requestAnimationFrame(function () {
+            let el = null;
+            if (pending.nav === 'prev') {
+                el = root.querySelector('a.page-navi.prev');
+            } else if (pending.nav === 'next') {
+                el = root.querySelector('a.page-navi.next');
+            }
+            if (!el && pending.page != null) {
+                el = root.querySelector('a.page-link[data-page="' + pending.page + '"]');
+            }
+            if (!el) {
+                el = root.querySelector('a.page-link.active');
+            }
+            if (el && typeof el.focus === 'function') {
+                el.focus();
+            }
+        });
+    }
+
+    function pageLinkHtml(page, current, total) {
+        const isLast = page === total;
+        const label = isLast ? formatMsg(MSG.pageLast, page) : formatMsg(MSG.page, page);
+        if (page === current) {
+            return '<a class="page-link active" href="#" data-page="' + page
+                + '" aria-current="page" aria-label="' + escapeHtml(label)
+                + '" onclick="return false;"><span class="sr-only">'
+                + escapeHtml(MSG.pageCurrent) + ' </span>' + page + '</a>';
+        }
+        return '<a class="page-link" href="#" data-page="' + page
+            + '" aria-label="' + escapeHtml(label) + '" onclick="return false;">' + page + '</a>';
+    }
+
+    function renderFilePagination() {
+        const nav = document.getElementById('filePagination');
+        const live = document.getElementById('filePageStatus');
+        if (!nav) {
+            return;
+        }
+        nav.innerHTML = '';
+        const total = selectedFiles.length;
+        const totalPages = Math.ceil(total / PAGE_UNIT);
+        if (totalPages <= 1) {
+            nav.hidden = true;
+            if (live && announcePageChange) {
+                live.textContent = '';
+            }
+            announcePageChange = false;
+            return;
+        }
+        nav.hidden = false;
+        clampFilePage();
+        const current = filePageIndex;
+        let html = '';
+        if (current > 1) {
+            html += '<a href="#" class="page-navi prev" data-page="' + (current - 1)
+                + '" data-nav="prev" onclick="return false;">' + escapeHtml(MSG.pagePrev) + '</a>';
+        } else {
+            html += '<span class="page-navi prev disabled" aria-disabled="true">'
+                + escapeHtml(MSG.pagePrev) + '</span>';
+        }
+
+        html += '<div class="page-links">';
+        let firstOnList = current - Math.floor((PAGE_SIZE - 1) / 2);
+        let lastOnList = firstOnList + PAGE_SIZE - 1;
+        if (firstOnList < 1) {
+            firstOnList = 1;
+            lastOnList = Math.min(totalPages, PAGE_SIZE);
+        }
+        if (lastOnList > totalPages) {
+            lastOnList = totalPages;
+            firstOnList = Math.max(1, lastOnList - PAGE_SIZE + 1);
+        }
+        for (let i = firstOnList; i <= lastOnList; i++) {
+            html += pageLinkHtml(i, current, totalPages);
+        }
+        html += '</div>';
+
+        if (current < totalPages) {
+            html += '<a href="#" class="page-navi next" data-page="' + (current + 1)
+                + '" data-nav="next" onclick="return false;">' + escapeHtml(MSG.pageNext) + '</a>';
+        } else {
+            html += '<span class="page-navi next disabled" aria-disabled="true">'
+                + escapeHtml(MSG.pageNext) + '</span>';
+        }
+        nav.innerHTML = html;
+
+        const start = (current - 1) * PAGE_UNIT;
+        const shown = Math.min(PAGE_UNIT, total - start);
+        if (announcePageChange && live) {
+            live.textContent = formatMsg(MSG.pageStatus, current, totalPages, shown, total);
+        }
+        announcePageChange = false;
+        focusPaginationControl();
+    }
+
+    function renderSelectedFiles() {
+        const wrap = document.getElementById('fileListWrap');
+        const list = document.getElementById('upload-list');
+        const current = document.querySelector('#fileListWrap .current');
+        list.innerHTML = '';
+        if (selectedFiles.length === 0) {
+            wrap.style.display = 'none';
+            current.textContent = '0';
+            filePageIndex = 1;
+            renderFilePagination();
+            if (pendingDeleteFocusIndex !== null) {
+                const selectBtn = document.querySelector('#fileAtchFrm .file-upload-btn-wrap button');
+                if (selectBtn) {
+                    selectBtn.focus();
+                }
+                pendingDeleteFocusIndex = null;
+            }
+            return;
+        }
+        clampFilePage();
+        wrap.style.display = 'block';
+        current.textContent = String(selectedFiles.length);
+        const start = (filePageIndex - 1) * PAGE_UNIT;
+        const end = Math.min(start + PAGE_UNIT, selectedFiles.length);
+        for (let index = start; index < end; index++) {
+            const item = selectedFiles[index];
+            const nameId = 'file-name-' + index;
+            const li = document.createElement('li');
+            li.id = 'file_' + index;
+            li.setAttribute('aria-setsize', String(selectedFiles.length));
+            li.setAttribute('aria-posinset', String(index + 1));
+            const typePart = (item.type && item.type.split('/')[1]) ? item.type.split('/')[1] : fileExtension(item.name).replace('.', '');
+            li.innerHTML =
+                '<div class="file-info">'
+                + '<div class="file-name" id="' + nameId + '">' + escapeHtml(item.name) + ' [' + escapeHtml(typePart) + ', ' + formatBytes(item.size) + ']</div>'
+                + '<div class="btn-wrap">'
+                + '<button type="button" class="krds-btn medium text" data-file-index="' + index
+                + '" aria-describedby="' + nameId + '">' + escapeHtml(MSG.delete)
+                + '<i class="svg-icon ico-delete-fill" aria-hidden="true"></i></button>'
+                + '</div>'
+                + '</div>';
+            list.appendChild(li);
+        }
+        list.querySelectorAll('[data-file-index]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const index = Number(btn.getAttribute('data-file-index'));
+                selectedFiles.splice(index, 1);
+                pendingDeleteFocusIndex = selectedFiles.length === 0 ? -1 : Math.min(index, selectedFiles.length - 1);
+                renderSelectedFiles();
+            });
+        });
+        renderFilePagination();
+        if (pendingDeleteFocusIndex !== null && pendingDeleteFocusIndex >= 0) {
+            const startVisible = (filePageIndex - 1) * PAGE_UNIT;
+            const endVisible = Math.min(startVisible + PAGE_UNIT, selectedFiles.length);
+            const focusIndex = Math.min(Math.max(pendingDeleteFocusIndex, startVisible), endVisible - 1);
+            const focusBtn = list.querySelector('[data-file-index="' + focusIndex + '"]');
+            if (focusBtn) {
+                focusBtn.focus();
+            }
+            pendingDeleteFocusIndex = null;
+        }
+    }
+
+    function renderStoredFiles(files) {
+        const body = document.getElementById('fileListBody');
+        if (!files || files.length === 0) {
+            body.innerHTML = '<tr><td>' + escapeHtml(MSG.noStored) + '</td></tr>';
+            return;
+        }
+        body.innerHTML = files.map(function (name) {
+            return '<tr><td>' + escapeHtml(name) + '</td></tr>';
+        }).join('');
+    }
+
+    function applyStatus(data) {
+        const processing = !!data.processing;
+        const summary = processing
+            ? formatMsg(MSG.processing, data.processedCount || 0, data.totalCount || 0, data.changedCount || 0)
+            : formatMsg(MSG.idle, data.hasDocuments ? MSG.hasDocs : MSG.noDocs, data.totalCount || 0, data.changedCount || 0);
+        document.getElementById('indexSummary').textContent = summary;
+        renderStoredFiles(data.storedFiles || []);
+        return processing;
+    }
+
+    async function loadStatus() {
+        const res = await fetch(API.status);
+        const data = await res.json();
+        if (data.resultState === 'FAIL') {
+            throw new Error(data.resultMessage || MSG.statusFail);
+        }
+        return applyStatus(data);
+    }
+
+    function stopPolling() {
+        if (statusTimer) {
+            clearInterval(statusTimer);
+            statusTimer = null;
+        }
+    }
+
+    function startPolling() {
+        stopPolling();
+        statusTimer = setInterval(async function () {
+            try {
+                const processing = await loadStatus();
+                if (!processing) {
+                    stopPolling();
+                    document.getElementById('btnReindex').disabled = false;
+                    document.getElementById('btnUpload').disabled = false;
+                    setHint('reindexStatus', MSG.indexDone);
+                }
+            } catch (e) {
+                stopPolling();
+                document.getElementById('btnReindex').disabled = false;
+                document.getElementById('btnUpload').disabled = false;
+                setHint('reindexStatus', e.message || MSG.statusFail, true);
+            }
+        }, 1000);
+    }
+
+    async function uploadDocuments() {
+        if (selectedFiles.length === 0) {
+            setHint('uploadStatus', MSG.select, true);
+            return;
+        }
+        const form = new FormData();
+        selectedFiles.forEach(function (file) {
+            form.append('files', file);
+        });
+        document.getElementById('btnUpload').disabled = true;
+        document.getElementById('btnReindex').disabled = true;
+        setHint('uploadStatus', MSG.uploading);
+        try {
+            const res = await fetch(API.upload, { method: 'POST', body: form });
+            const data = await res.json();
+            if (data.resultState === 'FAIL') {
+                throw new Error(data.resultMessage || MSG.uploadFail);
+            }
+            const count = (data.files && data.files.length) ? data.files.length : selectedFiles.length;
+            setHint('uploadStatus', formatMsg(MSG.saved, count, data.reindexMessage || ''));
+            selectedFiles.length = 0;
+            document.getElementById('fileUpload').value = '';
+            renderSelectedFiles();
+            await loadStatus();
+            startPolling();
+        } catch (e) {
+            document.getElementById('btnUpload').disabled = false;
+            document.getElementById('btnReindex').disabled = false;
+            setHint('uploadStatus', e.message || MSG.uploadFail, true);
+        }
+    }
+
+    async function reindexDocuments() {
+        document.getElementById('btnReindex').disabled = true;
+        document.getElementById('btnUpload').disabled = true;
+        setHint('reindexStatus', MSG.reindexRequest);
+        try {
+            const res = await fetch(API.reindex, { method: 'POST' });
+            const data = await res.json();
+            if (data.resultState === 'FAIL') {
+                throw new Error(data.resultMessage || MSG.reindexFail);
+            }
+            setHint('reindexStatus', data.reindexMessage || MSG.reindexDone);
+            await loadStatus();
+            startPolling();
+        } catch (e) {
+            document.getElementById('btnReindex').disabled = false;
+            document.getElementById('btnUpload').disabled = false;
+            setHint('reindexStatus', e.message || MSG.reindexFail, true);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', async function () {
+        const fileUpload = document.getElementById('fileUpload');
+        const dropZone = document.querySelector('.file-upload');
+
+        fileUpload.addEventListener('change', function (e) {
+            addFiles(e.target.files);
+            fileUpload.value = '';
+        });
+
+        document.addEventListener('dragover', function (event) {
+            event.preventDefault();
+        });
+        document.addEventListener('drop', function (event) {
+            event.preventDefault();
+        });
+        dropZone.addEventListener('drop', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            addFiles(e.dataTransfer.files);
+        });
+
+        document.getElementById('btnUpload').addEventListener('click', uploadDocuments);
+        document.getElementById('btnReindex').addEventListener('click', reindexDocuments);
+        document.getElementById('filePagination').addEventListener('click', function (e) {
+            const link = e.target.closest('a[data-page]');
+            if (!link) {
+                return;
+            }
+            e.preventDefault();
+            if (link.classList.contains('active') || link.getAttribute('aria-current') === 'page') {
+                return;
+            }
+            linkFilePage(Number(link.getAttribute('data-page')));
+        });
+        document.getElementById('btnReloadStatus').addEventListener('click', async function () {
+            try {
+                await loadStatus();
+                setHint('reindexStatus', MSG.statusReloaded);
+            } catch (e) {
+                setHint('reindexStatus', e.message || MSG.statusFail, true);
+            }
+        });
+        try {
+            const processing = await loadStatus();
+            if (processing) {
+                document.getElementById('btnReindex').disabled = true;
+                document.getElementById('btnUpload').disabled = true;
+                setHint('reindexStatus', MSG.indexBusy);
+                startPolling();
+            }
+        } catch (e) {
+            document.getElementById('indexSummary').textContent = MSG.indexLoadFail;
+            setHint('reindexStatus', e.message || MSG.statusFail, true);
+        }
+    });
+</script>
+</body>
+</html>

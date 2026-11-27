@@ -1,4 +1,7 @@
-﻿import 'package:flutter/material.dart';
+import 'package:egovframe_mobile_deviceapi_app/l10n/app_localizations.dart';
+import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
+import 'package:egovframe_mobile_deviceapi_app/presentation/resources/text_style.dart';
+import 'package:flutter/material.dart';
 
 import 'infobox.dart';
 import 'table.dart';
@@ -8,13 +11,13 @@ class License extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          InfoBox(
-            text: '이 애플리케이션은 오픈소스 라이선스 하에 개발되었으며, Apache License 2.0을 따릅니다.',
-          ),
+          InfoBox(text: l10n.licenseIntroText),
           const SizedBox(height: 16),
           Expanded(
             child: SingleChildScrollView(
@@ -22,12 +25,38 @@ class License extends StatelessWidget {
               child: Column(
                 children: [
                   CommonTable(
-                    title: '라이선스 정보',
+                    title: l10n.licenseInfoTitle,
                     data: [
-                      {'label': '라이선스', 'value': 'Apache License 2.0'},
-                      {'label': '개발자', 'value': '전자정부 표준프레임워크'},
-                      {'label': '버전', 'value': '5.0.0'},
+                      {
+                        'label': l10n.licenseLabelLicense,
+                        'value': l10n.licenseValueApache,
+                      },
+                      {
+                        'label': l10n.licenseLabelDeveloper,
+                        'value': l10n.licenseValueDeveloper,
+                      },
+                      {
+                        'label': l10n.licenseLabelVersion,
+                        'value': l10n.licenseValueVersion,
+                      },
                     ],
+                  ),
+                  const SizedBox(height: 24),
+                  const Divider(color: EgovColor.gray20),
+                  const SizedBox(height: 16),
+                  Text(
+                    l10n.licenseCopyrightYear,
+                    textAlign: TextAlign.center,
+                    style: EgovText.caption.copyWith(color: EgovColor.gray60),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    l10n.licenseCopyrightNotice,
+                    textAlign: TextAlign.center,
+                    style: EgovText.caption.copyWith(
+                      color: EgovColor.gray50,
+                      height: 1.5,
+                    ),
                   ),
                 ],
               ),

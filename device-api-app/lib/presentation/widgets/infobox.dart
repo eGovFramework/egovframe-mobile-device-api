@@ -1,12 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class InfoBox extends StatelessWidget {
   final String text;
 
-  const InfoBox({
-    super.key,
-    required this.text,
-  });
+  const InfoBox({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +16,12 @@ class InfoBox extends StatelessWidget {
         border: Border.all(width: 1, color: const Color(0xFFCDD1D5)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.12),
+            color: Colors.black.withValues(alpha: 0.12),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 32,
             offset: const Offset(0, 2),
           ),
@@ -35,7 +32,7 @@ class InfoBox extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
             width: 20,
             height: 20,
             child: Image.asset(

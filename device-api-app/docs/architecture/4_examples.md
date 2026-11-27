@@ -7,7 +7,7 @@ Device Info 기능을 예시로 Clean Architecture의 각 레이어가 어떻게
 ### 1. Entity (Domain Layer)
 
 ```dart
-// domain/entities/device_info.dart
+// domain/deviceInfo/entities/device_info.dart
 class DeviceInfo {
   final int sn;
   final String uuid;
@@ -72,8 +72,8 @@ class DeviceInfo {
 ### 2. Repository Interface (Domain Layer)
 
 ```dart
-// domain/repositories/device_repository.dart
-import 'package:egovframe_mobile_deviceapi_app/domain/entities/device_info.dart';
+// domain/deviceInfo/repositories/device_repository.dart
+import 'package:egovframe_mobile_deviceapi_app/domain/deviceInfo/entities/device_info.dart';
 
 abstract class DeviceRepository {
   Future<DeviceInfo> getDeviceInfo();
@@ -92,9 +92,9 @@ abstract class DeviceRepository {
 ### 3. Use Case (Domain Layer)
 
 ```dart
-// domain/usecases/device_usecase.dart
-import 'package:egovframe_mobile_deviceapi_app/domain/entities/device_info.dart';
-import 'package:egovframe_mobile_deviceapi_app/domain/repositories/device_repository.dart';
+// domain/deviceInfo/usecases/device_usecase.dart
+import 'package:egovframe_mobile_deviceapi_app/domain/deviceInfo/entities/device_info.dart';
+import 'package:egovframe_mobile_deviceapi_app/domain/deviceInfo/repositories/device_repository.dart';
 
 class DeviceUseCase {
   final DeviceRepository repository;
@@ -128,17 +128,19 @@ class DeviceUseCase {
 ### 4. Repository Implementation (Data Layer)
 
 ```dart
-// data/repositories/device_repository_impl.dart
-import 'package:egovframe_mobile_deviceapi_app/data/datasources/device_service.dart';
-import 'package:egovframe_mobile_deviceapi_app/domain/entities/device_info.dart';
-import 'package:egovframe_mobile_deviceapi_app/domain/repositories/device_repository.dart';
+// data/deviceInfo/repositories/device_repository_impl.dart
+import 'package:egovframe_mobile_deviceapi_app/data/deviceInfo/datasources/device_service.dart';
+import 'package:egovframe_mobile_deviceapi_app/domain/deviceInfo/entities/device_info.dart';
+import 'package:egovframe_mobile_deviceapi_app/domain/deviceInfo/repositories/device_repository.dart';
 
 class DeviceRepositoryImpl implements DeviceRepository {
   DeviceRepositoryImpl();
 
   @override
   Future<DeviceInfo> getDeviceInfo() async {
+    print('=== DeviceInfo 조회 (DeviceService) ===');
     final info = await DeviceService.getDeviceInfo();
+    print('DeviceInfo: $info');
     return info;
   }
 
@@ -166,13 +168,13 @@ class DeviceRepositoryImpl implements DeviceRepository {
 ### 5. Data Source (Data Layer)
 
 ```dart
-// data/datasources/device_service.dart
+// data/deviceInfo/datasources/device_service.dart
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:egovframe_mobile_deviceapi_app/config/app_config.dart';
-import 'package:egovframe_mobile_deviceapi_app/domain/entities/device_info.dart';
+import 'package:egovframe_mobile_deviceapi_app/domain/deviceInfo/entities/device_info.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
@@ -236,6 +238,7 @@ class DeviceService {
         return resultState == 'OK';
       }
     } catch (e) {
+      print('업로드 오류: $e');
     }
     return false;
   }
@@ -272,30 +275,31 @@ class DeviceService {
 ### 6. Presentation (Presentation Layer)
 
 ```dart
-// presentation/screens/deviceInfo/deviceInfo_main.dart
-import 'package:egovframe_mobile_deviceapi_app/di/injection_container.dart';
-import 'package:egovframe_mobile_deviceapi_app/domain/entities/device_info.dart';
-import 'package:egovframe_mobile_deviceapi_app/domain/usecases/device_usecase.dart';
+// presentation/screens/deviceInfo/view/device_info_main.dart
+import 'package:egovframe_mobile_deviceapi_app/di/providers.dart';
+import 'package:egovframe_mobile_deviceapi_app/domain/deviceInfo/entities/device_info.dart';
+import 'package:egovframe_mobile_deviceapi_app/domain/deviceInfo/usecases/device_usecase.dart';
 import 'package:egovframe_mobile_deviceapi_app/utils/error_handler.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class _DeviceInfoPageState extends State<DeviceInfoPage>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class DeviceInfoPage extends ConsumerStatefulWidget {
+  const DeviceInfoPage({super.key});
+
+  @override
+  ConsumerState<DeviceInfoPage> createState() => _DeviceInfoPageState();
+}
+
+class _DeviceInfoPageState extends ConsumerState<DeviceInfoPage> {
   DeviceInfo? deviceInfo;
   bool isLoading = true;
 
-  late final DeviceUseCase _deviceUseCase;
+  DeviceUseCase get _deviceUseCase => ref.read(deviceUseCaseProvider);
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this, initialIndex: 1);
-
-    // Use Cases 초기화 (의존성 주입)
-    _deviceUseCase = getIt<DeviceUseCase>();
-
-    _getDeviceInfo();
+    Future.microtask(_getDeviceInfo);
   }
 
   Future<void> _getDeviceInfo() async {
@@ -303,29 +307,21 @@ class _DeviceInfoPageState extends State<DeviceInfoPage>
     try {
       deviceInfo = await _deviceUseCase.getDeviceInfo();
     } catch (e, stackTrace) {
-      if (mounted) {
-        await ErrorHandler.handleException(
-          context,
-          e,
-          stackTrace: stackTrace,
-          logContext: 'DeviceInfoPage._getDeviceInfo',
-          title: '디바이스 정보 조회 실패',
-        );
-      }
+      ErrorHandler.logError(e, null, context: 'DeviceInfoPage._getDeviceInfo');
     } finally {
-      setState(() => isLoading = false);
+      if (mounted) setState(() => isLoading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('기기 정보')),
+      appBar: AppBar(title: const Text('기기 정보')),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : deviceInfo != null
               ? _buildDeviceInfoView()
-              : Center(child: Text('정보를 불러올 수 없습니다.')),
+              : const Center(child: Text('정보를 불러올 수 없습니다.')),
     );
   }
 }
@@ -363,36 +359,55 @@ class _DeviceInfoPageState extends State<DeviceInfoPage>
 
 ### GPS 모듈
 
-GPS 모듈도 동일한 구조를 따릅니다:
+GPS 모듈도 동일한 feature-first 구조를 따릅니다:
 
 ```
-domain/
+domain/gps/
 ├── entities/gps_info.dart
 ├── repositories/gps_repository.dart
 └── usecases/gps_usecase.dart
 
-data/
+data/gps/
 ├── datasources/gps_service.dart
 └── repositories/gps_repository_impl.dart
 
-presentation/
-└── screens/gps/gps_main.dart
+presentation/screens/gps/
+└── view/gps_main.dart
 ```
+
+### AI Chat 모듈
+
+```
+domain/aiChat/
+├── entities/ai_chat_info.dart, ai_chat_session.dart
+├── repositories/ai_chat_repository.dart
+└── usecases/ai_chat_usecase.dart
+
+data/aiChat/
+├── datasources/ai_chat_service.dart
+└── repositories/ai_chat_repository_impl.dart
+
+presentation/screens/aiChat/
+├── view/ai_chat_main.dart, ai_chat_list.dart, ai_chat_detail.dart
+└── view_model/ai_chat_controller.dart
+```
+
+자세한 흐름은 [applications/ai_chat.md](../applications/ai_chat.md) 를 보면 됩니다.
 
 ### Accelerator 모듈
 
 ```
-domain/
+domain/accelerator/
 ├── entities/accelerator_info.dart
 ├── repositories/accelerator_repository.dart
 └── usecases/accelerator_usecase.dart
 
-data/
+data/accelerator/
 ├── datasources/accelerometer_service.dart
 └── repositories/accelerator_repository_impl.dart
 
-presentation/
-└── screens/accelerator/accelerator_main.dart
+presentation/screens/accelerator/
+└── view/accelerator_main.dart
 ```
 
 모든 모듈이 동일한 아키텍처 패턴을 따르므로, 코드 일관성과 유지보수성이 향상

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.hyb.mbl.bar.service.impl.BarcodescannerDeviceAPIDAO">
+
+
+
+	<resultMap id="barcodeInfo" type="egovframework.hyb.mbl.bar.service.BarcodescannerAPIVO">
+
+		<result property="sn" column="SN"/>
+
+		<result property="uuid" column="UUID"/>
+
+		<result property="codeType" column="CODE_TYPE"/>
+
+		<result property="codeText" column="CODE_TEXT"/>
+
+		<result property="useYn" column="USEYN"/>
+
+		<result property="sndDt" column="CODE_DT"/>
+
+	</resultMap>
+
+
+
+	<insert id="insertBarcodeInfo">
+
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+
+		   SELECT (IFNULL(MAX(SN), 0)+1) sn from BARCODE_INFO
+
+		</selectKey>
+
+		INSERT INTO BARCODE_INFO (SN, UUID, CODE_TYPE, CODE_TEXT, USEYN, CODE_DT)
+
+		VALUES (#{sn}, #{uuid}, #{codeType}, #{codeText}, #{useYn}, #{sndDt})
+
+	</insert>
+
+
+
+	<select id="selectBarcodeInfoList" parameterType="egovframework.hyb.mbl.bar.service.BarcodescannerAPIVO" resultMap="barcodeInfo">
+
+		SELECT SN, UUID, CODE_TYPE, CODE_TEXT, USEYN, CODE_DT
+
+		FROM BARCODE_INFO
+
+		WHERE USEYN='Y'
+
+		AND UUID = #{uuid}
+
+		ORDER BY SN DESC
+
+	</select>
+
+
+
+	<delete id="deleteBarcodeInfo">
+
+		UPDATE BARCODE_INFO 
+
+		SET USEYN = 'N'
+
+		WHERE SN = #{sn}
+
+		AND UUID = #{uuid}
+
+	</delete>
+
+
+
+</mapper>

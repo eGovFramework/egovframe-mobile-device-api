@@ -54,7 +54,7 @@ Presentation → Domain ← Data
 ### 1단계: Domain 레이어에서 인터페이스 정의
 
 ```dart
-// domain/repositories/device_repository.dart
+// domain/deviceInfo/repositories/device_repository.dart
 abstract class DeviceRepository {
   Future<DeviceInfo> getDeviceInfo();
   Future<bool> uploadDeviceInfo(DeviceInfo deviceInfo);
@@ -67,7 +67,7 @@ abstract class DeviceRepository {
 ### 2단계: Data 레이어에서 인터페이스 구현
 
 ```dart
-// data/repositories/device_repository_impl.dart
+// data/deviceInfo/repositories/device_repository_impl.dart
 class DeviceRepositoryImpl implements DeviceRepository {
   DeviceRepositoryImpl();
 
@@ -93,7 +93,7 @@ class DeviceRepositoryImpl implements DeviceRepository {
 ### 3단계: Domain 레이어에서 Use Case 정의
 
 ```dart
-// domain/usecases/device_usecase.dart
+// domain/deviceInfo/usecases/device_usecase.dart
 class DeviceUseCase {
   final DeviceRepository repository;  // 인터페이스에 의존
 
@@ -118,29 +118,15 @@ class DeviceUseCase {
 ### 4단계: Presentation 레이어에서 Use Case 사용
 
 ```dart
-// presentation/screens/deviceInfo/deviceInfo_main.dart
-class _DeviceInfoPageState extends State<DeviceInfoPage> {
-  late final DeviceUseCase _deviceUseCase;
-
-  @override
-  void initState() {
-    super.initState();
-    _deviceUseCase = getIt<DeviceUseCase>(); // 의존성 주입
-  }
+// presentation/screens/deviceInfo/view/device_info_main.dart
+class _DeviceInfoPageState extends ConsumerState<DeviceInfoPage> {
+  DeviceUseCase get _deviceUseCase => ref.read(deviceUseCaseProvider);
 
   Future<void> _getDeviceInfo() async {
     try {
       deviceInfo = await _deviceUseCase.getDeviceInfo();
-    } catch (e, stackTrace) {
-      if (mounted) {
-        await ErrorHandler.handleException(
-          context,
-          e,
-          stackTrace: stackTrace,
-          logContext: 'DeviceInfoPage._getDeviceInfo',
-          title: '디바이스 정보 조회 실패',
-        );
-      }
+    } catch (e) {
+      ErrorHandler.showErrorDialog(context, e.toString());
     }
   }
 }
@@ -151,21 +137,18 @@ class _DeviceInfoPageState extends State<DeviceInfoPage> {
 ### 5단계: 의존성 주입 설정
 
 ```dart
-// di/injection_container.dart
-void setupDependencies() {
-  // Repository 구현체 등록
-  getIt.registerLazySingleton<DeviceRepository>(
-    () => DeviceRepositoryImpl(),
-  );
-
-  // Use Case 등록 (Repository 주입)
-  getIt.registerLazySingleton<DeviceUseCase>(
-    () => DeviceUseCase(getIt()),
-  );
+// di/providers.dart
+@Riverpod(keepAlive: true)
+DeviceRepository deviceRepository(Ref ref) {
+  return DeviceRepositoryImpl(/* remote + sqlite */);
 }
+
+@Riverpod(keepAlive: true)
+DeviceUseCase deviceUseCase(Ref ref) =>
+    DeviceUseCase(ref.watch(deviceRepositoryProvider));
 ```
 
-**핵심**: GetIt을 통해 의존성을 주입하고, Clean Architecture의 **의존성 방향 규칙**을 준수
+**핵심**: Riverpod Provider를 통해 의존성을 주입하고, Clean Architecture의 **의존성 방향 규칙**을 준수
 
 ## 의존성 역전의 장점
 
@@ -175,14 +158,16 @@ void setupDependencies() {
 
 ```dart
 // 기존 구현체
-getIt.registerLazySingleton<DeviceRepository>(
-  () => DeviceRepositoryImpl(),
-);
+@Riverpod(keepAlive: true)
+DeviceRepository deviceRepository(Ref ref) => DeviceRepositoryImpl(/* ... */);
 
-// 새로운 구현체로 교체 (Domain 코드 변경 불필요)
-getIt.registerLazySingleton<DeviceRepository>(
-  () => MockDeviceRepositoryImpl(),  // 테스트용 Mock 구현체
-);
+// 테스트: ProviderScope overrides 로 교체 (Domain 코드 변경 불필요)
+ProviderScope(
+  overrides: [
+    deviceRepositoryProvider.overrideWithValue(MockDeviceRepositoryImpl()),
+  ],
+  child: /* ... */,
+)
 ```
 
 ### 2. 테스트 용이성

@@ -14,24 +14,21 @@ import egovframework.hyb.mbl.dvc.service.DeviceAPIVO;
 import egovframework.hyb.mbl.dvc.service.EgovDeviceAPIService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.annotation.Resource;
 
 /**
  * 통합 Device API Controller
  */
 @Controller
-@RequiredArgsConstructor
-@Slf4j
-@Tag(name = "05. DeviceInfo Guide Program Service", description = "디바이스 API 관리")
+@Tag(name = "04. DeviceInfo Guide Program Service", description = "디바이스 API 관리")
 public class EgovDeviceAPIController {
 
-    private final EgovDeviceAPIService egovDeviceAPIService;
+    @Resource(name = "EgovDeviceAPIService")
+    private EgovDeviceAPIService egovDeviceAPIService;
 
     @Operation(summary = "디바이스 정보 목록 조회", description = "디바이스 정보 목록을 조회합니다.")
     @GetMapping("/dvc/selectDeviceInfoList.do")
     public ResponseEntity<Map<String, Object>> selectDeviceInfoList(DeviceAPIVO searchVO) {
-        log.debug("uuid={}", searchVO.getUuid());
         Map<String, Object> response = new HashMap<>();
         List<DeviceAPIVO> deviceInfoList = egovDeviceAPIService.selectDeviceInfoList(searchVO);
         response.put("deviceInfoList", deviceInfoList);

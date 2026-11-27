@@ -1,12 +1,24 @@
-﻿import 'package:egovframe_mobile_deviceapi_app/presentation/screens/loading_page.dart';
+import 'package:egovframe_mobile_deviceapi_app/data/push/datasources/firebase_messaging_service.dart';
+import 'package:egovframe_mobile_deviceapi_app/l10n/app_localizations.dart';
+import 'package:egovframe_mobile_deviceapi_app/presentation/screens/loading_page.dart';
+import 'package:egovframe_mobile_deviceapi_app/utils/app_logger.dart';
+import 'package:egovframe_mobile_deviceapi_app/sqlite/sqlite.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
-import 'di/injection_container.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  SqliteConfig.downloadsMethodChannel =
+      'egovframe_mobile_deviceapi_app/downloads';
+  if (kDebugMode) {
+    SqliteConfig.onLog = appLog;
+  }
+
+  await FirebaseMessagingService.initializeFirebase();
   
   // 화면 회전을 세로 모드로 고정
   await SystemChrome.setPreferredOrientations([
@@ -14,8 +26,11 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   
-  setupDependencies(); // 의존성 주입 초기화
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -27,6 +42,7 @@ class MyApp extends StatelessWidget {
       title: 'Hello World Flutter',
       locale: const Locale('ko', 'KR'),
       localizationsDelegates: const [
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,

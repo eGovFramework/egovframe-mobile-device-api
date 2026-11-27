@@ -1,13 +1,13 @@
 package egovframework.hyb.config;
 
 import java.util.List;
-import java.util.Properties;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -69,17 +69,10 @@ public class EgovConfigWeb implements WebMvcConfigurer, ApplicationContextAware 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/");
-        registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/images/");
-        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
-
-        // favicon.ico 처리를 위한 빈 핸들러 (404 오류 방지)
-        registry.addResourceHandler("/favicon.ico")
-        		.addResourceLocations("classpath:/static/")
-        		.setCachePeriod(3600);
-        
-        // .well-known 경로도 처리 (Chrome DevTools 자동 요청)
-        registry.addResourceHandler("/.well-known/**")
-        		.addResourceLocations("classpath:/static/.well-known/");
+		registry.addResourceHandler("/fonts/**").addResourceLocations("classpath:/static/fonts/");
+		registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/images/");
+		registry.addResourceHandler("/img/**").addResourceLocations("classpath:/static/img/");
+		registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
 	}
 
 	@Bean
@@ -99,23 +92,14 @@ public class EgovConfigWeb implements WebMvcConfigurer, ApplicationContextAware 
 		registry.addInterceptor(localeChangeInterceptor());
 	}
 
+	/** 기본 리졸버(400, 405 등) 뒤에 두어 처리되지 않은 예외만 공통 에러 화면으로 보낸다. */
 	@Override
-	public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
-		Properties prop = new Properties();
-		prop.setProperty("org.springframework.dao.DataAccessException", "error");
-		prop.setProperty("org.springframework.transaction.TransactionException", "error");
-		prop.setProperty("org.egovframe.rte.fdl.cmmn.exception.EgovBizException", "error");
-		prop.setProperty("org.springframework.security.AccessDeniedException", "error");
-		prop.setProperty("java.lang.Throwable", "error");
-
-		Properties statusCode = new Properties();
-		statusCode.setProperty("error", "400");
-		statusCode.setProperty("error", "500");
-
+	public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
 		SimpleMappingExceptionResolver smer = new SimpleMappingExceptionResolver();
 		smer.setDefaultErrorView("error");
-		smer.setExceptionMappings(prop);
-		smer.setStatusCodes(statusCode);
+		smer.setDefaultStatusCode(500);
+		smer.setExcludedExceptions(AccessDeniedException.class);
+		smer.setWarnLogCategory(SimpleMappingExceptionResolver.class.getName());
 		resolvers.add(smer);
 	}
 

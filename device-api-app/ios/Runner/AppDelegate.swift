@@ -69,7 +69,6 @@ import GoogleMaps
         let freeMemory = freePages * Int64(pageSize)
         let freeMemoryGB = Double(freeMemory) / (1024.0 * 1024.0 * 1024.0)
         
-        //return String(format: "Total: %.1f GB, Available: %.1f GB", totalMemoryGB, freeMemoryGB)
         return String(format: "Total: %.1f GB",totalMemoryGB)
       }
     }

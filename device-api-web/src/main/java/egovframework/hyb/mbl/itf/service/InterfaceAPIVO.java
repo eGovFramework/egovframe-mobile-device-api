@@ -25,14 +25,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @Class Name : InterfaceAPIVO.java
- * @Description : 통합 Interface API VO Class (Android/iOS 공통)
- * @Modification Information
- * @
- * @ 수정일               수정자              수정내용
- * @ ----------   ---------   -------------------------------
- *   2025.10.28   통합개발팀          Android/iOS 패키지 통합
+ * 통합 Interface API VO Class (Android/iOS 공통)
  *
+ * 수정이력
+ * 2025.10.28 통합개발팀 Android/iOS 패키지 통합
  */
 @Getter
 @Setter
@@ -53,7 +49,7 @@ public class InterfaceAPIVO implements Serializable {
     @Size(max = 20, message = "{interface.userId.maxlength}")
     private String userId;
 
-    /** 비밀번호 (앱 1차 해시: SHA-256(userId||password) Base64 — DB에 그대로 저장) */
+    /** 요청은 평문 비밀번호. 저장값은 서버가 만든 BCrypt 해시 */
     @EgovNotNull(message = "{interface.userPw.required}")
     @Size(min = 1, max = 200, message = "{interface.userPw.invalid}")
     private String userPw;

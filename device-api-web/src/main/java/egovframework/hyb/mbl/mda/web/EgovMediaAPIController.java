@@ -7,9 +7,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,42 +21,38 @@ import org.springframework.web.multipart.MultipartFile;
 import egovframework.hyb.mbl.mda.service.EgovMediaAPIService;
 import egovframework.hyb.mbl.mda.service.MediaAPIVO;
 import egovframework.hyb.utils.EgovFileMngUtil;
-import egovframework.hyb.utils.EgovFileService;
+import egovframework.hyb.utils.DeviceUuidCheck;
 import egovframework.hyb.utils.FileVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 통합 Media API Controller
  */
 @Controller
-@RequiredArgsConstructor
-@Slf4j
-@Tag(name = "09. Media Guide Program Service", description = "미디어 API 관리")
+@Tag(name = "08. Media Guide Program Service", description = "미디어 API 관리")
 public class EgovMediaAPIController {
 
-    private final EgovMediaAPIService egovMediaAPIService;
-    
-    @Resource(name = "EgovFileService")
-    private EgovFileService egovFileService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(EgovMediaAPIController.class);
 
+    @Resource(name = "EgovMediaAPIService")
+    private EgovMediaAPIService egovMediaAPIService;
+    
     @Resource(name = "egovFileMngUtil")
     private EgovFileMngUtil fileMngUtil;
 
     @Operation(summary = "미디어 정보 목록 조회", description = "미디어 정보 목록을 조회합니다.")
     @GetMapping("/mda/selectMediaInfoList.do")
     public ResponseEntity<Map<String, Object>> selectMediaInfoList(MediaAPIVO searchVO) {
-        log.debug("uuid={}", searchVO.getUuid());
+        if (DeviceUuidCheck.isBlank(searchVO.getUuid())) {
+            return DeviceUuidCheck.requiredResponse();
+        }
         Map<String, Object> response = new HashMap<>();
         List<MediaAPIVO> mediaInfoList = egovMediaAPIService.selectMediaInfoList(searchVO);
-        //List<?> mediaInfoList = egovMediaAPIService.selectMediaInfoList(searchVO);
         response.put("mediaInfoList", mediaInfoList);
-        log.debug("Media info list retrieved: {} items", mediaInfoList != null ? mediaInfoList.size() : 0);
         response.put("resultState", "OK");
         return ResponseEntity.ok(response);
     }
@@ -62,6 +60,9 @@ public class EgovMediaAPIController {
     @Operation(summary = "미디어 정보 등록", description = "미디어 정보를 등록합니다.")
     @PostMapping("/mda/insertMediaInfo.do")
     public ResponseEntity<Map<String, Object>> insertMediaInfo(MediaAPIVO mediaVO) {
+        if (DeviceUuidCheck.isBlank(mediaVO.getUuid())) {
+            return DeviceUuidCheck.requiredResponse();
+        }
         Map<String, Object> response = new HashMap<>();
         mediaVO.setMdCode("MLT03");
         mediaVO.setUseyn("Y");
@@ -80,6 +81,9 @@ public class EgovMediaAPIController {
     @Operation(summary = "미디어 정보 삭제", description = "미디어 정보를 삭제합니다.")
     @DeleteMapping("/mda/deleteMediaInfo.do")
     public ResponseEntity<Map<String, Object>> deleteMediaInfo(MediaAPIVO mediaVO) {
+        if (DeviceUuidCheck.isBlank(mediaVO.getUuid())) {
+            return DeviceUuidCheck.requiredResponse();
+        }
         Map<String, Object> response = new HashMap<>();
         int cnt = egovMediaAPIService.deleteMediaInfo(mediaVO);
         if(cnt > 0) {
@@ -97,9 +101,10 @@ public class EgovMediaAPIController {
     public ResponseEntity<Map<String, Object>> uploadMediaFile(
             @Parameter(description = "업로드할 파일(들)") @RequestParam("files") MultipartFile[] files,
             @Parameter(description = "기기 식별코드") @RequestParam("uuid") String uuid) {
-       
+        if (DeviceUuidCheck.isBlank(uuid)) {
+            return DeviceUuidCheck.requiredResponse();
+        }
         Map<String, Object> response = new HashMap<>();
-        
         try {
             if (files == null || files.length == 0) {
                 response.put("resultState", "FAIL");
@@ -157,12 +162,13 @@ public class EgovMediaAPIController {
                         fileResults.add(result);
                     }
                 } catch (Exception e) {
+                    LOGGER.error("미디어 업로드 실패", e);
                     failCount++;
                     Map<String, Object> result = new LinkedHashMap<>();
                     result.put("fileSn", fileVO.getFileSn());
                     result.put("fileName", fileVO.getOrignlFileNm());
                     result.put("status", "FAIL");
-                    result.put("message", "오류: " + e.getMessage());
+                    result.put("message", "업로드에 실패했습니다");
                     fileResults.add(result);
                 }
             }
@@ -182,8 +188,9 @@ public class EgovMediaAPIController {
             }
             
         } catch (Exception e) {
+            LOGGER.error("미디어 업로드 실패", e);
             response.put("resultState", "FAIL");
-            response.put("resultMessage", "업로드 실패: " + e.getMessage());
+            response.put("resultMessage", "업로드에 실패했습니다");
         }
         
         return ResponseEntity.ok(response);
@@ -192,29 +199,19 @@ public class EgovMediaAPIController {
     @Operation(summary = "미디어 파일 다운로드", description = "기기 UUID 소유권을 검증한 뒤 미디어 파일을 다운로드합니다.")
     @GetMapping("/mda/downloadMediaFile.do")
     public void downloadMediaFile(
-            @Parameter(description = "파일 일련번호") @RequestParam int fileSn,
-            @Parameter(description = "기기 식별코드") @RequestParam String uuid,
-            HttpServletResponse response) throws IOException {
-        byte[] fileData;
+            @Parameter(description = "파일 일련번호") @RequestParam("fileSn") int fileSn,
+            @Parameter(description = "기기 식별코드") @RequestParam("uuid") String uuid,
+            HttpServletResponse response) throws Exception {
+        if (DeviceUuidCheck.isBlank(uuid)) {
+            fileMngUtil.writeDownloadError(response, HttpServletResponse.SC_BAD_REQUEST, "uuid is required");
+            return;
+        }
         try {
-        	fileData = fileMngUtil.fileDownload(response, fileSn, uuid);
+            fileMngUtil.streamMediaFile(response, fileSn, uuid);
         } catch (SecurityException e) {
             fileMngUtil.writeDownloadError(response, HttpServletResponse.SC_FORBIDDEN, "파일 접근 권한이 없습니다.");
-            return;
         } catch (IOException e) {
             fileMngUtil.writeDownloadError(response, HttpServletResponse.SC_NOT_FOUND, "파일을 찾을 수 없습니다.");
-            return;
-        }
-
-        if (response.getContentType() == null) {
-            response.setContentType("application/octet-stream");
-        }
-        response.setContentLength(fileData.length);
-        try {
-            response.getOutputStream().write(fileData);
-            response.getOutputStream().flush();
-        } catch (IOException e) {
-            fileMngUtil.writeDownloadError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null);
         }
     }
 

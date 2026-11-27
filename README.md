@@ -3,7 +3,7 @@
 [![eGovFrame](https://img.shields.io/badge/eGovFrame-5.0.0-134F8C?labelColor=white&logo=data:image/svg%2Bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNzMuMjgyIDE3My4yODIiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0xNzMuMjgyIDg2LjY1YzAgNDcuODQ0LTM4Ljc5NCA4Ni42MzItODYuNjQ2IDg2LjYzMkMzOC43OTkgMTczLjI4MiAwIDEzNC40OTQgMCA4Ni42NSAwIDM4Ljc4OCAzOC43OTkgMCA4Ni42MzYgMGM0Ny44NTIgMCA4Ni42NDYgMzguNzg4IDg2LjY0NiA4Ni42NSIvPjxwYXRoIGZpbGw9IiMwMDM3NjQiIGQ9Ik0xMjcuMzg5IDgwLjU5OGMtMTMuNzkxLTkuMzY1LTMxLjQzOS01LjU0Mi00MC43MTcgOC41MzMtNy43MiAxMS43NjctMTkuNDA1IDEzLjIzNS0yMy45MDYgMTMuMjM1LTE0Ljc1MSAwLTI0LjgyNC0xMC4zNjctMjcuODE4LTIxLjA5NWgtLjAxYy0uMDM5LS4xMDgtLjA1OS0uMi0uMDktLjMwNy0uMDI1LS4xMi0uMDU2LS4yMzMtLjA4OS0uMzY2LTEuMTc3LTQuNDY3LTEuNDY3LTYuNjA5LTEuNDY3LTExLjM2OCAwLTI1LjY1IDI2LjMyMS01NC4yMTMgNjQuMjE1LTU0LjIxMyAzOC44MjkgMCA2MS4wNSAyOS41NDUgNjYuNzggNDUuOTc5LS4xMDctLjI5NS0uMjA5LS41ODEtLjI5MS0uODc3LTExLjAxNS0zMi4xMjUtNDEuNDc0LTU1LjIxNi03Ny4zNTctNTUuMjE2LTQ1LjEzIDAtODEuNzI5IDM2LjU5LTgxLjcyOSA4MS43MzkgMCA0MC4zNTEgMjkuMTA4IDc0Ljg5MSA2OS40NzkgNzQuODkxIDMyLjE5NyAwIDUzLjg0Mi0xOC4wNTIgNjMuNzU3LTQyLjkzIDUuNDUtMTMuNjE0IDEuNTk1LTI5LjYwNS0xMC43NTctMzguMDA1Ii8%2BPHBhdGggZmlsbD0iI2U0MDMyZSIgZD0iTTE2NC43ODggNjIuNTg5Yy00Ljc3Ny0xNi4wMjYtMjcuMTUzLTQ3LjU3MS02Ny4yODItNDcuNTcxLTM3Ljg5NCAwLTY0LjIxNCAyOC41NjMtNjQuMjE0IDU0LjIxMiAwIDQuNzU5LjI5IDYuOTAxIDEuNDY2IDExLjM2OC0uNDg5LTEuOTUxLS43NC0zLjkwOC0uNzQtNS44MjMgMC0yNi43MjEgMjYuNzQxLTQ1LjIyNyA1NC4yNDgtNDUuMjI3IDM3LjIxOCAwIDY3LjM4OCAzMC4xNzQgNjcuMzg4IDY3LjM5IDAgMjkuMTczLTE2Ljc4NSA1NC40MzctNDEuMTc5IDY2LjU2NXYuMDIzYzMxLjQ1NS0xMS4zOTEgNTMuOTA4LTQxLjUxMiA1My45MDgtNzYuODg0IDAtOC4zNzgtMS4xMjctMTUuNzU5LTMuNTk1LTI0LjA1MyIvPjwvc3ZnPg%3D%3D)](https://www.egovframe.go.kr)
 [![Java](https://img.shields.io/badge/Java-17-007396?logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Maven](https://img.shields.io/badge/Maven-3.9.9-C71A36?logo=apachemaven&logoColor=white)](https://maven.apache.org/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.6-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.16-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=white)](https://flutter.dev/)
 
 표준프레임워크 기반 모바일 Device API의 WEB 서버와 Flutter 기반 App 샘플을 함께 제공하는 프로젝트입니다.
@@ -15,57 +15,72 @@
 
 ## 공통 환경
 
+### DeviceAPI App
+| 항목 | 버전 |
+| :--- | :--- |
+| Flutter | SDK 3.9.2 이상 |
+| Dart | 3.9.2 이상 |
+
+### DeviceAPI Web
 | 항목 | 버전 |
 | :--- | :--- |
 | JDK | 17 |
-| Spring Boot | 3.5.6 |
+| Spring Boot | 3.5.16 |
 | Maven | 3.9.9 |
 
 ## 프로젝트 구성
 
-| 프로젝트 | 역할 | 가이드 |
-| :--- | :--- | :--- |
-| `device-api-web` | Device API WEB 서버(Spring Boot) | [README](./device-api-app/docs/webserver.md) |
-| `device-api-app` | Device API App 샘플(Flutter) | [README](./device-api-app/docs) |
-
-## 프로젝트 시작 방법
-- Device API App
-	- [1.환경설정 구성 방법](./device-api-app/docs/settings.md)
-	- [2.애뮬레이터 구성 방법](./device-api-app/docs/emulator.md)
-	- [3.프로젝트 시작 방법](./device-api-app/docs/project_start.md)
-	
-- Device API Web
+| 프로젝트 | 역할 | 
+| :--- | :--- | 
+| `device-api-app` | Device API App 샘플(Flutter) | 
+| `device-api-web` | Device API WEB 서버(Spring Boot) | 
 
 
-## 패치
-### 2026/06/26 v5.0.1 배포
-- gps, accelerator app에서 제공하던 '목록 삭제'를 상세 화면에서만 삭제할 수 있도록 위젯 및 레이아웃이 변경되었습니다.
-- READ, UPDATE, DELETE 시 기기의 uuid를 검증하는 로직이 추가되었습니다.
-	- A 디바이스에서 서버에 전송한 값을 B 디바이스에서 읽기,쓰기,삭제 불가
-	- CREATE를 진행한 디바이스의 데이터만 READ, UPDATE, DELETE 가능
-	- File Opener 에서 UUID 검증할 수 있도록 DB column 추가 (DDL 수정)
-- UUID 생성 방식이 UUIDv4 방식으로 변경되었습니다.
-	- lib/core/device_id_service.dart
-	- application 삭제 전 까지 동일한 uuid를 사용할 수 있습니다. (삭제 시 uuid도 초기화)
-	- docs/applications/utils.md 에서 uuid 관련 항목 참조
-	
-### 2026/07/01 v5.0.2 배포
-- Interface APP에서 평문 비밀번호 전송 방지와 Validation 로직이 추가되었습니다.
-	- 비밀번호 평문 전송 제거
-	- SHA-256(userId‖password) Base64 해시값 전송·저장 (flutter_secure_storage)
-	- 서버 조회 응답에서 userPw 제외, @Valid 입력 검증 추가.
-- 파일 다운로드 시 uuid + fileSn 소유권 검증 추가
-- 파일 업로드/다운로드 시 uuid 검증 로직이 추가되었습니다.
-	- 파일 업로드 시 서버에서 uuid·fileSn 자동 등록
-	- 타 기기 fileSn 임의 연결 차단
-- Secure Storage 실패 시 unknown_device 폴백 제거
-- print()로 출력되던 로그 및 민감정보 로그가 정리되고 Applogger를 통해 debug 모드에서만 로그가 출력됩니다.
-- 미사용중인 WebSocket 샘플 모듈이 제거되었으며 차후 버전에서 고도화 될 예정입니다.
+## 설치 및 실행
 
-## 기타
-- GPS Application 사용을 위해서는 Google MAP API Key 발급이 필요합니다
-	- - [Google Map API Key 발급 방법](./device-api-app/docs/aaplications/gps.md#Google Maps API 키 설정)
-	
-- 로컬 환경이 아닌 환경에서 개발 및 배포하는 경우 아래 네트워크 환경에 대한 설정이 추가적으로 필요합니다.
-아래 가이드를 참조하여 설정을 진행하시기 바랍니다.
-[README](./device-api-app/docs/project_start.md#2) 로컬 Web서버가 아닌 다른 서버를 이용하는 경우)
+### 1. 필수 요구사항
+- Flutter SDK 3.9.2 이상
+- Android Studio 또는 VS Code
+- iOS: Xcode (iOS 빌드 시)
+- Android: Android SDK
+
+### 2. 프로젝트 설정
+
+압축을 풀고 IDE에서 `egovframe_mobile_deviceapi_app`을 연 뒤 맞추는 항목입니다. <br>
+키 발급 절차는 [처음 설정](./docs/gettingStarted.md)에 있습니다.
+
+#### 앱 기동에 필요한 설정
+
+이 항목이 없으면 Android 또는 iOS 빌드가 멈추고 앱이 켜지지 않습니다.
+
+- Flutter SDK와 Android SDK(Android) 또는 Xcode(iOS)
+- 패키지 설치: `flutter pub get`
+- Android `android/local.properties`. SDK가 설치되어 있으면 `flutter pub get`이 만듭니다
+- `android/app/google-services.json`의 `package_name`이 `egovframework.mobile_deviceapi`일 것. 배포본의 자리표시자 파일이면 Firebase 키 없이 빌드됩니다
+
+#### 선택 설정
+
+없어도 앱은 켜집니다. 해당 기능만 동작하지 않습니다.
+
+- Google Maps API 키: GPS 지도
+- Firebase 앱 등록과 `google-services.json`, `ios/Runner/GoogleService-Info.plist` 교체: 푸시
+- `lib/config/app_config.dart`의 `apiHost`: `flutter run`이 이 기본값으로 `device-api-web`에 연결
+- `android/key.properties`: 릴리스 빌드. debug 실행에는 필요 없습니다
+
+```bash
+flutter pub get
+
+# 코드 분석 실행 (선택사항)
+flutter analyze
+```
+
+#### Message 중앙 관리
+- l10n 으로 message 중앙 관리 및 국제화 처리 가능
+- app_나라별 언어.arb 내부 파일 수정 
+- `flutter gen-l10n` 실행 시 message 관련 파일 생성 됨 (ex - app_localizations_ko.dart)
+- 파일별 기능 
+  - l10n/app_*.arb : 언어별 message 원본
+  - l10n/<application명>_message_keys.dart : 수동 작성 key 파일
+  - l10n.yaml : gen-l10n 설정
+  - l10n/app_localizations_*.dart : app_*.arb를 참고하여 자동생성되는 message 파일
+  - l10n/app_localization.dart : l10n 진입점

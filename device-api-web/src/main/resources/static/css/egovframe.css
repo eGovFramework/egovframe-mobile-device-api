@@ -1,0 +1,736 @@
+/* main Layout */
+
+.layout{
+    min-height: calc(100vh - 277px);
+    padding-bottom: var(--krds-pc-gap-layout-contents-footer);
+}
+.in-between{
+    display: flex;
+    align-items: normal;
+    justify-content: flex-start;
+    flex-direction: row;
+    gap: var(--krds-gap-12);
+}
+.contents{
+    width:100%;
+}
+
+/* lnb(sideMenu) */
+.krds-side-navigation{
+    flex-shrink: 0;
+    width: 24.8rem;
+    padding: var(--krds-padding-8) 0 0;
+    border: none;
+}
+
+/* Headeer */
+#krds-header{
+    border-bottom: 0.1rem solid var(--krds-color-light-gray-20);
+}
+#krds-header .left{
+    margin-left:20px;
+}
+.header-actions button a{
+    font-weight: 700;
+}
+.header-actions button a.active{
+    color: #246BEB;
+    font-weight: 700;
+}
+
+.conts-area{
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: var(--krds-gap-9);
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.conts-wrap{
+    margin-bottom:var(--krds-number-9);
+}
+
+.krds-side-navigation .lnb-list .lnb-item.active .lnb-btn:not(.lnb-toggle-popup)::after{
+    transform: rotate(180deg);
+}
+
+.krds-side-navigation .lnb-list .lnb-item .lnb-submenu .lnb-subitem.active .lnb-btn,
+.krds-side-navigation .lnb-list .lnb-item .lnb-submenu .lnb-subitem.active .lnb-submenu-lv2 ul li.active .lnb-btn{
+    color: var(--krds-side-navigation--color-text-selected);
+    font-weight: var(--krds-font-weight-bold);
+    background-color: var(--krds-side-navigation--color-action-selected);
+}
+
+.krds-side-navigation .lnb-list .lnb-item .lnb-submenu .lnb-subitem.active .lnb-submenu-lv2 .lnb-btn{
+    color:black;
+    font-weight: var( --krds-typo-font-weight-regular);
+    background-color:transparent;
+}
+
+.krds-main-menu .gnb-menu .gnb-main-trigger.active::before{
+    bottom: -1.6rem;
+}
+
+.krds-breadcrumb-wrap .breadcrumb {
+    flex-wrap:wrap;
+}
+
+/* Search Wrap */
+.search-wrap{
+    display: flex;
+    gap: 1rem;
+    margin-bottom: var(--krds-number-9);
+    justify-content: space-between;
+}
+.search-body{
+    display:flex;
+    align-items: center;
+    gap: 1rem;
+}
+.search-wrap .searchOption{
+    width: auto;
+    flex-grow: 1;
+}
+.search-wrap  .searchKeyword{
+    width: auto;
+    flex-grow: 3;
+}
+.search-wrap .search-tit{
+    align-self: center;
+    text-wrap: nowrap;
+}
+
+/* btn wrap*/
+.page-btn-wrap{
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-top: var(--krds-number-7);
+}
+.page-btn-wrap .btn-wrap{
+    display: flex;
+    gap: 1rem;
+    width:auto;
+}
+
+/* input-form */
+.input-form{
+    border: 1px solid;
+    border-radius: var(--krds-number-6);
+    padding: var(--krds-number-9);
+    margin: var(--krds-number-9) 0;
+}
+
+/* dd */
+.def-list-wrap .def-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--krds-gap-5) 0;
+    border-top: var(--krds-light-border-width-variable-regular) solid var(--krds-light-color-divider-gray);
+    border-bottom: var(--krds-light-border-width-variable-regular) solid var(--krds-light-color-divider-gray);
+    padding: var(--krds-padding-8) 0;
+}
+
+.def-list-wrap .def-list > dt {
+    width: 18rem;
+    margin-right: var(--krds-gap-7);
+    font-weight: var(--krds-font-weight-bold);
+}
+
+.def-list-wrap .def-list > dd {
+    width: calc(100% - (18rem + var(--krds-gap-7)));
+}
+
+/* table */
+.krds-table-wrap .tbl.data tbody td {
+    word-break: break-word;
+}
+.krds-table-wrap .tbl.data .text-center, .krds-table-wrap .tbl.data .text-center a{
+    text-align: center;
+}
+
+/* Comment / Sfsfdg */
+.comment-wrap{
+    margin-top:2rem;
+    padding:2rem;
+    border:1px solid #dbdbdb;
+    border-radius: 0.5rem;
+}
+.comment_cnt{
+    font-size: 2rem;
+}
+.comment_cnt .keyword{
+    color:var(--krds-color-light-information-60);
+}
+#comment-list, #satisfaction-list{
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    margin-top: 2rem;
+    padding-right: 1rem;
+}
+.comment-top{
+    display: flex;
+    justify-content: space-between;
+}
+#comment-list li:not(:last-child), #satisfaction-list li:not(:last-child){
+    border-bottom: 1px solid lightgray;
+}
+#comment-list li, #satisfaction-list li{
+    padding: 2rem;
+}
+#comment-list li .info-top, #satisfaction-list .info-top{
+    display: flex;
+}
+#comment-list li .info-body, #satisfaction-list li .info-body{
+    background-color: #fff;
+    padding: 1rem 1rem 0 1rem;
+}
+.comment-wrap{
+    padding: 1rem;
+    border: 1px solid #e7e7e7
+}
+.comment-list-top{
+    display: flex;
+    align-items: end;
+    gap: 1rem;
+}
+.comment-wrap .textarea-wrap{
+    position: relative;
+    width: 100%;
+    padding-right: 10rem;
+    background-color: #e3e3e3;
+}
+.commentBtn{
+    position: absolute;
+    right:1rem;
+    bottom:1rem;
+}
+#answer{
+    height:50%;
+    border:none;
+    background-color: transparent;
+    padding: 1rem;
+}
+.star{
+    position:relative;
+    color:lightgray;
+}
+
+.star input {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+.star span {
+    width: 0;
+    position: absolute;
+    left: 0;
+    color: rgba(250, 208, 0, 0.99);
+    overflow: hidden;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* icon */
+.svg-icon.ico-reply {
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center center;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    mask-size: contain;
+    width: 20px;
+    height: 20px;
+    -webkit-mask-image: url(../img/egovframework/icon_reply.png);
+    mask-image: url(../img/egovframework/icon_reply.png);
+}
+.svg-icon.ico-secret {
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center center;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    mask-size: contain;
+    width: 20px;
+    height: 20px;
+    -webkit-mask-image: url(../img/egovframework/icon_secret.svg);
+    mask-image: url(../img/egovframework/icon_secret.svg);
+}
+.svg-icon.ico-notice {
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center center;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    mask-size: contain;
+    width: 20px;
+    height: 20px;
+    -webkit-mask-image: url(../img/egovframework/icon_notice.png);
+    mask-image: url(../img/egovframework/icon_notice.png);
+}
+
+/* title*/
+.heading-large{
+    margin-bottom: 1.5rem;
+}
+
+/* FCM 관리 화면 */
+.fcm-layout {
+    min-height: 100vh;
+    padding: var(--krds-padding-8) var(--krds-contents-padding-x) var(--krds-pc-gap-layout-contents-footer);
+}
+
+.fcm-layout .page-desc a {
+    color: var(--krds-color-light-primary-50);
+    text-decoration: underline;
+}
+
+/* KRDS 페이징 링크는 버튼 스타일 유지 (전역 a 스타일 영향 차단) */
+.fcm-layout .krds-pagination a.page-navi,
+.fcm-layout .krds-pagination a.page-link,
+.chat-layout .krds-pagination a.page-navi,
+.chat-layout .krds-pagination a.page-link {
+    color: var(--krds-pagination--color-text);
+    text-decoration: none;
+}
+
+.fcm-layout .krds-pagination a.page-link.active,
+.chat-layout .krds-pagination a.page-link.active {
+    color: var(--krds-pagination--color-text-active);
+}
+
+.fcm-layout .krds-pagination a.page-navi:focus-visible,
+.fcm-layout .krds-pagination a.page-link:focus-visible,
+.chat-layout .krds-pagination a.page-navi:focus-visible,
+.chat-layout .krds-pagination a.page-link:focus-visible {
+    outline: 0.2rem solid var(--krds-light-color-border-primary);
+    outline-offset: 0.1rem;
+}
+
+.chat-layout .krds-file-upload .krds-pagination.w-page {
+    justify-content: center;
+}
+
+.chat-layout .krds-pagination[hidden] {
+    display: none !important;
+}
+
+#container.contents {
+    max-width: var(--krds-contents-wrap-size);
+    margin: 0 auto;
+}
+
+.page-desc {
+    margin: 0 0 var(--krds-gap-9);
+    color: var(--krds-light-color-text-subtle);
+    font-size: var(--krds-pc-font-size-body-medium);
+    line-height: var(--krds-line-height-base);
+}
+
+.page-desc code {
+    padding: 0.1rem 0.4rem;
+    border-radius: var(--krds-radius-small1);
+    background: var(--krds-light-color-surface-gray-subtler);
+    font-size: 0.95em;
+}
+
+.section-title {
+    margin: 0 0 var(--krds-gap-7);
+    font-size: var(--krds-pc-font-size-heading-small);
+    font-weight: var(--krds-font-weight-bold);
+    color: var(--krds-light-color-text-basic);
+}
+
+.list-summary {
+    align-self: center;
+    color: var(--krds-light-color-text-subtle);
+    font-size: var(--krds-pc-font-size-body-small);
+}
+
+.empty-msg {
+    padding: var(--krds-padding-8) 0;
+    text-align: center;
+    color: var(--krds-light-color-text-subtle);
+}
+
+.fcm-layout td.uuid-cell,
+.fcm-layout td.history-target {
+    word-break: break-all;
+}
+
+.krds-table-wrap .tbl.data td.token {
+    max-width: 14rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: var(--krds-pc-font-size-label-small);
+    color: var(--krds-light-color-text-subtle);
+}
+
+.krds-table-wrap .tbl.data td.token.fcm {
+    max-width: 18rem;
+}
+
+.krds-table-wrap .tbl.data tbody tr.selected td {
+    background-color: var(--krds-light-color-surface-primary-subtler);
+}
+
+.fcm-table .device-row {
+    cursor: pointer;
+}
+
+.fcm-table .device-row:hover td {
+    background-color: var(--krds-light-color-surface-gray-subtler);
+}
+
+.fcm-table .device-row.selected:hover td {
+    background-color: var(--krds-light-color-surface-primary-subtler);
+}
+
+/* 테이블용 KRDS 체크박스 (네이티브 input 유지 + 커스텀 시각) */
+.fcm-table .fcm-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.fcm-table .fcm-check > label {
+    margin: 0;
+    cursor: pointer;
+}
+
+.fcm-table .fcm-check > input[type=checkbox] ~ label:before,
+.fcm-table .fcm-check > input[type=checkbox] ~ label:after {
+    margin-top: 0;
+}
+
+.fcm-table .fcm-check > input[type=checkbox] ~ label:after {
+    top: calc((var(--krds-form-check--button-size-medium) - var(--krds-form-check--checkbox-check-size-medium)) / 2);
+    /* 프로젝트 내 아이콘으로 체크 표시 (KRDS 기본 아이콘 경로 미포함 대응) */
+    -webkit-mask-image: url(../images/egovframework/icon_check.svg);
+    mask-image: url(../images/egovframework/icon_check.svg);
+}
+
+.fcm-table .fcm-check > input[type=checkbox]:focus-visible ~ label:before {
+    outline: 0.2rem solid var(--krds-light-color-border-primary);
+    outline-offset: 0.15rem;
+}
+
+.fcm-table td.col-check,
+.fcm-table th.col-check {
+    width: 3.2rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.krds-pagination.w-page {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--krds-gap-7);
+}
+
+.krds-pagination .page-navi,
+.krds-pagination .page-link {
+    min-width: var(--krds-pagination--size-height);
+    padding-left: var(--krds-padding-3);
+    padding-right: var(--krds-padding-3);
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.krds-pagination .page-navi.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+    cursor: default;
+}
+
+#selectedDeviceHint {
+    margin-top: var(--krds-gap-3);
+}
+
+.svg-icon.ico-reload {
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center center;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    mask-size: contain;
+    width: var(--krds-icon--size-medium);
+    height: var(--krds-icon--size-medium);
+    -webkit-mask-image: url(../../images/egovframework/icon_reload.svg);
+    mask-image: url(../../images/egovframework/icon_reload.svg);
+    background-color: currentColor;
+}
+
+.fcm-layout .search-wrap {
+    align-items: flex-end;
+}
+
+.fcm-layout .sch-form-wrap.vert {
+    gap: var(--krds-gap-2);
+}
+
+.fcm-layout .sch-form-wrap .form-label {
+    font-size: var(--krds-pc-font-size-label-small);
+    font-weight: var(--krds-font-weight-regular);
+    color: var(--krds-light-color-text-subtle);
+    line-height: 1.4;
+}
+
+.fcm-layout .sch-input {
+    width: min(36rem, 100%);
+}
+
+.fcm-layout .sch-input .krds-btn.ico-search .svg-icon {
+    position: static;
+    top: auto;
+    right: auto;
+    transform: none;
+}
+
+.fcm-layout .search-wrap .page-btn-wrap {
+    margin-top: 0;
+}
+
+.svg-icon.ico-search {
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center center;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    mask-size: contain;
+    width: var(--krds-icon--size-medium);
+    height: var(--krds-icon--size-medium);
+    -webkit-mask-image: url(../../images/egovframework/icon_search.svg);
+    mask-image: url(../../images/egovframework/icon_search.svg);
+    background-color: currentColor;
+}
+
+#sendStatus {
+    display: none;
+    margin-top: var(--krds-gap-5);
+}
+
+#sendStatus.is-visible {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .search-wrap {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-wrap .page-btn-wrap {
+        justify-content: flex-end;
+    }
+
+    .krds-table-wrap .tbl.data td.token,
+    .krds-table-wrap .tbl.data td.token.fcm {
+        max-width: 8rem;
+    }
+}
+
+.fcm-layout .input-form .page-btn-wrap, #btnSend{
+    width: 100%;
+}
+
+.fcm-layout .krds-form-checks-inline {
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#deviceDialog {
+    width: min(110rem, calc(100vw - 4rem));
+    max-height: min(80rem, calc(100vh - 4rem));
+    margin: auto;
+    padding: var(--krds-padding-8);
+    border: var(--krds-light-border-width-variable-regular) solid var(--krds-light-color-border-gray);
+    border-radius: var(--krds-radius-xlarge1);
+    color: var(--krds-light-color-text-basic);
+    background: var(--krds-light-color-surface-white-subtler, #fff);
+    box-shadow: 0 1.6rem 2.4rem rgba(0, 0, 0, 0.16);
+}
+
+#deviceDialog::backdrop {
+    background: rgba(0, 0, 0, 0.45);
+}
+
+#deviceDialog .dialog-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--krds-gap-5);
+    margin-bottom: var(--krds-gap-5);
+}
+
+#deviceDialog .dialog-head .section-title {
+    margin-bottom: 0;
+}
+
+#deviceDialog .krds-table-wrap {
+    max-height: 48rem;
+    overflow: auto;
+}
+
+/* ========== WebSocket Chat (KRDS) ========== */
+.chat-layout {
+    min-height: 100vh;
+    padding: var(--krds-padding-8) var(--krds-contents-padding-x) var(--krds-pc-gap-layout-contents-footer);
+}
+
+.chat-layout .page-desc a {
+    color: var(--krds-color-light-primary-50);
+    text-decoration: underline;
+}
+
+.chat-section-head {
+    align-items: center;
+    margin-bottom: var(--krds-gap-7);
+}
+
+.chat-section-head .section-title {
+    margin-bottom: 0;
+}
+
+.chat-conn-actions {
+    margin-top: var(--krds-gap-7);
+    justify-content: flex-start;
+}
+
+.chat-panel {
+    height: 22rem;
+    overflow-y: auto;
+    padding: var(--krds-padding-6);
+    border: 0.1rem solid var(--krds-light-color-border-gray);
+    border-radius: var(--krds-radius-medium1);
+    background-color: var(--krds-light-color-surface-gray-subtler);
+    box-sizing: border-box;
+}
+
+.chat-message-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--krds-gap-5);
+    min-height: 100%;
+}
+
+.chat-empty {
+    margin: auto;
+    padding: var(--krds-padding-8) 0;
+    text-align: center;
+    color: var(--krds-light-color-text-subtle);
+    font-size: var(--krds-pc-font-size-body-small);
+}
+
+.chat-row {
+    display: flex;
+    width: 100%;
+}
+
+.chat-row.is-system {
+    justify-content: center;
+}
+
+.chat-row.is-other {
+    justify-content: flex-start;
+}
+
+.chat-row.is-mine {
+    justify-content: flex-end;
+}
+
+.chat-system-text {
+    margin: 0;
+    padding: var(--krds-padding-2) var(--krds-padding-4);
+    border-radius: var(--krds-radius-max);
+    background-color: var(--krds-light-color-surface-white-subtle);
+    color: var(--krds-light-color-text-subtle);
+    font-size: var(--krds-pc-font-size-label-small);
+}
+
+.chat-bubble {
+    max-width: min(80%, 28rem);
+    padding: var(--krds-padding-4) var(--krds-padding-5);
+    border-radius: var(--krds-radius-medium2);
+    background-color: var(--krds-light-color-surface-white);
+    border: 0.1rem solid var(--krds-light-color-border-gray);
+    box-shadow: 0 0.1rem 0.2rem rgb(0 0 0 / 4%);
+}
+
+.chat-row.is-mine .chat-bubble {
+    background-color: var(--krds-light-color-surface-primary-subtler);
+    border-color: var(--krds-light-color-border-primary);
+}
+
+.chat-meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--krds-gap-4);
+    margin-bottom: var(--krds-gap-2);
+}
+
+.chat-sender {
+    font-weight: var(--krds-font-weight-bold);
+    font-size: var(--krds-pc-font-size-label-small);
+    color: var(--krds-light-color-text-basic);
+}
+
+.chat-time {
+    font-size: var(--krds-pc-font-size-label-xsmall, 0.75rem);
+    color: var(--krds-light-color-text-subtle);
+    white-space: nowrap;
+}
+
+.chat-text {
+    margin: 0;
+    font-size: var(--krds-pc-font-size-body-medium);
+    line-height: var(--krds-line-height-base);
+    color: var(--krds-light-color-text-basic);
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+.chat-composer {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-4);
+    margin-top: var(--krds-gap-6);
+}
+
+.chat-composer-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.chat-composer .krds-btn {
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .chat-panel {
+        height: 18rem;
+    }
+
+    .chat-bubble {
+        max-width: 90%;
+    }
+
+    .chat-conn-actions {
+        flex-wrap: wrap;
+    }
+
+    .chat-conn-actions .krds-btn {
+        flex: 1;
+    }
+}

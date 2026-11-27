@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>WebSocket 채팅</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/component/output.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/egovframe.css}">
+    <script th:src="@{/js/component/ui-script.js}" defer></script>
+</head>
+
+<body>
+<div class="chat-layout">
+    <div id="container" class="contents">
+
+        <h2 class="heading-large">WebSocket 채팅</h2>
+        <p class="page-desc">
+            Flutter 앱과 동일한 엔드포인트(<code>/websocket/chat.ws</code>)로 실시간 메시지를 주고합니다.
+            메시지 형식은 <code>msg:발신자:내용</code> 입니다.
+        </p>
+
+        <!-- 1. 연결 설정 -->
+        <div class="conts-wrap">
+            <div class="search-wrap chat-section-head">
+                <h3 class="section-title">1. 연결 설정</h3>
+                <span id="connBadge" class="krds-badge bg-light-gray" role="status" aria-live="polite">연결 안 됨</span>
+            </div>
+
+            <fieldset class="fieldset input-form">
+                <legend class="sr-only">WebSocket 연결 설정</legend>
+
+                <div class="form-group">
+                    <div class="form-tit">
+                        <label for="serverUrl">서버 URL</label>
+                    </div>
+                    <div class="form-conts">
+                        <input type="text" id="serverUrl" class="krds-input" th:value="${serverUrl}"
+                               placeholder="ws://호스트:포트" autocomplete="off">
+                    </div>
+                    <p class="form-hint">모바일 기기와 테스트할 때는 localhost 대신 서버 IP를 사용하세요.</p>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-tit">
+                        <label for="nickname">닉네임</label>
+                    </div>
+                    <div class="form-conts">
+                        <input type="text" id="nickname" class="krds-input" placeholder="web-user"
+                               maxlength="40" autocomplete="nickname">
+                    </div>
+                </div>
+
+                <div class="page-btn-wrap chat-conn-actions">
+                    <button type="button" id="enterBtn" class="krds-btn medium">연결</button>
+                    <button type="button" id="exitBtn" class="krds-btn medium tertiary" disabled>연결 해제</button>
+                </div>
+            </fieldset>
+        </div>
+
+        <!-- 2. 채팅 -->
+        <div class="conts-wrap">
+            <h3 class="section-title">2. 채팅</h3>
+
+            <div id="chatArea" class="chat-panel" role="log" aria-live="polite" aria-relevant="additions"
+                 aria-label="채팅 메시지">
+                <div id="chatMessageArea" class="chat-message-list">
+                    <p class="chat-empty" id="chatEmpty">아직 메시지가 없습니다. 연결 후 대화를 시작하세요.</p>
+                </div>
+            </div>
+
+            <div class="chat-composer">
+                <div class="form-conts chat-composer-input">
+                    <label for="message" class="sr-only">메시지 입력</label>
+                    <input type="text" id="message" class="krds-input" maxlength="500"
+                           placeholder="메시지를 입력하세요" disabled autocomplete="off">
+                </div>
+                <button type="button" id="sendBtn" class="krds-btn medium" disabled>전송</button>
+            </div>
+            <p class="form-hint">Enter 키로도 전송할 수 있습니다.</p>
+        </div>
+
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const MSG_PREFIX = 'msg:';
+    let wsocket = null;
+
+    function escapeHtml(value) {
+        if (value == null) return '';
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function setConnectionUi(state) {
+        const badge = document.getElementById('connBadge');
+        const enterBtn = document.getElementById('enterBtn');
+        const exitBtn = document.getElementById('exitBtn');
+        const message = document.getElementById('message');
+        const sendBtn = document.getElementById('sendBtn');
+        const serverUrl = document.getElementById('serverUrl');
+        const nickname = document.getElementById('nickname');
+
+        badge.className = 'krds-badge';
+        if (state === 'connected') {
+            badge.classList.add('bg-success');
+            badge.textContent = '연결됨';
+            enterBtn.disabled = true;
+            exitBtn.disabled = false;
+            message.disabled = false;
+            sendBtn.disabled = false;
+            serverUrl.disabled = true;
+            nickname.disabled = true;
+            message.focus();
+        } else if (state === 'connecting') {
+            badge.classList.add('bg-information');
+            badge.textContent = '연결 중...';
+            enterBtn.disabled = true;
+            exitBtn.disabled = false;
+            message.disabled = true;
+            sendBtn.disabled = true;
+        } else {
+            badge.classList.add('bg-light-gray');
+            badge.textContent = '연결 안 됨';
+            enterBtn.disabled = false;
+            exitBtn.disabled = true;
+            message.disabled = true;
+            sendBtn.disabled = true;
+            serverUrl.disabled = false;
+            nickname.disabled = false;
+        }
+    }
+
+    function hideEmptyHint() {
+        const empty = document.getElementById('chatEmpty');
+        if (empty) {
+            empty.remove();
+        }
+    }
+
+    function appendSystem(text) {
+        hideEmptyHint();
+        const list = document.getElementById('chatMessageArea');
+        const row = document.createElement('div');
+        row.className = 'chat-row is-system';
+        row.innerHTML = '<p class="chat-system-text">' + escapeHtml(text) + '</p>';
+        list.appendChild(row);
+        scrollChatToBottom();
+    }
+
+    function appendChat(sender, message, isMine) {
+        hideEmptyHint();
+        const list = document.getElementById('chatMessageArea');
+        const row = document.createElement('div');
+        row.className = 'chat-row' + (isMine ? ' is-mine' : ' is-other');
+
+        const time = new Date();
+        const timeLabel = String(time.getHours()).padStart(2, '0') + ':'
+            + String(time.getMinutes()).padStart(2, '0');
+
+        row.innerHTML =
+            '<div class="chat-bubble">'
+            + '<div class="chat-meta">'
+            + '<span class="chat-sender">' + escapeHtml(sender) + '</span>'
+            + '<time class="chat-time" datetime="' + time.toISOString() + '">' + timeLabel + '</time>'
+            + '</div>'
+            + '<p class="chat-text">' + escapeHtml(message) + '</p>'
+            + '</div>';
+
+        list.appendChild(row);
+        scrollChatToBottom();
+    }
+
+    function scrollChatToBottom() {
+        const area = document.getElementById('chatArea');
+        area.scrollTop = area.scrollHeight;
+    }
+
+    function parseChatMessage(data) {
+        if (!data || data.indexOf(MSG_PREFIX) !== 0) {
+            return null;
+        }
+        const body = data.substring(MSG_PREFIX.length);
+        const separatorIndex = body.indexOf(':');
+        if (separatorIndex <= 0) {
+            return null;
+        }
+        const sender = body.substring(0, separatorIndex).trim();
+        const message = body.substring(separatorIndex + 1).trim();
+        if (!sender || !message) {
+            return null;
+        }
+        return { sender: sender, message: message };
+    }
+
+    function connect() {
+        const ipAddr = document.getElementById('serverUrl').value.trim();
+        const nickname = document.getElementById('nickname').value.trim();
+
+        if (!ipAddr) {
+            appendSystem('서버 URL을 입력하세요.');
+            document.getElementById('serverUrl').focus();
+            return;
+        }
+        if (!nickname) {
+            appendSystem('닉네임을 입력하세요.');
+            document.getElementById('nickname').focus();
+            return;
+        }
+
+        disconnect(true);
+        setConnectionUi('connecting');
+        appendSystem('서버에 연결 중...');
+
+        try {
+            wsocket = new WebSocket(ipAddr + '/websocket/chat.ws');
+        } catch (err) {
+            appendSystem('WebSocket 생성 실패: ' + err.message);
+            setConnectionUi('disconnected');
+            return;
+        }
+
+        wsocket.onopen = function () {
+            setConnectionUi('connected');
+            appendSystem('연결되었습니다.');
+        };
+        wsocket.onmessage = function (evt) {
+            const parsed = parseChatMessage(evt.data);
+            if (!parsed) {
+                return;
+            }
+            const mine = parsed.sender === document.getElementById('nickname').value.trim();
+            appendChat(parsed.sender, parsed.message, mine);
+        };
+        wsocket.onclose = function () {
+            setConnectionUi('disconnected');
+            appendSystem('연결이 종료되었습니다.');
+            wsocket = null;
+        };
+        wsocket.onerror = function () {
+            appendSystem('WebSocket 연결 오류가 발생했습니다.');
+        };
+    }
+
+    function disconnect(silent) {
+        if (!wsocket) {
+            if (!silent) {
+                setConnectionUi('disconnected');
+            }
+            return;
+        }
+
+        wsocket.onopen = null;
+        wsocket.onmessage = null;
+        wsocket.onclose = null;
+        wsocket.onerror = null;
+
+        if (wsocket.readyState === WebSocket.OPEN || wsocket.readyState === WebSocket.CONNECTING) {
+            wsocket.close();
+        }
+        wsocket = null;
+        setConnectionUi('disconnected');
+        if (!silent) {
+            appendSystem('연결을 해제했습니다.');
+        }
+    }
+
+    function send() {
+        const nickname = document.getElementById('nickname').value.trim();
+        const msgInput = document.getElementById('message');
+        const msg = msgInput.value.trim();
+
+        if (!nickname) {
+            appendSystem('닉네임을 입력하세요.');
+            return;
+        }
+        if (!msg) {
+            return;
+        }
+        if (!wsocket || wsocket.readyState !== WebSocket.OPEN) {
+            appendSystem('WebSocket이 연결되지 않았습니다.');
+            return;
+        }
+
+        wsocket.send(MSG_PREFIX + nickname + ':' + msg);
+        msgInput.value = '';
+        msgInput.focus();
+    }
+
+    document.getElementById('enterBtn').addEventListener('click', connect);
+    document.getElementById('exitBtn').addEventListener('click', function () {
+        disconnect(false);
+    });
+    document.getElementById('sendBtn').addEventListener('click', send);
+    document.getElementById('message').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            send();
+        }
+    });
+
+    setConnectionUi('disconnected');
+</script>
+</body>
+</html>

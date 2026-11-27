@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.hyb.mbl.stm.service.impl.StreamingMediaInfoAPIDAO">
+
+	<resultMap id="streamingMediaInfo" type="egovframework.hyb.mbl.stm.service.StreamingMediaAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="mediaType" column="MEDIA_TYPE"/>
+		<result property="filePath" column="FILE_PATH"/>
+		<result property="duration" column="DURATION"/>
+		<result property="useYn" column="USEYN"/>
+		<result property="timestamp" column="TIMESTAMP"/>
+	</resultMap>
+
+	<insert id="insertStreamingMediaInfo">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (NVL(MAX(SN), 0)+1) sn from STREAMING_MEDIA
+		</selectKey>
+		INSERT INTO STREAMING_MEDIA (SN, UUID, MEDIA_TYPE, FILE_PATH, DURATION, USEYN, TIMESTAMP)
+		VALUES (#{sn}, #{uuid}, #{mediaType}, #{filePath}, #{duration}, #{useYn}, #{timestamp})
+	</insert>
+
+	<select id="selectStreamingMediaInfoList" parameterType="egovframework.hyb.mbl.stm.service.StreamingMediaAPIVO" resultMap="streamingMediaInfo">
+		SELECT SN, UUID, MEDIA_TYPE, FILE_PATH, DURATION, USEYN, TIMESTAMP
+		FROM STREAMING_MEDIA
+		WHERE USEYN='Y'
+			AND UUID = #{uuid}
+		ORDER BY SN DESC
+	</select>
+
+	<update id="deleteStreamingMediaInfo">
+		UPDATE STREAMING_MEDIA
+		SET USEYN = 'N'
+		WHERE UUID = #{uuid}
+		AND SN = #{sn}
+		AND USEYN = 'Y'
+	</update>
+
+</mapper>

@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>FCM 푸시 발송 관리</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/component/output.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/egovframe.css}">
+    <script th:src="@{/js/component/ui-script.js}" defer></script>
+</head>
+
+<body>
+<div class="fcm-layout">
+    <div id="container" class="contents">
+
+        <h2 class="heading-large">FCM 푸시 발송 관리</h2>
+        <p class="page-desc">
+            발송 대상을 전체 또는 선택으로 정한 뒤 메시지를 보냅니다.
+            선택은 기기 목록 팝업에서 고릅니다.
+            수신 앱에서 먼저 <strong>디바이스 등록</strong>을 완료해야 합니다.</br>
+            <span><strong>PushNotifications App</strong> 또는 <a th:href="@{/swagger-ui.html}" target="_blank" aria-label="Swagger API 새 창 열림">Swagger API</a>를 통해 등록할 수 있습니다.</span>
+        </p>
+
+        <!-- 1. 메시지 작성 및 발송 -->
+        <div class="conts-wrap">
+            <h3 class="section-title">1. 메시지 작성 및 발송</h3>
+            <fieldset class="fieldset input-form">
+                <legend class="sr-only">FCM 메시지 발송</legend>
+
+                <div class="form-group">
+                    <div class="form-tit">
+                        <span id="targetModeLabel">발송 대상</span>
+                    </div>
+                    <div class="form-conts">
+                        <div class="krds-form-checks-inline">
+                            <div class="krds-form-checks-inline" role="radiogroup" aria-labelledby="targetModeLabel">
+                                <div class="krds-form-check medium">
+                                    <input type="radio" name="sendTarget" id="targetAll" value="all" checked>
+                                    <label for="targetAll">전체</label>
+                                </div>
+                                <div class="krds-form-check medium">
+                                    <input type="radio" name="sendTarget" id="targetPick" value="pick">
+                                    <label for="targetPick">선택</label>
+                                </div>
+                            </div>
+                            <button type="button" id="btnOpenDevices" class="krds-btn medium tertiary" hidden>기기 목록</button>
+                        </div>
+                    </div>
+                    <div class="form-conts">
+                        <input type="text" id="selectedDeviceLabel" class="krds-input" readonly
+                               value="등록된 모든 기기" aria-describedby="selectedDeviceHint">
+                    </div>
+                    <p id="selectedDeviceHint" class="form-hint">사용 중인 등록 기기 전체에 발송합니다.</p>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-tit">
+                        <label for="message">메시지 내용</label>
+                    </div>
+                    <div class="form-conts">
+                        <div class="textarea-wrap">
+                            <textarea id="message" class="krds-input" maxlength="2000" rows="5"
+                                      placeholder="푸시 알림 본문을 입력하세요."></textarea>
+                        </div>
+                    </div>
+                    <p class="form-hint">알림 제목은 서버 기본값(FCM Test Title)이 사용됩니다.</p>
+                </div>
+
+                <div class="page-btn-wrap">
+                    <button type="button" id="btnSend" class="krds-btn medium" disabled>발송</button>
+                </div>
+                <p id="sendStatus" class="form-hint" role="status" aria-live="polite"></p>
+            </fieldset>
+        </div>
+
+        <dialog id="deviceDialog" aria-labelledby="deviceDialogTitle">
+            <div class="dialog-head">
+                <h3 id="deviceDialogTitle" class="section-title">등록 기기 목록</h3>
+                <button type="button" id="btnCloseDevices" class="krds-btn medium tertiary">닫기</button>
+            </div>
+            <div class="search-wrap">
+                <div class="search-body">
+                    <span id="deviceCount" class="list-summary"></span>
+                </div>
+                <div class="page-btn-wrap">
+                    <button type="button" id="btnReloadDevices" class="krds-btn medium tertiary icon">
+                        <span class="sr-only">새로고침</span>
+                        <i class="svg-icon ico-reload" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="krds-table-wrap">
+                <div id="deviceTableWrap" class="fcm-table"></div>
+            </div>
+            <div id="devicePagination" class="krds-pagination w-page" aria-label="등록 기기 목록 페이지"></div>
+        </dialog>
+
+        <!-- 2. 발송 이력 -->
+        <div class="conts-wrap">
+            <h3 class="section-title">2. 발송 이력 (PUSH_MESSAGE)</h3>
+            <div class="search-wrap">
+                <div class="sch-form-wrap vert">
+                    <label class="form-label" for="historyKeyword">검색</label>
+                    <div class="sch-input">
+                        <input type="text" id="historyKeyword" class="krds-input" placeholder="UUID 또는 메시지">
+                        <button type="button" id="btnFilterHistory" class="krds-btn medium icon ico-search">
+                            <span class="sr-only">검색</span>
+                            <i class="svg-icon ico-search" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="page-btn-wrap">
+                    <button type="button" id="btnReloadHistory" class="krds-btn medium tertiary icon">
+                        <span class="sr-only">새로고침</span>
+                        <i class="svg-icon ico-reload" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="krds-table-wrap">
+                <div id="historyTableWrap"></div>
+            </div>
+            <div id="historyPagination" class="krds-pagination w-page" aria-label="발송 이력 페이지"></div>
+        </div>
+
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const API = {
+        devices: /*[[@{/pus/selectAllPushDeviceList.do}]]*/ '/pus/selectAllPushDeviceList.do',
+        messages: /*[[@{/pus/selectAllPushMessageList.do}]]*/ '/pus/selectAllPushMessageList.do',
+        send: /*[[@{/pus/requestPushInfo.do}]]*/ '/pus/requestPushInfo.do'
+    };
+
+    const PAGE_UNIT = 5;
+    let devicePageIndex = 1;
+    let historyPageIndex = 1;
+    let deviceListCache = [];
+    /** @type {Map<string, object>} uuid → device (페이지 이동 시에도 유지) */
+    const selectedDevices = new Map();
+    /** @type {{ containerId: string, nav?: string, page?: number } | null} */
+    let pendingPaginationFocus = null;
+
+    function formatSndDt() {
+        const now = new Date();
+        const pad = function (value, size) {
+            return String(value).padStart(size, '0');
+        };
+        return now.getFullYear() + '-' + pad(now.getMonth() + 1, 2) + '-' + pad(now.getDate(), 2)
+            + ' ' + pad(now.getHours(), 2) + ':' + pad(now.getMinutes(), 2) + ':' + pad(now.getSeconds(), 2);
+    }
+
+    function escapeHtml(value) {
+        if (value == null) return '';
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function renderEmpty(wrap, message) {
+        wrap.innerHTML = '<p class="empty-msg">' + escapeHtml(message) + '</p>';
+    }
+
+    function renderTable(wrap, columns, rowsHtml) {
+        let colgroup = '';
+        columns.forEach(function (col) {
+            colgroup += '<col' + (col.width ? ' style="width:' + col.width + ';"' : '') + '>';
+        });
+
+        let thead = '<thead><tr>';
+        columns.forEach(function (col) {
+            thead += '<th scope="col"' + (col.center ? ' class="text-center"' : '') + '>'
+                + (col.html ? col.html : escapeHtml(col.label)) + '</th>';
+        });
+        thead += '</tr></thead>';
+
+        wrap.innerHTML = '<table class="tbl col data">'
+            + '<colgroup>' + colgroup + '</colgroup>'
+            + thead
+            + '<tbody>' + rowsHtml + '</tbody>'
+            + '</table>';
+    }
+
+    function historyTargetText(item) {
+        const uuid = item.uuid == null ? '' : String(item.uuid);
+        const count = Number(item.deviceCount) || 1;
+        if (count > 1) {
+            return (uuid ? uuid + ' 등 ' : '') + count + '건';
+        }
+        return uuid;
+    }
+
+    function showSendStatus(ok, message, loading) {
+        const el = document.getElementById('sendStatus');
+        if (!message) {
+            el.textContent = '';
+            el.className = 'form-hint';
+            el.classList.remove('is-visible');
+            return;
+        }
+        el.textContent = message;
+        el.className = 'form-hint is-visible '
+            + (loading ? 'form-hint-information' : (ok ? 'form-hint-success' : 'form-hint-invalid'));
+    }
+
+    function isAllTarget() {
+        return document.getElementById('targetAll').checked;
+    }
+
+    function updateSendButton() {
+        const hasMessage = document.getElementById('message').value.trim() !== '';
+        const ready = isAllTarget() || selectedDevices.size > 0;
+        document.getElementById('btnSend').disabled = !(hasMessage && ready);
+    }
+
+    function setSendButtonsDisabled(disabled) {
+        document.getElementById('btnSend').disabled = disabled;
+    }
+
+    function openDeviceDialog() {
+        const dialog = document.getElementById('deviceDialog');
+        if (!dialog.open) {
+            dialog.showModal();
+        }
+        if (!deviceListCache.length) {
+            loadDevices(false);
+        }
+    }
+
+    function closeDeviceDialog() {
+        const dialog = document.getElementById('deviceDialog');
+        if (dialog.open) {
+            dialog.close();
+        }
+    }
+
+    function syncTargetMode() {
+        const pick = !isAllTarget();
+        document.getElementById('btnOpenDevices').hidden = !pick;
+        if (!pick) {
+            closeDeviceDialog();
+        }
+        updateSelectedDeviceLabel();
+    }
+
+    function updateSelectedDeviceLabel() {
+        const label = document.getElementById('selectedDeviceLabel');
+        const hint = document.getElementById('selectedDeviceHint');
+        const countEl = document.getElementById('deviceCount');
+        const count = selectedDevices.size;
+
+        if (countEl && countEl.textContent) {
+            const base = countEl.textContent.replace(/\s*\(선택 \d+건\)/, '');
+            countEl.textContent = base + (count ? ' (선택 ' + count + '건)' : '');
+        }
+
+        if (isAllTarget()) {
+            label.value = '등록된 모든 기기';
+            hint.textContent = '사용 중인 등록 기기 전체에 발송합니다.';
+            updateSendButton();
+            return;
+        }
+
+        if (count === 0) {
+            label.value = '';
+            label.placeholder = '기기 목록에서 기기를 선택하세요';
+            hint.textContent = '선택된 기기가 없습니다.';
+            updateSendButton();
+            return;
+        }
+
+        const devices = Array.from(selectedDevices.values());
+        if (count === 1) {
+            const d = devices[0];
+            label.value = (d.deviceNm || 'Device') + ' / ' + (d.uuid || '') + ' / ' + (d.osType || '');
+        } else {
+            label.value = count + '개 기기 선택됨';
+        }
+        hint.textContent = '선택 ' + count + '건'
+            + (count <= 3
+                ? ' — ' + devices.map(function (d) { return d.deviceNm || d.uuid; }).join(', ')
+                : '');
+        updateSendButton();
+    }
+
+    function clearDeviceSelection() {
+        selectedDevices.clear();
+        document.querySelectorAll('.device-row.selected').forEach(function (row) {
+            row.classList.remove('selected');
+            row.setAttribute('aria-selected', 'false');
+            const cb = row.querySelector('.device-check');
+            if (cb) cb.checked = false;
+        });
+        const master = document.getElementById('checkAllDevices');
+        if (master) master.checked = false;
+        updateSelectedDeviceLabel();
+    }
+
+    function setDeviceSelected(device, row, checked) {
+        const uuid = device.uuid || '';
+        if (!uuid) return;
+
+        const cb = row.querySelector('.device-check');
+        if (checked) {
+            selectedDevices.set(uuid, device);
+            row.classList.add('selected');
+            row.setAttribute('aria-selected', 'true');
+            if (cb) cb.checked = true;
+        } else {
+            selectedDevices.delete(uuid);
+            row.classList.remove('selected');
+            row.setAttribute('aria-selected', 'false');
+            if (cb) cb.checked = false;
+        }
+        syncCheckAllState();
+        updateSelectedDeviceLabel();
+    }
+
+    function syncCheckAllState() {
+        const master = document.getElementById('checkAllDevices');
+        if (!master) return;
+        const checks = document.querySelectorAll('.device-check');
+        if (!checks.length) {
+            master.checked = false;
+            master.indeterminate = false;
+            return;
+        }
+        let checkedCount = 0;
+        checks.forEach(function (cb) {
+            if (cb.checked) checkedCount++;
+        });
+        master.checked = checkedCount === checks.length;
+        master.indeterminate = checkedCount > 0 && checkedCount < checks.length;
+    }
+
+    function toggleSelectAll(checked) {
+        document.querySelectorAll('.device-row').forEach(function (row) {
+            const index = Number(row.getAttribute('data-index'));
+            const device = deviceListCache[index];
+            if (device) {
+                setDeviceSelected(device, row, checked);
+            }
+        });
+    }
+
+    function linkDevicePage(pageIndex) {
+        const prev = devicePageIndex;
+        pendingPaginationFocus = {
+            containerId: 'devicePagination',
+            nav: pageIndex === prev - 1 ? 'prev' : (pageIndex === prev + 1 ? 'next' : null),
+            page: pageIndex
+        };
+        devicePageIndex = pageIndex;
+        loadDevices(false);
+    }
+
+    function linkHistoryPage(pageIndex) {
+        const prev = historyPageIndex;
+        pendingPaginationFocus = {
+            containerId: 'historyPagination',
+            nav: pageIndex === prev - 1 ? 'prev' : (pageIndex === prev + 1 ? 'next' : null),
+            page: pageIndex
+        };
+        historyPageIndex = pageIndex;
+        loadHistory();
+    }
+
+    function focusPaginationControl() {
+        const pending = pendingPaginationFocus;
+        pendingPaginationFocus = null;
+        if (!pending) return;
+
+        const root = document.getElementById(pending.containerId);
+        if (!root) return;
+
+        requestAnimationFrame(function () {
+            let el = null;
+            if (pending.nav === 'prev') {
+                el = root.querySelector('a.page-navi.prev');
+            } else if (pending.nav === 'next') {
+                el = root.querySelector('a.page-navi.next');
+            }
+            if (!el && pending.page != null) {
+                el = root.querySelector('a.page-link[data-page="' + pending.page + '"]');
+            }
+            if (!el) {
+                el = root.querySelector('a.page-link.active');
+            }
+            if (el && typeof el.focus === 'function') {
+                el.focus();
+            }
+        });
+    }
+
+    async function loadDevices(resetSelection) {
+        const wrap = document.getElementById('deviceTableWrap');
+        const paginationEl = document.getElementById('devicePagination');
+        renderEmpty(wrap, '불러오는 중...');
+        paginationEl.innerHTML = '';
+        document.getElementById('deviceCount').textContent = '';
+        if (resetSelection) {
+            clearDeviceSelection();
+        }
+
+        const url = API.devices
+            + '?pageIndex=' + encodeURIComponent(devicePageIndex)
+            + '&pageUnit=' + encodeURIComponent(PAGE_UNIT)
+            + '&pageSize=' + encodeURIComponent(PAGE_UNIT)
+            + '&pageLinkFunction=linkDevicePage';
+
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            const list = data.pushDeviceList || [];
+            const totalCount = typeof data.totalCount === 'number' ? data.totalCount : list.length;
+            deviceListCache = list;
+
+            if (!list.length) {
+                renderEmpty(wrap, '등록된 기기가 없습니다. 수신 앱에서 디바이스 등록을 먼저 해 주세요.');
+                document.getElementById('deviceCount').textContent = '총 0건';
+                return;
+            }
+
+            let rowsHtml = '';
+            list.forEach(function (item, index) {
+                const uuid = item.uuid || '';
+                const selected = selectedDevices.has(uuid);
+                const deviceLabel = (item.deviceNm || 'Device') + ' / ' + uuid;
+                const checkId = 'device-check-' + index;
+                rowsHtml += '<tr class="device-row' + (selected ? ' selected' : '') + '"'
+                    + ' data-index="' + index + '"'
+                    + ' aria-selected="' + (selected ? 'true' : 'false') + '">'
+                    + '<td class="text-center col-check">'
+                    + '<span class="krds-form-check medium fcm-check">'
+                    + '<input type="checkbox" id="' + checkId + '" class="device-check"'
+                    + (selected ? ' checked' : '') + '>'
+                    + '<label for="' + checkId + '"><span class="sr-only">'
+                    + escapeHtml(deviceLabel) + ' 선택</span></label>'
+                    + '</span>'
+                    + '</td>'
+                    + '<td class="text-center">' + escapeHtml(item.sn) + '</td>'
+                    + '<td>' + escapeHtml(item.deviceNm) + '</td>'
+                    + '<td class="text-center">' + escapeHtml(item.osVer) + '</td>'
+                    + '<td class="uuid-cell">' + escapeHtml(item.uuid) + '</td>'
+                    + '</tr>';
+            });
+
+            renderTable(wrap, [
+                {
+                    label: '선택',
+                    width: '5%',
+                    center: true,
+                    html: '<span class="krds-form-check medium fcm-check">'
+                        + '<input type="checkbox" id="checkAllDevices">'
+                        + '<label for="checkAllDevices"><span class="sr-only">현재 페이지 전체 선택</span></label>'
+                        + '</span>'
+                },
+                { label: 'SN', width: '6%', center: true },
+                { label: '디바이스명', width: '12%' },
+                { label: 'OS', width: '12%', center: true },
+                { label: 'UUID' }
+            ], rowsHtml);
+
+            document.getElementById('deviceCount').textContent =
+                '총 ' + totalCount + '건'
+                + (selectedDevices.size ? ' (선택 ' + selectedDevices.size + '건)' : '');
+
+            if (data.pagination) {
+                paginationEl.innerHTML = data.pagination;
+                focusPaginationControl();
+            }
+
+            const master = document.getElementById('checkAllDevices');
+            if (master) {
+                master.addEventListener('change', function () {
+                    toggleSelectAll(master.checked);
+                });
+            }
+
+            wrap.querySelectorAll('.device-row').forEach(function (row) {
+                const index = Number(row.getAttribute('data-index'));
+                const device = deviceListCache[index];
+                const cb = row.querySelector('.device-check');
+
+                cb.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                });
+                cb.addEventListener('change', function () {
+                    setDeviceSelected(device, row, cb.checked);
+                });
+
+                // 마우스 편의: 행 클릭 시 체크박스 토글 (키보드 조작은 체크박스에 집중)
+                row.addEventListener('click', function (e) {
+                    if (e.target.closest('.fcm-check')) return;
+                    setDeviceSelected(device, row, !selectedDevices.has(device.uuid));
+                });
+            });
+            syncCheckAllState();
+            updateSelectedDeviceLabel();
+        } catch (err) {
+            renderEmpty(wrap, '기기 목록 조회 실패: ' + err.message);
+        }
+    }
+
+    async function loadHistory() {
+        const wrap = document.getElementById('historyTableWrap');
+        const paginationEl = document.getElementById('historyPagination');
+        renderEmpty(wrap, '불러오는 중...');
+        paginationEl.innerHTML = '';
+
+        const keyword = document.getElementById('historyKeyword').value.trim();
+        let url = API.messages
+            + '?pageIndex=' + encodeURIComponent(historyPageIndex)
+            + '&pageUnit=' + encodeURIComponent(PAGE_UNIT)
+            + '&pageSize=' + encodeURIComponent(PAGE_UNIT)
+            + '&pageLinkFunction=linkHistoryPage';
+        if (keyword) {
+            url += '&uuid=' + encodeURIComponent(keyword);
+        }
+
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            const list = data.pushMessageList || [];
+
+            if (!list.length) {
+                renderEmpty(wrap, keyword ? '검색 결과가 없습니다.' : '발송 이력이 없습니다.');
+                return;
+            }
+
+            let rowsHtml = '';
+            list.forEach(function (item) {
+                rowsHtml += '<tr>'
+                    + '<td class="history-target">' + escapeHtml(historyTargetText(item)) + '</td>'
+                    + '<td>' + escapeHtml(item.message) + '</td>'
+                    + '<td class="text-center">' + escapeHtml(item.sndDt) + '</td>'
+                    + '</tr>';
+            });
+
+            renderTable(wrap, [
+                { label: '발송 대상', width: '34%' },
+                { label: '메시지' },
+                { label: '발송일시', width: '18%', center: true }
+            ], rowsHtml);
+
+            if (data.pagination) {
+                paginationEl.innerHTML = data.pagination;
+                focusPaginationControl();
+            }
+        } catch (err) {
+            renderEmpty(wrap, '이력 조회 실패: ' + err.message);
+        }
+    }
+
+    async function sendToDevices(devices, message) {
+        setSendButtonsDisabled(true);
+
+        let successCount = 0;
+        let failCount = 0;
+        const sndDt = formatSndDt();
+
+        for (let i = 0; i < devices.length; i++) {
+            const device = devices[i];
+            showSendStatus(false, '발송 중... (' + (i + 1) + '/' + devices.length + ')', true);
+
+            const body = new URLSearchParams();
+            body.append('uuid', device.uuid || '');
+            body.append('tokenId', device.tokenId || '');
+            body.append('osType', device.osType || 'Android');
+            body.append('message', message);
+            body.append('sndDt', sndDt);
+
+            try {
+                const res = await fetch(API.send, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+                    body: body.toString()
+                });
+                const data = await res.json();
+                if (data.resultState === 'OK') {
+                    successCount++;
+                } else {
+                    failCount++;
+                }
+            } catch (err) {
+                failCount++;
+            }
+        }
+
+        if (failCount === 0) {
+            showSendStatus(true, devices.length + '개 기기에 발송 성공');
+        } else if (successCount === 0) {
+            showSendStatus(false, '발송 실패 (' + failCount + '건)');
+        } else {
+            showSendStatus(false, '일부 발송 완료 (성공 ' + successCount + ' / 실패 ' + failCount + ')');
+        }
+
+        historyPageIndex = 1;
+        await loadHistory();
+        updateSendButton();
+    }
+
+    async function sendPush() {
+        const message = document.getElementById('message').value.trim();
+        if (!message) {
+            showSendStatus(false, '메시지 입력이 필요합니다.');
+            return;
+        }
+        if (isAllTarget()) {
+            await sendToAll();
+            return;
+        }
+
+        const devices = Array.from(selectedDevices.values()).filter(function (device) {
+            return device.tokenId && String(device.tokenId).trim() !== '';
+        });
+        if (!devices.length) {
+            showSendStatus(false, '발송할 기기를 선택하세요.');
+            return;
+        }
+        await sendToDevices(devices, message);
+    }
+
+    async function sendToAll() {
+        const message = document.getElementById('message').value.trim();
+        if (!message) {
+            showSendStatus(false, '메시지 입력이 필요합니다.');
+            return;
+        }
+
+        setSendButtonsDisabled(true);
+        showSendStatus(false, '등록 기기 조회 중...', true);
+
+        try {
+            const res = await fetch(API.devices + '?pageIndex=0');
+            const data = await res.json();
+            const devices = (data.pushDeviceList || []).filter(function (device) {
+                return device.tokenId && String(device.tokenId).trim() !== '';
+            });
+            if (!devices.length) {
+                showSendStatus(false, '발송할 등록 기기가 없습니다.');
+                updateSendButton();
+                return;
+            }
+            await sendToDevices(devices, message);
+        } catch (err) {
+            showSendStatus(false, '전체 기기 조회 실패: ' + err.message);
+            updateSendButton();
+        }
+    }
+
+    document.querySelectorAll('input[name="sendTarget"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            syncTargetMode();
+            if (!isAllTarget()) {
+                openDeviceDialog();
+            }
+        });
+    });
+    document.getElementById('btnOpenDevices').addEventListener('click', openDeviceDialog);
+    document.getElementById('btnCloseDevices').addEventListener('click', closeDeviceDialog);
+    document.getElementById('deviceDialog').addEventListener('cancel', function (e) {
+        e.preventDefault();
+        closeDeviceDialog();
+    });
+    document.getElementById('btnReloadDevices').addEventListener('click', function () {
+        devicePageIndex = 1;
+        loadDevices(true);
+    });
+    document.getElementById('btnReloadHistory').addEventListener('click', function () {
+        historyPageIndex = 1;
+        loadHistory();
+    });
+    document.getElementById('btnFilterHistory').addEventListener('click', function () {
+        historyPageIndex = 1;
+        loadHistory();
+    });
+    document.getElementById('historyKeyword').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            historyPageIndex = 1;
+            loadHistory();
+        }
+    });
+    document.getElementById('btnSend').addEventListener('click', sendPush);
+    document.getElementById('message').addEventListener('input', updateSendButton);
+
+    syncTargetMode();
+    loadHistory();
+</script>
+</body>
+</html>

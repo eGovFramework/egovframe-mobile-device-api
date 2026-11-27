@@ -1,5 +1,6 @@
 import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:egovframe_mobile_deviceapi_app/presentation/screens/application_list_main.dart';
+import 'package:egovframe_mobile_deviceapi_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class LoadingPage extends StatefulWidget {
@@ -19,12 +20,12 @@ class _LoadingPageState extends State<LoadingPage> {
   Future<void> _initializeApplication() async {
     await Future.delayed(const Duration(seconds: 2));
     if (mounted) {
+      final l10n = AppLocalizations.of(context)!;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const ApplicationListMain(
-            title: 'MobileDevice API Application List',
-          ),
+          builder: (context) =>
+              ApplicationListMain(title: l10n.applicationListTitle),
         ),
       );
     }
@@ -32,6 +33,8 @@ class _LoadingPageState extends State<LoadingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: EgovColor.gray0,
       body: Center(
@@ -43,7 +46,7 @@ class _LoadingPageState extends State<LoadingPage> {
               children: [
                 // 외곽선 레이어
                 Text(
-                  'DeviceAPI',
+                  l10n.loadingSplashAppName,
                   style: TextStyle(
                     fontSize: 48,
                     foreground: Paint()
@@ -52,18 +55,15 @@ class _LoadingPageState extends State<LoadingPage> {
                       ..color = EgovColor.primary50,
                   ),
                 ),
-                const Text(
-                  'DeviceAPI',
-                  style: TextStyle(
-                    fontSize: 48,
-                    color: EgovColor.white100,
-                  ),
+                Text(
+                  l10n.loadingSplashAppName,
+                  style: TextStyle(fontSize: 48, color: EgovColor.white100),
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Flutter',
+            Text(
+              l10n.loadingSplashFrameworkName,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -82,4 +82,3 @@ class _LoadingPageState extends State<LoadingPage> {
     );
   }
 }
-

@@ -1,20 +1,18 @@
-﻿import "package:flutter/cupertino.dart";
-abstract class EgovText{
-  static final regular = TextStyle(
-    fontSize: 16,
-    fontFamily: "Pretendard GOV"
-  );
+import "package:flutter/cupertino.dart";
+
+abstract class EgovText {
+  static final regular = TextStyle(fontSize: 16, fontFamily: "Pretendard GOV");
 
   static final medium = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w500,
-    fontFamily: "Pretendard GOV"
+    fontFamily: "Pretendard GOV",
   );
 
   static final bold = TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.w700,
-      fontFamily: "Pretendard GOV"
+    fontSize: 16,
+    fontWeight: FontWeight.w700,
+    fontFamily: "Pretendard GOV",
   );
 
   // Number
@@ -40,50 +38,50 @@ abstract class EgovText{
   static const int number_19 = 72;
   static const int number_20 = 80;
   static const int number_21 = 96;
-  static const int number_max = 100;
+  static const int numberMax = 100;
 
   // Spacing
-  static const int padding_small = number_3;
-  static const int padding_medium = number_8;
-  static const int padding_large = number_10;
+  static const int paddingSmall = number_3;
+  static const int paddingMedium = number_8;
+  static const int paddingLarge = number_10;
 
   // Title styles
   static final title = TextStyle(
-  fontSize: 20,
-  fontWeight: FontWeight.w700,
-  fontFamily: "Pretendard GOV",
-  color: Color(0xFF1E2124),
+    fontSize: 20,
+    fontWeight: FontWeight.w700,
+    fontFamily: "Pretendard GOV",
+    color: Color(0xFF1E2124),
   );
 
   static final subtitle = TextStyle(
-  fontSize: 18,
-  fontWeight: FontWeight.w600,
-  fontFamily: "Pretendard GOV",
-  color: Color(0xFF1E2124),
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    fontFamily: "Pretendard GOV",
+    color: Color(0xFF1E2124),
   );
 
   // Caption styles
   static final caption = TextStyle(
-  fontSize: 14,
-  fontWeight: FontWeight.w400,
-  fontFamily: "Pretendard GOV",
-  color: Color(0xFF58616A),
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    fontFamily: "Pretendard GOV",
+    color: Color(0xFF58616A),
   );
 
   static final captionBold = TextStyle(
-  fontSize: 14,
-  fontWeight: FontWeight.w600,
-  fontFamily: "Pretendard GOV",
-  color: Color(0xFF1E2124),
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    fontFamily: "Pretendard GOV",
+    color: Color(0xFF1E2124),
   );
 
   // Button text
   static final buttonText = TextStyle(
-  fontSize: 17,
-  fontWeight: FontWeight.w400,
-  fontFamily: "Pretendard GOV",
-  color: Color(0xFFFFFFFF),
-  height: 1.50,
+    fontSize: 17,
+    fontWeight: FontWeight.w400,
+    fontFamily: "Pretendard GOV",
+    color: Color(0xFFFFFFFF),
+    height: 1.50,
   );
 
   // Body styles (Material Design 호환)

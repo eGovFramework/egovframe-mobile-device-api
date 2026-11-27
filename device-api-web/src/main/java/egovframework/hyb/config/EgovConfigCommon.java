@@ -32,6 +32,8 @@ public class EgovConfigCommon {
 				"classpath:/org/egovframe/rte/fdl/idgnr/messages/idgnr",
 				"classpath:/org/egovframe/rte/fdl/property/messages/properties");
 		reloadableResourceBundleMessageSource.setDefaultEncoding("UTF-8");
+		// ko 요청이 서버 기본 Locale(en 등)로 넘어가지 않고 기본(한글) 번들을 쓰도록
+		reloadableResourceBundleMessageSource.setFallbackToSystemLocale(false);
 		reloadableResourceBundleMessageSource.setCacheSeconds(60);
 		return reloadableResourceBundleMessageSource;
 	}

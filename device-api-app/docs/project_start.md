@@ -24,7 +24,7 @@
 
 #### Flutter
 
-- [Settings 1.Flutter 설치](/settings.md)에서 지정한 경로에 Fluttr가 지정되어있는지 확인
+- [Settings 1.Flutter 설치](/settings.md)에서 지정한 경로에 Flutter가 지정되어있는지 확인
   - Window
     ![flutter path](./images/flutter_path.png)
   - macOS
@@ -45,11 +45,14 @@
 
 - `pubspec.yaml` 파일에 사용하고있는 flutter API 확인</br>
   각 사용하고 있는 API에 대한 설명은 [모바일 아키텍처](https://www.egovframe.go.kr/home/sub.do?menuNo=98) 하단의 오픈소스 사용현황에서 확인 가능
+- 기능별 패키지는 [device_applications.md](./device_applications.md) 참고
 
-- pubspec에 정의된 라이브러리 호출
+- pubspec에 정의된 라이브러리 호출 후 코드 생성
   ```ps1
   flutter clean
   flutter pub get
+  flutter gen-l10n
+  dart run build_runner build --delete-conflicting-outputs
   ```
     *프로젝트 Open시 Build를 진행하지만 라이브러리를 불러오지 못해 에러표시가 생기는 경우 실행
 
@@ -90,99 +93,24 @@ Emulator(Virtual Device) 를 미리 실행시켜 두어야 목록에서 확인 �
     *applist 화면이 로딩되면 페이지전환 </br>
     ![flutter loading page](./images/flutterLoadingPage.png)
 
-- DeviceAPI Application 9종 화면</br>
+- DeviceAPI Application 목록 화면 (가속도계 ~ SQLite Manager, **AI 채팅** 포함 19개)</br>
     ![flutter main page](./images/flutterAppListPage.png)
 
 ## 7. WebServer와 연동
 연동 서버를 열지 않아도 Flutter 앱은 기동 가능</br>
-Flutter 서버와의 연동을 위해 웹서버 기동 후 설정 필요</br>
-    *[DeviceAPI 연동 WebServer 기동](/webserver.md) 참고
+서버와 앱을 local 또는 운영으로 나눠 실행하는 절차는 [local과 운영 실행](/run_profiles.md)을 따른다.
 
-### 1) baseUrl 설정
+- local 서버: `application.properties` 기본값으로 기동
+- 운영 서버: 같은 파일의 `[DEV/운영]` 주석 항목을 수정한 뒤 기동
+- local 앱은 `flutter run`만 하면 `lib/config/app_config.dart`의 `apiHost` `defaultValue`와 포트 `9700`으로 접속한다.
+- 개발 PC 주소가 다르면 그 `defaultValue`를 수정한다. 한 번만 바꿀 때는 `--dart-define=API_HOST`로 덮어쓴다. Android 에뮬레이터에서 개발 PC는 `10.0.2.2`이다.
+- 운영 앱은 `--dart-define=APP_ENV=dev`와 `API_BASE_URL`, `API_USERNAME`, `API_PASSWORD`를 넘긴다.
 
-`lib > config > app_config.dart`
-- 기본값 : `static const String baseUrl = 'http://10.0.2.2:9700';`
-- WebServer 기동 시 로컬이 아닌 다른 서버에서 기동한 경우 변경 필요 (IP 또는 서버, 포트번호 확인)
-- 또는 개발용 url 설정
-    ```dart
-    // 개발/운영 환경별 설정 (필요시 확장 가능)
-    static const String devUrl = '사용할 서버 URL';
-    
-    static String get currentBaseUrl {
-        return devUrl;
-    }
-    ```
-- 변경 후 Clean > Build 실행
-    ```ps1
-    flutter clean
-    flutter pub get
-    ```
-
-### 2) 로컬 Web서버가 아닌 다른 서버를 이용하는 경우
-
-https가 아닌 http 로 통신을 하는 경우 보안문제로 인해 개발 IP만 허용되도록 설정 </br>
-운영환경에서는 해당 기능을 주석처리하거나 삭제 필요
-
-- 기본값으로 localhost(127.0.0.1)로 기동된 서버에 대한 값은 허용
-
-#### Android
->IP 설정: `android/app/src/main/res/xml/network_security_config.xml` 
-```xml
-    <!-- 특정 도메인/IP에 대해서만 HTTP 허용 -->
-    <domain-config cleartextTrafficPermitted="true">
-        <!-- 개발 서버 IP -->
-        <domain includeSubdomains="true">허용할 개발 PC의 IP</domain>
-
-        <!-- Android 에뮬레이터용 localhost -->
-        <domain includeSubdomains="true">10.0.2.2</domain>
-        <!-- 로컬 개발용 -->
-        <domain includeSubdomains="true">localhost</domain>
-        <domain includeSubdomains="true">127.0.0.1</domain>
-    </domain-config>
-```
-- `<domain includeSubdomains="true">`를 통해 통신을 진행할 서버의 도메인 값을 추가
-
-> 설정 추가 : `android/app/src/main/AndroidManifest.xml`
-```xml
-<application android:networkSecurityConfig="@xml/network_security_config">
-```
-https로 통신하는 production의 경우 해당 설정을 삭제하거나 주석 처리
-
-#### IOS
-> 설정 파일 : `ios/Runner/Info.plist`
-```xml
-	<!-- 네트워크 보안 설정 -->
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<false/>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>허용할 개발 PC의 IP</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-				<key>NSExceptionMinimumTLSVersion</key>
-				<string>TLSv1.0</string>
-			</dict>
-			<key>localhost</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
-			<key>127.0.0.1</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
-		</dict>
-	</dict>
-```
-- `NSExceptionAllowsInsecureHTTPLoads`로 접근을 허용할 IP를 <key>에 작성
-- Production 배포시 해당 설정 파일 주석/삭제 처리
+AI 채팅은 앱이 9700만 호출하고, RAG 주소는 `application.properties`에만 둔다.
 
 ## 연관 가이드
 
 - [Flutter 설치가이드](/settings.md)
 - [Android Studio Emulator 설치 및 설정](/emulator.md)
 - [DeviceAPI 연동 WebServer 기동](/webserver.md)
+- [local과 운영 실행](/run_profiles.md)

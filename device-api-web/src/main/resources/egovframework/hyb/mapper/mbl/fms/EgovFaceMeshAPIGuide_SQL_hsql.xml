@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.hyb.mbl.fms.service.impl.FaceMeshAPIDAO">
+
+	<resultMap id="faceMeshInfo" type="egovframework.hyb.mbl.fms.service.FaceMeshAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="useYn" column="USEYN"/>
+		<result property="timestamp" column="TIMESTAMP"/>
+		<result property="faceGroupId" column="FACE_GROUP_ID"/>
+		<result property="source" column="SOURCE"/>
+		<result property="imagePath" column="IMAGE_PATH"/>
+		<result property="imageWidth" column="IMAGE_WIDTH"/>
+		<result property="imageHeight" column="IMAGE_HEIGHT"/>
+		<result property="faceCount" column="FACE_COUNT"/>
+		<result property="faceIndex" column="FACE_INDEX"/>
+		<result property="trackingId" column="TRACKING_ID"/>
+		<result property="bboxLeft" column="BBOX_LEFT"/>
+		<result property="bboxTop" column="BBOX_TOP"/>
+		<result property="bboxRight" column="BBOX_RIGHT"/>
+		<result property="bboxBottom" column="BBOX_BOTTOM"/>
+		<result property="landmarkCount" column="LANDMARK_COUNT"/>
+		<result property="meshScore" column="MESH_SCORE"/>
+		<result property="hasIris" column="HAS_IRIS"/>
+		<result property="iodNorm" column="IOD_NORM"/>
+		<result property="noseTipX" column="NOSE_TIP_X"/>
+		<result property="noseTipY" column="NOSE_TIP_Y"/>
+		<result property="leftEyeX" column="LEFT_EYE_X"/>
+		<result property="leftEyeY" column="LEFT_EYE_Y"/>
+		<result property="rightEyeX" column="RIGHT_EYE_X"/>
+		<result property="rightEyeY" column="RIGHT_EYE_Y"/>
+		<result property="mouthCenterX" column="MOUTH_CENTER_X"/>
+		<result property="mouthCenterY" column="MOUTH_CENTER_Y"/>
+		<result property="headEulerX" column="HEAD_EULER_X"/>
+		<result property="headEulerY" column="HEAD_EULER_Y"/>
+		<result property="headEulerZ" column="HEAD_EULER_Z"/>
+	</resultMap>
+
+	<insert id="insertFaceMeshInfo">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+			SELECT (COALESCE(MAX(SN), 0)+1) sn FROM FACE_MESH_INFO
+		</selectKey>
+		INSERT INTO FACE_MESH_INFO (
+			SN, UUID, USEYN, "TIMESTAMP",
+			FACE_GROUP_ID, SOURCE, IMAGE_PATH, IMAGE_WIDTH, IMAGE_HEIGHT, FACE_COUNT,
+			FACE_INDEX, TRACKING_ID,
+			BBOX_LEFT, BBOX_TOP, BBOX_RIGHT, BBOX_BOTTOM,
+			LANDMARK_COUNT, MESH_SCORE, HAS_IRIS, IOD_NORM,
+			NOSE_TIP_X, NOSE_TIP_Y, LEFT_EYE_X, LEFT_EYE_Y,
+			RIGHT_EYE_X, RIGHT_EYE_Y, MOUTH_CENTER_X, MOUTH_CENTER_Y,
+			HEAD_EULER_X, HEAD_EULER_Y, HEAD_EULER_Z
+		) VALUES (
+			#{sn}, #{uuid}, #{useYn}, #{timestamp},
+			#{faceGroupId}, #{source}, #{imagePath}, #{imageWidth}, #{imageHeight}, #{faceCount},
+			#{faceIndex}, #{trackingId},
+			#{bboxLeft}, #{bboxTop}, #{bboxRight}, #{bboxBottom},
+			#{landmarkCount}, #{meshScore}, #{hasIris}, #{iodNorm},
+			#{noseTipX}, #{noseTipY}, #{leftEyeX}, #{leftEyeY},
+			#{rightEyeX}, #{rightEyeY}, #{mouthCenterX}, #{mouthCenterY},
+			#{headEulerX}, #{headEulerY}, #{headEulerZ}
+		)
+	</insert>
+
+	<select id="selectFaceMeshInfoList"
+			parameterType="egovframework.hyb.mbl.fms.service.FaceMeshAPIVO"
+			resultMap="faceMeshInfo">
+		SELECT
+			SN, UUID, USEYN, "TIMESTAMP",
+			FACE_GROUP_ID, SOURCE, IMAGE_PATH, IMAGE_WIDTH, IMAGE_HEIGHT, FACE_COUNT,
+			FACE_INDEX, TRACKING_ID,
+			BBOX_LEFT, BBOX_TOP, BBOX_RIGHT, BBOX_BOTTOM,
+			LANDMARK_COUNT, MESH_SCORE, HAS_IRIS, IOD_NORM,
+			NOSE_TIP_X, NOSE_TIP_Y, LEFT_EYE_X, LEFT_EYE_Y,
+			RIGHT_EYE_X, RIGHT_EYE_Y, MOUTH_CENTER_X, MOUTH_CENTER_Y,
+			HEAD_EULER_X, HEAD_EULER_Y, HEAD_EULER_Z
+		FROM FACE_MESH_INFO
+		WHERE USEYN = 'Y'
+		AND UUID = #{uuid}
+		<if test="faceGroupId != null and faceGroupId != ''">
+			AND FACE_GROUP_ID = #{faceGroupId}
+		</if>
+		ORDER BY SN DESC
+	</select>
+
+	<delete id="deleteFaceMeshInfo">
+		UPDATE FACE_MESH_INFO
+		SET USEYN = 'N'
+		WHERE SN = #{sn}
+		AND UUID = #{uuid}
+	</delete>
+
+</mapper>

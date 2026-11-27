@@ -7,21 +7,18 @@ import org.springframework.stereotype.Service;
 
 import egovframework.hyb.mbl.acl.service.AcceleratorAPIVO;
 import egovframework.hyb.mbl.acl.service.EgovAcceleratorAPIService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.annotation.Resource;
 
 /**
  * 통합 Accelerator API ServiceImpl
  */
-@Service
-@RequiredArgsConstructor
-@Slf4j
+@Service("EgovAcceleratorAPIService")
 public class EgovAcceleratorAPIServiceImpl extends EgovAbstractServiceImpl implements EgovAcceleratorAPIService {
 
-    private final AcceleratorAPIDAO acceleratorAPIDAO;
+    @Resource(name="AcceleratorAPIDAO")
+    private AcceleratorAPIDAO acceleratorAPIDAO;
 
     public List<AcceleratorAPIVO> selectAcceleratorInfoList(AcceleratorAPIVO searchVO) {
-        log.debug("uuid={}", searchVO.getUuid());
         return acceleratorAPIDAO.selectAcceleratorInfoList(searchVO);
     }
     

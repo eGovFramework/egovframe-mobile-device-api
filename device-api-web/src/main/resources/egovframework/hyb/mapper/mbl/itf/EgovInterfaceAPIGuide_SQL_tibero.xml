@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="interfaceAPIDAO">
+<mapper namespace="egovframework.hyb.mbl.itf.service.impl.InterfaceAPIDAO">
 
 	<resultMap id="interfaceInfo" type="egovframework.hyb.mbl.itf.service.InterfaceAPIVO">
 		<result property="sn" column="SN"/>
@@ -34,7 +34,6 @@
 		
 			DELETE FROM INTERFACE_EGOV
 			WHERE USER_ID = #{userId}
-			AND USER_PW = #{userPw}
 		
 	</delete>
 	
@@ -45,7 +44,6 @@
 				USER_ID, USER_PW
 			FROM INTERFACE_EGOV 
 			WHERE USER_ID = #{userId} 
-			AND USER_PW = #{userPw}
 		
 	</select>
 
@@ -55,7 +53,6 @@
 				USER_ID
 		FROM INTERFACE_EGOV
 		WHERE USER_ID = #{userId}
-		AND USER_PW = #{userPw}
 		ORDER BY SN DESC
 	</select>
 

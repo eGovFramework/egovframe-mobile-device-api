@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mediaAPIDAO">
+<mapper namespace="egovframework.hyb.mbl.mda.service.impl.MediaAPIDAO">
 
 	<resultMap id="mediaDetail" type="egovframework.hyb.mbl.mda.service.MediaAPIVO">
 		<result property="sn" column="SN"/>
 		<result property="mdSj" column="MD_SJ"/>
 		<result property="revivCo" column="REVIV_CO"/>
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="mdCode" column="MD_CODE"/>
 	</resultMap>
 	
 	<resultMap id="mediaList" type="egovframework.hyb.mbl.mda.service.MediaAPIVO">
 		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
 		<result property="mdSj" column="MD_SJ"/>
+		<result property="mdCode" column="MD_CODE"/>
 		<result property="revivCo" column="REVIV_CO"/>
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="orignlFileNm" column="ORIGNL_FILE_NM"/>
+		<result property="streFileNm" column="STRE_FILE_NM"/>
+		<result property="fileExtsn" column="FILE_EXTSN"/>
+		<result property="fileSize" column="FILE_SIZE"/>
+		<result property="fileStreCours" column="FILE_STRE_COURS"/>
 	</resultMap>
 	
 	<insert id="insertMediaInfo">
@@ -52,15 +62,28 @@
  
 	 <select id="selectMediaInfoList" resultMap="mediaList">
 	    	SELECT
-				A.SN, A.MD_SJ,A.MD_CODE, B.FILE_SN, B.FILE_STRE_COURS, B.STRE_FILE_NM, B.FILE_EXTSN, B.FILE_SIZE
-			FROM MEDIA A JOIN FILE_DETAIL_INFO B USING(FILE_SN)
-			WHERE A.USEYN = 'Y' AND A.UUID = #{uuid}
+				A.SN, A.UUID, A.MD_SJ, A.MD_CODE, A.REVIV_CO, A.FILE_SN,
+				B.ORIGNL_FILE_NM, B.STRE_FILE_NM, B.FILE_EXTSN, B.FILE_SIZE, B.FILE_STRE_COURS
+			FROM MEDIA A
+			JOIN FILE_DETAIL_INFO B ON A.FILE_SN = B.FILE_SN
+			WHERE A.USEYN = 'Y'
+			  AND A.UUID = #{uuid}
+			ORDER BY A.SN DESC
+	</select>
+
+	<select id="selectMediaFileSnBySn" parameterType="egovframework.hyb.mbl.mda.service.MediaAPIVO" resultType="int">
+		SELECT A.FILE_SN
+		FROM MEDIA A
+		WHERE A.SN = #{sn}
+		  AND A.UUID = #{uuid}
+		  AND A.USEYN = 'Y'
 	</select>
 
 	<delete id="deleteMediaInfo">
 		UPDATE MEDIA 
 		SET USEYN='N'
-		WHERE SN = #{sn} AND UUID = #{uuid}
+		WHERE SN = #{sn}
+		  AND UUID = #{uuid}
 	</delete> 
 	
 </mapper>

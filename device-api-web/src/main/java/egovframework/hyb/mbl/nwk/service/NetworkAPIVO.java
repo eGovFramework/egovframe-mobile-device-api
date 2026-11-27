@@ -22,19 +22,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @Class Name : NetworkAPIVO.java
- * @Description : 통합 Network API VO Class
- * @Modification Information
- * @
- * @ 수정일               수정자              수정내용
- * @ ----------   ---------   -------------------------------
- *   2025.10.28   통합개발팀          Android/iOS 패키지 통합
+ * 통합 Network API VO
  *
- * @author 디바이스 API 실행환경 팀
- * @since 2025. 10. 28.
- * @version 2.0
- * @see
- *
+ * 수정이력
+ * 2025.10.28 통합개발팀 Android/iOS 패키지 통합
  */
 @Getter
 @Setter

@@ -1,12 +1,11 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:egovframe_mobile_deviceapi_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-import 'app_logger.dart';
 
 /// 권한 관리를 위한 유틸리티 클래스
 class PermissionManager {
@@ -21,22 +20,21 @@ class PermissionManager {
 
       // 현재 권한 상태 확인
       LocationPermission permission = await Geolocator.checkPermission();
-      
+
       if (permission == LocationPermission.denied) {
         // 권한 요청
         permission = await Geolocator.requestPermission();
       }
-      
+
       if (permission == LocationPermission.deniedForever) {
         return PermissionStatus.permanentlyDenied;
       }
-      
-      return permission == LocationPermission.whileInUse || 
-             permission == LocationPermission.always 
-             ? PermissionStatus.granted 
-             : PermissionStatus.denied;
+
+      return permission == LocationPermission.whileInUse ||
+              permission == LocationPermission.always
+          ? PermissionStatus.granted
+          : PermissionStatus.denied;
     } catch (e) {
-      AppLogger.e('위치 권한 요청 오류', e);
       return PermissionStatus.denied;
     }
   }
@@ -44,10 +42,11 @@ class PermissionManager {
   /// 연락처 권한을 요청하는 메서드
   static Future<PermissionStatus> requestContactsPermission() async {
     try {
-      final permission = await FlutterContacts.requestPermission(readonly: true);
+      final permission = await FlutterContacts.requestPermission(
+        readonly: true,
+      );
       return permission ? PermissionStatus.granted : PermissionStatus.denied;
     } catch (e) {
-      AppLogger.e('연락처 권한 요청 오류', e);
       return PermissionStatus.denied;
     }
   }
@@ -58,7 +57,6 @@ class PermissionManager {
       final status = await Permission.camera.request();
       return status;
     } catch (e) {
-      AppLogger.e('카메라 권한 요청 오류', e);
       return PermissionStatus.denied;
     }
   }
@@ -70,7 +68,7 @@ class PermissionManager {
         final deviceInfo = DeviceInfoPlugin();
         final androidInfo = await deviceInfo.androidInfo;
         final sdkInt = androidInfo.version.sdkInt;
-        
+
         if (sdkInt >= 33) {
           final status = await Permission.photos.request();
           return status;
@@ -83,53 +81,83 @@ class PermissionManager {
         return status;
       }
     } catch (e) {
-      AppLogger.e('저장소 권한 요청 오류', e);
       return PermissionStatus.denied;
     }
   }
 
   /// 권한 상태에 따른 사용자 친화적 메시지 반환
-  static String getPermissionMessage(PermissionStatus status, String permissionType) {
+  static String getPermissionMessage(
+    PermissionStatus status,
+    String permissionType, {
+    AppLocalizations? l10n,
+  }) {
+    String fallback(
+      String granted,
+      String denied,
+      String permanent,
+      String restricted,
+      String limited,
+      String provisional,
+    ) {
+      return switch (status) {
+        PermissionStatus.granted => granted,
+        PermissionStatus.denied => denied,
+        PermissionStatus.permanentlyDenied => permanent,
+        PermissionStatus.restricted => restricted,
+        PermissionStatus.limited => limited,
+        PermissionStatus.provisional => provisional,
+      };
+    }
+
+    if (l10n == null) {
+      return fallback(
+        '$permissionType permission granted.',
+        '$permissionType permission denied. Enable it in Settings.',
+        '$permissionType permission permanently denied. Allow it in app settings.',
+        '$permissionType permission is restricted.',
+        '$permissionType permission is limited.',
+        '$permissionType permission is provisionally granted.',
+      );
+    }
+
     switch (status) {
       case PermissionStatus.granted:
-        return '$permissionType 권한이 허용되었습니다.';
+        return l10n.permissionGranted(permissionType);
       case PermissionStatus.denied:
-        return '$permissionType 권한이 거부되었습니다. 기능을 사용하려면 설정에서 권한을 허용해주세요.';
+        return l10n.permissionDenied(permissionType);
       case PermissionStatus.permanentlyDenied:
-        return '$permissionType 권한이 영구적으로 거부되었습니다. 앱 설정에서 직접 권한을 허용해주세요.';
+        return l10n.permissionPermanentlyDenied(permissionType);
       case PermissionStatus.restricted:
-        return '$permissionType 권한이 제한되었습니다.';
+        return l10n.permissionRestricted(permissionType);
       case PermissionStatus.limited:
-        return '$permissionType 권한이 제한적으로 허용되었습니다.';
+        return l10n.permissionLimited(permissionType);
       case PermissionStatus.provisional:
-        return '$permissionType 권한이 임시적으로 허용되었습니다.';
+        return l10n.permissionProvisional(permissionType);
     }
   }
 
   /// 권한 설정 화면으로 이동하는 다이얼로그 표시
   static Future<void> showPermissionSettingsDialog(
-    BuildContext context, 
-    String permissionType
+    BuildContext context,
+    String permissionType,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('$permissionType 권한 필요'),
-          content: Text(
-            '$permissionType 기능을 사용하려면 권한이 필요합니다.\n'
-            '설정에서 권한을 허용하시겠습니까?'
-          ),
+          title: Text(l10n.permissionRequiredTitle(permissionType)),
+          content: Text(l10n.permissionRequiredMessage(permissionType)),
           actions: <Widget>[
             TextButton(
-              child: const Text('취소'),
+              child: Text(l10n.commonCancel),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('설정으로 이동'),
+              child: Text(l10n.commonOpenSettings),
               onPressed: () {
                 Navigator.of(context).pop();
                 openAppSettings();
@@ -144,12 +172,12 @@ class PermissionManager {
   /// 모든 권한을 한번에 요청하는 메서드
   static Future<Map<String, PermissionStatus>> requestAllPermissions() async {
     final results = <String, PermissionStatus>{};
-    
+
     results['location'] = await requestLocationPermission();
     results['contacts'] = await requestContactsPermission();
     results['camera'] = await requestCameraPermission();
     results['storage'] = await requestStoragePermission();
-    
+
     return results;
   }
 }

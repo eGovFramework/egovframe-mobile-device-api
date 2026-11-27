@@ -8,29 +8,27 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import egovframework.hyb.mbl.fop.service.EgovFileOpenerDeviceAPIService;
 import egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIVO;
+import egovframework.hyb.utils.DeviceUuidCheck;
 import egovframework.hyb.utils.EgovFileMngUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 통합 File Opener API Controller
  */
 @Controller
-@RequiredArgsConstructor
-@Slf4j
-@Tag(name = "13. FileOpener Guide Program Service", description = "파일 오프너 API 관리")
+@Tag(name = "11. FileOpener Guide Program Service", description = "파일 오프너 API 관리")
 public class EgovFileOpenerDeviceAPIController {
 
-    private final EgovFileOpenerDeviceAPIService egovFileOpenerDeviceAPIService;
+    @Resource(name = "EgovFileOpenerDeviceAPIService")
+    private EgovFileOpenerDeviceAPIService egovFileOpenerDeviceAPIService;
 
 	@Resource(name = "egovFileMngUtil")
 	private EgovFileMngUtil egovFileMngUtil;
@@ -39,7 +37,9 @@ public class EgovFileOpenerDeviceAPIController {
 	@GetMapping("/fop/selectFileOpenerList.do")
     public ResponseEntity<Map<String, Object>> selectFileOpenerList(
     		@Parameter(description = "기기 식별코드") FileOpenerDeviceAPIVO searchVO) {
-		log.debug("uuid={}", searchVO.getUuid());
+		if (DeviceUuidCheck.isBlank(searchVO.getUuid())) {
+			return DeviceUuidCheck.requiredResponse();
+		}
 		Map<String, Object> response = new HashMap<>();
 		List<FileOpenerDeviceAPIVO> fileOpenerDeviceAPIVO = egovFileOpenerDeviceAPIService.selectFileOpenerList(searchVO);
 		response.put("resultSet", fileOpenerDeviceAPIVO);
@@ -47,39 +47,24 @@ public class EgovFileOpenerDeviceAPIController {
 		return ResponseEntity.ok(response);
     }
 
-	/**
-	 * 선택된 파일을 클라이언트로 전송한다.
-	 * @param response - HttpServletResponse 
-	 * @param fileVO - 전송할 파일 정보가 담긴 ResourceUpdateDeviceAPIVO 
-	 * @return ModelAndView
-	 * @exception Exception
-	 */
     @Operation(summary = "파일 오프너 파일 다운로드", description = "기기 UUID 소유권을 검증한 뒤 파일을 다운로드합니다.")
     @GetMapping("/fop/fileDownload.do")
 	public void fileDownload(
-			@Parameter(description = "기기 식별코드") @RequestParam String uuid,
-			@Parameter(description = "파일 일련번호") @RequestParam int fileSn,
+			@Parameter(description = "기기 식별코드") @RequestParam("uuid") String uuid,
+			@Parameter(description = "파일 일련번호") @RequestParam("fileSn") int fileSn,
 			HttpServletResponse response) throws IOException {
-		byte[] fildData;
+		if (DeviceUuidCheck.isBlank(uuid)) {
+			egovFileMngUtil.writeDownloadError(response, HttpServletResponse.SC_BAD_REQUEST, "uuid is required");
+			return;
+		}
 		try {
-			fildData = egovFileMngUtil.fileDownload(response, fileSn, uuid);
+			egovFileMngUtil.fileDownload(response, fileSn, uuid);
 		} catch (SecurityException e) {
 			egovFileMngUtil.writeDownloadError(response, HttpServletResponse.SC_FORBIDDEN, "파일 접근 권한이 없습니다.");
 			return;
 		} catch (IOException e) {
 			egovFileMngUtil.writeDownloadError(response, HttpServletResponse.SC_NOT_FOUND, "파일을 찾을 수 없습니다.");
-			return;
-		}
-
-		response.setContentType("application/octet-stream");
-		response.setContentLength(fildData.length);
-		try {
-			response.getOutputStream().write(fildData);
-			response.getOutputStream().flush();
-		} catch (IOException e) {
-			egovFileMngUtil.writeDownloadError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null);
 		}
 	}
-
 
 }

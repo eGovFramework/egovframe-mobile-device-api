@@ -1,4 +1,4 @@
-﻿import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
+import 'package:egovframe_mobile_deviceapi_app/presentation/resources/color_style.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatefulWidget {
@@ -33,7 +33,8 @@ class CustomButton extends StatefulWidget {
   State<CustomButton> createState() => _CustomButtonState();
 }
 
-class _CustomButtonState extends State<CustomButton> with SingleTickerProviderStateMixin {
+class _CustomButtonState extends State<CustomButton>
+    with SingleTickerProviderStateMixin {
   bool isPressed = false;
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
@@ -45,13 +46,9 @@ class _CustomButtonState extends State<CustomButton> with SingleTickerProviderSt
       duration: widget.animationDuration,
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.95,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -63,11 +60,12 @@ class _CustomButtonState extends State<CustomButton> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     final isDisabled = widget.onTap == null || widget.isLoading;
-    final normalColor = isDisabled 
-        ? EgovColor.gray20 
+    final normalColor = isDisabled
+        ? EgovColor.gray20
         : (widget.normalColor ?? EgovColor.primary50);
-    final pressedColor = widget.pressedColor ?? normalColor.withValues(alpha: 0.7);
-    
+    final pressedColor =
+        widget.pressedColor ?? normalColor.withValues(alpha: 0.7);
+
     return ConstrainedBox(
       constraints: BoxConstraints(
         minWidth: widget.width ?? 78,
@@ -93,13 +91,15 @@ class _CustomButtonState extends State<CustomButton> with SingleTickerProviderSt
           builder: (context, child) {
             return Transform.scale(
               scale: _scaleAnimation.value,
-                              child: Container(
-                  height: widget.height ?? 48,
-                  padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding ?? 16),
-                  decoration: BoxDecoration(
-                    color: isPressed ? pressedColor : normalColor,
-                    borderRadius: BorderRadius.circular(6),
-                    boxShadow: isPressed 
+              child: Container(
+                height: widget.height ?? 48,
+                padding: EdgeInsets.symmetric(
+                  horizontal: widget.horizontalPadding ?? 16,
+                ),
+                decoration: BoxDecoration(
+                  color: isPressed ? pressedColor : normalColor,
+                  borderRadius: BorderRadius.circular(6),
+                  boxShadow: isPressed
                       ? [
                           BoxShadow(
                             color: EgovColor.black10,
@@ -119,7 +119,7 @@ class _CustomButtonState extends State<CustomButton> with SingleTickerProviderSt
                             blurRadius: 2,
                           ),
                         ],
-                  ),
+                ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -144,7 +144,9 @@ class _CustomButtonState extends State<CustomButton> with SingleTickerProviderSt
                         widget.text,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: isDisabled ? EgovColor.gray70 : EgovColor.white100,
+                          color: isDisabled
+                              ? EgovColor.gray70
+                              : EgovColor.white100,
                           fontSize: widget.fontSize ?? 17,
                           fontFamily: 'Pretendard GOV',
                           fontWeight: FontWeight.w400,
@@ -180,16 +182,11 @@ class BottomButtonRow extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: height ?? 113,
-      padding: padding ?? const EdgeInsets.only(
-        top: 16,
-        left: 16,
-        right: 16,
-        bottom: 32,
-      ),
+      padding:
+          padding ??
+          const EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 32),
       clipBehavior: Clip.antiAlias,
-      decoration: const BoxDecoration(
-        color: Colors.transparent,
-      ),
+      decoration: const BoxDecoration(color: Colors.transparent),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -198,18 +195,12 @@ class BottomButtonRow extends StatelessWidget {
           final index = entry.key;
           final button = entry.value;
           return Expanded(
-            child: index > 0 
-              ? Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: SizedBox(
-                    height: 48,
-                    child: button,
-                  ),
-                )
-              : SizedBox(
-                  height: 48,
-                  child: button,
-                ),
+            child: index > 0
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: SizedBox(height: 48, child: button),
+                  )
+                : SizedBox(height: 48, child: button),
           );
         }).toList(),
       ),

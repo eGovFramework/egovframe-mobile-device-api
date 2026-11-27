@@ -15,84 +15,69 @@
  */
 package egovframework.hyb.mbl.nwk.service.impl;
 
+import org.egovframe.rte.psl.dataaccess.mapper.EgovMapper;
+
 import java.util.List;
 
-import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
-import org.springframework.stereotype.Repository;
 
 import egovframework.hyb.mbl.nwk.service.NetworkAPIVO;
 
-/**  
- * @Class Name : NetworkAPIDAO.java
- * @Description : 통합 Network API DAO Class
- * @Modification Information  
- * @
- * @  수정일            수정자        수정내용
- * @ ---------        ---------    -------------------------------
- * @ 2025.10.28        통합개발팀    Android/iOS 패키지 통합
- * @ 2026.06.24        이백행      [2026년 컨트리뷰션] 불필요한 예외 제거
- * 
- * @author 디바이스 API 실행환경 팀
- * @since 2025. 10. 28.
- * @version 2.0
- * @see
- * 
+/**
+ * 통합 Network API DAO
+ *
+ * 수정이력
+ * 2025.10.28 통합개발팀 Android/iOS 패키지 통합
+ * 2026.06.24 이백행 [2026년 컨트리뷰션] 불필요한 예외 제거
  */
-@Repository("NetworkAPIDAO")
-public class NetworkAPIDAO extends EgovAbstractMapper {
+@EgovMapper("NetworkAPIDAO")
+public interface NetworkAPIDAO {
 
     /**
      * 네트워크 정보를 등록한다.
      * @param vo - 등록할 정보가 담긴 NetworkAPIVO
      * @return 등록 결과
      */
-    public int insertNetworkInfo(NetworkAPIVO vo) {
-        return (Integer)insert("networkAPIDAO.insertNetworkInfo", vo);
-    }
+    public int insertNetworkInfo(NetworkAPIVO vo);
+
 
     /**
      * 네트워크 정보를 수정한다.
      * @param vo - 수정할 정보가 담긴 NetworkAPIVO
      * @return 수정 결과
      */
-    public int updateNetworkInfo(NetworkAPIVO vo) {
-        return (Integer)update("networkAPIDAO.updateNetworkInfo", vo);
-    }
+    public int updateNetworkInfo(NetworkAPIVO vo);
+
 
     /**
      * 네트워크 정보를 삭제한다.
      * @param vo - 삭제할 정보가 담긴 NetworkAPIVO
      * @return 삭제 결과
      */
-    public int deleteNetworkInfo(NetworkAPIVO vo) {
-        return (Integer)delete("networkAPIDAO.deleteNetworkInfo", vo);
-    }
+    public int deleteNetworkInfo(NetworkAPIVO vo);
+
 
     /**
      * 네트워크 정보를 조회한다.
      * @param vo - 조회할 정보가 담긴 NetworkAPIVO
      * @return 조회한 네트워크 정보
      */
-    public NetworkAPIVO selectNetworkInfo(NetworkAPIVO vo) {
-        return (NetworkAPIVO) selectOne("networkAPIDAO.selectNetworkInfo", vo);
-    }
+    public NetworkAPIVO selectNetworkInfo(NetworkAPIVO vo);
+
 
     /**
      * 네트워크 정보 목록을 조회한다.
      * @param vo - 조회할 정보가 담긴 NetworkAPIVO 또는 NetworkAPIDefaultVO
      * @return 네트워크 정보 목록
      */
-    public List<?> selectNetworkInfoList(Object vo) {
-        return selectList("networkAPIDAO.selectNetworkInfoList", vo);
-    }
+    public List<NetworkAPIVO> selectNetworkInfoList(Object vo);
+
 
     /**
      * 네트워크 정보 총 개수를 조회한다.
      * @param  vo - 조회할 정보가 담긴 NetworkAPIVO 또는 NetworkAPIDefaultVO
      * @return 네트워크 정보 총 개수
      */
-    public int selectNetworkInfoListTotCnt(Object vo) {
-        return (Integer) selectOne("networkAPIDAO.selectNetworkInfoListTotCnt", vo);
-    }
+    public int selectNetworkInfoListTotCnt(Object vo);
+
 }
 

@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>egovframe_mobile_deviceapi_app</string>
+	<string>mobile_deviceapi</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -43,31 +43,26 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSContactsUsageDescription</key>
-	<string>이 앱은 연락처 개수를 확인하기 위해 연락처에 접근합니다.</string>
-	
-	<!-- 위치 접근 권한 -->
+	<string>이 앱은 연락처 정보를 조회하고 저장하기 위해 연락처에 접근합니다.</string>
+
+	<key>NSUserNotificationUsageDescription</key>
+	<string>푸시 알림을 수신하기 위해 알림 권한이 필요합니다.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>위치 정보를 수집하기 위해 위치 접근이 필요합니다.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>위치 정보를 수집하기 위해 위치 접근이 필요합니다.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>백그라운드에서도 위치 정보를 수집하기 위해 위치 접근이 필요합니다.</string>
-	
-	<!-- 카메라/마이크 권한 -->
+
 	<key>NSCameraUsageDescription</key>
-	<string>사진 촬영을 위해 카메라 접근이 필요합니다.</string>
+	<string>사진 촬영 및 얼굴 인식을 위해 카메라 접근이 필요합니다.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>오디오 녹음을 위해 마이크 접근이 필요합니다.</string>
+	<string>동영상 촬영 시 소리를 포함하기 위해 마이크 접근이 필요합니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>갤러리에서 사진을 선택하기 위해 접근이 필요합니다.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>촬영한 사진을 갤러리에 저장하기 위해 접근이 필요합니다.</string>
-	
-	<!-- 파일 접근 권한 -->
-	<key>NSDocumentsFolderUsageDescription</key>
-	<string>파일 관리를 위해 문서 폴더에 접근이 필요합니다.</string>
-	<key>NSFileProviderDomainUsageDescription</key>
-	<string>파일 공유를 위해 파일 제공자 도메인에 접근이 필요합니다.</string>
 	
 	<!-- Google Maps API 키 -->
 	<key>GMSApiKey</key>

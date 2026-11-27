@@ -7,14 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @Class Name : MediaAPIFileVO.java
- * @Description : 통합 Media API File VO Class
- * @Modification Information
- * @
- * @ 수정일               수정자              수정내용
- * @ ----------   ---------   -------------------------------
- *   2025.10.28   통합개발팀          Android/iOS 패키지 통합
+ * 통합 Media API File VO
  *
+ * 수정이력
+ * 2025.10.28 통합개발팀 Android/iOS 패키지 통합
  */
 @Getter
 @Setter

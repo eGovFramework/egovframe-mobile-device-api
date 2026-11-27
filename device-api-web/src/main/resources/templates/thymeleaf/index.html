@@ -8,11 +8,14 @@
 
 <body>
 
-    <h1>DeviceAPI Web Service</h1>
+    <h1 th:text="#{main.heading}">DeviceAPI Web Service</h1>
 
     <h3 th:text="#{main.description}"></h3>
 
-    <a th:href="@{/swagger-ui.html}"><span>Swagger</span> <span th:text="#{main.swagger}"></span> <span>(Swagger Restful Service definition document)</span></a>
+    <p><a th:href="@{/chat-sockjs}" th:text="#{main.websocket}">WebSocket chat test</a></p>
+    <p><a th:href="@{/swagger-ui.html}">Swagger <span th:text="#{main.swagger}"></span></a></p>
+    <p><a th:href="@{/fcm}" th:text="#{main.fcm}">FCM push send admin</a></p>
+    <p><a th:href="@{/ai-chat}" th:text="#{main.aiChat}">AI Chat RAG document admin</a></p>
 
     <br/>
     <br/>

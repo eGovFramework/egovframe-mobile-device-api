@@ -2,81 +2,88 @@
 
 의존성 주입은 Clean Architecture에서 중요한 역할을 합니다. 객체를 직접 생성하지 않고, 외부에서 주입받는 기법입니다.
 
-## GetIt을 사용한 의존성 주입
+## Riverpod을 사용한 의존성 주입
 
-본 프로젝트는 GetIt을 사용하여 의존성을 관리합니다.
+본 프로젝트는 **GetIt이 아니라 Riverpod** 으로 의존성을 관리합니다.
+
+- `di/providers.dart` — Service·Repository·UseCase (`@Riverpod(keepAlive: true)`)
+- `di/{feature}_connection_provider.dart` — 서버/SQLite 연결 모드
+- 화면 상태는 `presentation/screens/{feature}/view_model/*_controller.dart` 의 `@riverpod class`
+- `build_runner` 가 `*.g.dart` 를 생성합니다 (`part '...g.dart'`)
 
 ### 의존성 주입 설정
 
 ```dart
-// di/injection_container.dart
-import 'package:get_it/get_it.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:http/http.dart' as http;
-
-// Repository 구현체
-import 'package:egovframe_mobile_deviceapi_app/data/repositories/device_repository_impl.dart';
-import 'package:egovframe_mobile_deviceapi_app/data/repositories/gps_repository_impl.dart';
-// ... 기타 Repository 구현체
-
-// Repository 인터페이스
-import 'package:egovframe_mobile_deviceapi_app/domain/repositories/device_repository.dart';
-import 'package:egovframe_mobile_deviceapi_app/domain/repositories/gps_repository.dart';
-// ... 기타 Repository 인터페이스
-
-// Use Cases
-import 'package:egovframe_mobile_deviceapi_app/domain/usecases/device_usecase.dart';
-import 'package:egovframe_mobile_deviceapi_app/domain/usecases/gps_usecase.dart';
-// ... 기타 Use Cases
-
-final GetIt getIt = GetIt.instance;
-
-void setupDependencies() {
-  // 외부 라이브러리 등록
-  getIt.registerLazySingleton<DeviceInfoPlugin>(() => DeviceInfoPlugin());
-  getIt.registerLazySingleton<http.Client>(() => http.Client());
-
-  // Repository 구현체 등록
-  getIt.registerLazySingleton<DeviceRepository>(
-    () => DeviceRepositoryImpl(),
+// di/providers.dart (발췌)
+@Riverpod(keepAlive: true)
+DeviceRepository deviceRepository(Ref ref) {
+  DeviceConnectionState readConnection() => ref.read(deviceConnectionProvider);
+  return DeviceRepositoryImpl(
+    remote: DeviceRemoteRepositoryImpl(),
+    sqlite: DeviceSqliteRepositoryImpl(
+      ref.watch(deviceSqliteServiceProvider),
+      readConnection,
+    ),
+    readConnection: readConnection,
   );
-  
-  getIt.registerLazySingleton<GpsRepository>(
-    () => GpsRepositoryImpl(),
-  );
-  
-  getIt.registerLazySingleton<AcceleratorRepository>(
-    () => AcceleratorRepositoryImpl(),
-  );
-  
-  // ... 기타 Repository 등록
+}
 
-  // Use Case 등록 (Repository 주입)
-  getIt.registerLazySingleton<DeviceUseCase>(
-    () => DeviceUseCase(getIt()),  // getIt()으로 Repository 주입
+@Riverpod(keepAlive: true)
+DeviceUseCase deviceUseCase(Ref ref) =>
+    DeviceUseCase(ref.watch(deviceRepositoryProvider));
+
+@Riverpod(keepAlive: true)
+AiChatRepository aiChatRepository(Ref ref) {
+  AiChatConnectionState readConnection() => ref.read(aiChatConnectionProvider);
+  return AiChatRepositoryImpl(
+    remote: AiChatRemoteRepositoryImpl(),
+    sqlite: AiChatSqliteRepositoryImpl(
+      ref.watch(aiChatSqliteServiceProvider),
+      readConnection,
+    ),
+    readConnection: readConnection,
   );
-  
-  getIt.registerLazySingleton<GpsUseCase>(
-    () => GpsUseCase(getIt()),
-  );
-  
-  // ... 기타 Use Case 등록
+}
+
+@Riverpod(keepAlive: true)
+AiChatUseCase aiChatUseCase(Ref ref) =>
+    AiChatUseCase(ref.watch(aiChatRepositoryProvider));
+```
+
+연결 모드는 feature별 Notifier입니다.
+
+```dart
+// di/ai_chat_connection_provider.dart
+@Riverpod(keepAlive: true)
+class AiChatConnection extends _$AiChatConnection {
+  @override
+  AiChatConnectionState build() => const AiChatConnectionState();
+
+  void useServer() { /* ... */ }
+  void useSqlite(String dbFileName) { /* ... */ }
 }
 ```
 
 ### 앱 진입점에서 초기화
 
-```dart
-// main.dart
-import 'di/injection_container.dart';
+GetIt `setupDependencies()` 호출은 없습니다. `main.dart` 에서 `ProviderScope` 만 감쌉니다.
 
+```dart
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  setupDependencies(); // 의존성 주입 초기화
-  
-  runApp(const MyApp());
+  await FirebaseMessagingService.initializeFirebase();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  runApp(const ProviderScope(child: MyApp()));
 }
+```
+
+코드 생성:
+
+```bash
+dart run build_runner build --delete-conflicting-outputs
 ```
 
 ---
@@ -88,69 +95,45 @@ void main() async {
 클래스 간 직접적인 의존성을 제거합니다.
 
 ```dart
-// 의존성 주입
 class DeviceUseCase {
   final DeviceRepository repository;
-  
+
   DeviceUseCase(this.repository);  // 외부에서 주입
 }
 ```
 
 ### 2. 테스트 용이성
 
-Mock 객체를 쉽게 주입할 수 있습니다.
+UseCase는 생성자로 Repository를 받으므로 Mock을 바로 넣을 수 있습니다.
 
-**테스트 예시**:
 ```dart
-// 테스트에서 Mock 객체 주입
 class MockDeviceRepository implements DeviceRepository {
   @override
   Future<DeviceInfo> getDeviceInfo() async {
     return DeviceInfo(/* Mock 데이터 */);
   }
-  // ...
 }
 
-// Use Case 테스트
 void main() {
   test('DeviceUseCase 테스트', () async {
-    final mockRepository = MockDeviceRepository();
-    final useCase = DeviceUseCase(mockRepository);
-    
+    final useCase = DeviceUseCase(MockDeviceRepository());
     final result = await useCase.getDeviceInfo();
     expect(result, isA<DeviceInfo>());
   });
 }
 ```
 
+위젯/Provider 테스트에서는 `ProviderScope(overrides: [...])` 로 구현체를 바꿉니다.
+
 ### 3. 유연성
 
-런타임에 구현체를 교체할 수 있습니다.
-
-**예시**:
-```dart
-// 개발 환경: Mock Repository 사용
-void setupDependencies() {
-  if (kDebugMode) {
-    getIt.registerLazySingleton<DeviceRepository>(
-      () => MockDeviceRepositoryImpl(),
-    );
-  } else {
-    getIt.registerLazySingleton<DeviceRepository>(
-      () => DeviceRepositoryImpl(),
-    );
-  }
-}
-```
+연결 모드 Provider가 서버/SQLite 구현을 고릅니다. Domain UseCase 코드는 바뀌지 않습니다.
 
 ### 4. 중앙 관리
 
-모든 의존성을 한 곳에서 관리합니다.
-
-**장점**:
-- 의존성 관계를 한눈에 파악 가능
-- 의존성 변경 시 한 곳만 수정
-- 의존성 순환 참조 방지
+- 전역 그래프: `di/providers.dart`
+- 연결 모드: `di/{feature}_connection_provider.dart`
+- 화면 상태: feature `view_model`
 
 ---
 
@@ -158,96 +141,56 @@ void setupDependencies() {
 
 ### Presentation Layer에서 사용
 
+화면은 `ConsumerStatefulWidget` / `ConsumerWidget` 이고, UseCase는 Provider에서 읽습니다.
+
 ```dart
-// presentation/screens/deviceInfo/deviceInfo_main.dart
-import 'package:egovframe_mobile_deviceapi_app/di/injection_container.dart';
-import 'package:egovframe_mobile_deviceapi_app/domain/usecases/device_usecase.dart';
+// presentation/screens/aiChat/view_model/ai_chat_controller.dart
+AiChatUseCase _aiChatUseCase(Ref ref) => ref.read(aiChatUseCaseProvider);
 
-class _DeviceInfoPageState extends State<DeviceInfoPage> {
-  late final DeviceUseCase _deviceUseCase;
-
-  @override
-  void initState() {
-    super.initState();
-    _deviceUseCase = getIt<DeviceUseCase>();  // 의존성 주입
-  }
-
-  Future<void> _getDeviceInfo() async {
-    try {
-      deviceInfo = await _deviceUseCase.getDeviceInfo();
-    } catch (e) {
-      // 에러 처리
-    }
+@riverpod
+class AiChatMain extends _$AiChatMain {
+  Future<AiChatAskResult> askCurrentQuestion() async {
+    return _aiChatUseCase(ref).askQuestion(info, onToken: (token) { /* ... */ });
   }
 }
+```
+
+Device Info도 같은 패턴입니다. `getIt<DeviceUseCase>()` 는 쓰지 않습니다.
+
+```dart
+final useCase = ref.read(deviceUseCaseProvider);
 ```
 
 ### Use Case에서 Repository 주입
 
 ```dart
-// domain/usecases/device_usecase.dart
-class DeviceUseCase {
-  final DeviceRepository repository;  // 인터페이스에 의존
+class AiChatUseCase {
+  final AiChatRepository repository;
 
-  DeviceUseCase(this.repository);  // 생성자 주입
+  AiChatUseCase(this.repository);
 
-  Future<DeviceInfo> getDeviceInfo() async {
-    return await repository.getDeviceInfo();
+  Future<AiChatAskResult> askQuestion(AiChatInfo info, {void Function(String token)? onToken}) {
+    return /* repository.askAiChat ... */;
   }
 }
 ```
 
 **의존성 주입 흐름**:
-1. `setupDependencies()`에서 `DeviceRepositoryImpl` 등록
-2. `DeviceUseCase` 생성 시 `getIt<DeviceRepository>()`로 구현체 주입
-3. Presentation에서 `getIt<DeviceUseCase>()`로 Use Case 주입
+1. `ProviderScope` 가 앱을 감쌈
+2. `aiChatRepositoryProvider` 가 원격/SQLite 구현을 조립
+3. `aiChatUseCaseProvider` 가 Repository를 UseCase에 주입
+4. 화면 Notifier가 `ref.read(aiChatUseCaseProvider)` 로 호출
 
 ---
 
-## GetIt의 주요 메서드
+## Riverpod 코드 생성
 
-### registerLazySingleton
+`@Riverpod` / `@riverpod` 애노테이션은 `*.g.dart` 를 만듭니다. 손수 `Provider` 클래스를 쓰지 않습니다.
 
-싱글톤으로 등록하되, 처음 사용될 때 생성됩니다.
-
-```dart
-getIt.registerLazySingleton<DeviceRepository>(
-  () => DeviceRepositoryImpl(),
-);
-```
-
-**특징**:
-- 앱 전체에서 하나의 인스턴스만 사용
-- 처음 사용될 때 생성 (지연 초기화)
-- 메모리 효율적
-
-### registerSingleton
-
-즉시 싱글톤으로 등록합니다.
-
-```dart
-getIt.registerSingleton<DeviceRepository>(
-  DeviceRepositoryImpl(),
-);
-```
-
-**특징**:
-- 앱 시작 시 즉시 생성
-- 항상 사용되는 객체에 적합
-
-### registerFactory
-
-매번 새로운 인스턴스를 생성합니다.
-
-```dart
-getIt.registerFactory<DeviceRepository>(
-  () => DeviceRepositoryImpl(),
-);
-```
-
-**특징**:
-- 호출할 때마다 새로운 인스턴스 생성
-- 상태를 공유하지 않는 객체에 적합
+| 용도 | 예시 |
+|------|------|
+| 함수 Provider (UseCase) | `@Riverpod(keepAlive: true) AiChatUseCase aiChatUseCase(Ref ref)` |
+| Notifier (연결 모드·화면 상태) | `@riverpod class AiChatMain extends _$AiChatMain` |
 
 ---
 
@@ -255,17 +198,17 @@ getIt.registerFactory<DeviceRepository>(
 
 ### 생성자 주입 (권장)
 
-생성자를 통해 의존성을 주입합니다.
-
 ```dart
 class DeviceUseCase {
   final DeviceRepository repository;
 
-  DeviceUseCase(this.repository);  // 생성자 주입
+  DeviceUseCase(this.repository);
 }
 ```
 
 **장점**:
 - 필수 의존성을 명확히 표현
-- 불변성 보장 (final 필드)
+- 불변성 보장 (`final` 필드)
 - 테스트 용이
+
+화면 Notifier에 필드를 추가하는 절차와 AI 서버 연결 상태(`aiServerConnected`)는 [Riverpod 화면 상태](./8_riverpod.md)를 본다.

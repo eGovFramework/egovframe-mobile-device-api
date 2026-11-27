@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <!-- %enc{}{CRLF}: 로그 메시지의 개행을 이스케이프해 로그 위조(CWE-117) 방지 -->
+            <PatternLayout pattern="%d %5p [%c] %enc{%m}{CRLF}%n" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="org.springframework" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="org.egovframe" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+
+        <SpringProfile name="local">
+            <Logger name="egovframework" level="DEBUG" additivity="false">
+                <AppenderRef ref="console" />
+            </Logger>
+        </SpringProfile>
+
+        <SpringProfile name="!local">
+            <Logger name="egovframework" level="INFO" additivity="false">
+                <AppenderRef ref="console" />
+            </Logger>
+        </SpringProfile>
+
+        <Root level="ERROR">
+            <AppenderRef ref="console" />
+        </Root>
+    </Loggers>
+</Configuration>

@@ -1,30 +1,17 @@
 package egovframework.hyb.utils;
 
-import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Param;
+import org.egovframe.rte.psl.dataaccess.mapper.EgovMapper;
 
-@Repository("FileDAO")
-public class EgovFileDAO extends EgovAbstractMapper{
-	
-	public FileVO selectFileDetailInfo(int fileSn) {
-		return selectOne("fileDAO.selectFileDetailInfo",fileSn);
-	}
-	
-	public int insertFileDetailInfo(FileVO fileVO) {
-		return (Integer) insert("fileDAO.insertFileDetailInfo", fileVO);
-	}
+@EgovMapper("FileDAO")
+public interface EgovFileDAO {
 
-	public int countFileOwnershipByUuid(int fileSn, String uuid) {
-		java.util.Map<String, Object> params = new java.util.HashMap<>();
-		params.put("fileSn", fileSn);
-		params.put("uuid", uuid);
-		Integer count = selectOne("fileDAO.countFileOwnershipByUuid", params);
-		return count != null ? count : 0;
-	}
+	FileVO selectFileDetailInfo(@Param("fileSn") int fileSn);
 
-	public int countFileRegistration(int fileSn) {
-		Integer count = selectOne("fileDAO.countFileRegistration", fileSn);
-		return count != null ? count : 0;
-	}
+	int insertFileDetailInfo(FileVO fileVO);
+
+	Integer countFileOwnershipByUuid(@Param("fileSn") int fileSn, @Param("uuid") String uuid);
+
+	Integer countFileRegistration(@Param("fileSn") int fileSn);
 
 }

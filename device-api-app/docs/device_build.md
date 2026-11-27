@@ -17,6 +17,8 @@
 ### 참고
 [안드로이드 스튜디오 Docs](https://developer.android.com/studio/run/device?hl=ko)
 
+로컬 설치는 `flutter run`입니다. 릴리스 서명은 [local과 운영 실행](/run_profiles.md)의 운영 앱을 따릅니다.
+
 ## IOS
 - IOS에서 기기로 디버깅을 하기위해서는 Apple 개발자 계정이 필요합니다.
 - apple에서 디버깅용도의 무료 코드사인 방법을 제공합니다.

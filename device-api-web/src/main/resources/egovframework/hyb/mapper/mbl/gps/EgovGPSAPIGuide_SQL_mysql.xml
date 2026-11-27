@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="gpsAPIDAO">
+<mapper namespace="egovframework.hyb.mbl.gps.service.impl.GPSAPIDAO">
 
 	<resultMap id="gpsInfo" type="egovframework.hyb.mbl.gps.service.GPSAPIVO">
 		<result property="sn" column="SN"/>
@@ -33,9 +33,11 @@
 	</insert>
 	
 	<delete id="deleteGPSInfo">
-		UPDATE GPS 
+		UPDATE GPS
 		SET USEYN='N'
-		WHERE SN = #{sn} AND UUID = #{uuid}
+		WHERE SN = #{sn}
+		  AND UUID = #{uuid}
+		  AND USEYN = 'Y'
 	</delete>
 	
 	<select id="selectGPSInfoList" parameterType="egovframework.hyb.mbl.gps.service.GPSAPIVO" resultMap="gpsInfo">

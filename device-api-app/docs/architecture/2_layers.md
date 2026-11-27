@@ -35,29 +35,15 @@ Clean Architecture는 3개의 주요 레이어로 구성됩니다. 각 레이어
 ### 실제 코드 예시
 
 ```dart
-// presentation/screens/deviceInfo/deviceInfo_main.dart
-class _DeviceInfoPageState extends State<DeviceInfoPage> {
-  late final DeviceUseCase _deviceUseCase;
-
-  @override
-  void initState() {
-    super.initState();
-    _deviceUseCase = getIt<DeviceUseCase>(); // 의존성 주입
-  }
+// presentation/screens/deviceInfo/view/device_info_main.dart
+class _DeviceInfoPageState extends ConsumerState<DeviceInfoPage> {
+  DeviceUseCase get _deviceUseCase => ref.read(deviceUseCaseProvider);
 
   Future<void> _getDeviceInfo() async {
     try {
       deviceInfo = await _deviceUseCase.getDeviceInfo(); // Use Case 호출
-    } catch (e, stackTrace) {
-      if (mounted) {
-        await ErrorHandler.handleException(
-          context,
-          e,
-          stackTrace: stackTrace,
-          logContext: 'DeviceInfoPage._getDeviceInfo',
-          title: '디바이스 정보 조회 실패',
-        );
-      }
+    } catch (e) {
+      ErrorHandler.showErrorDialog(context, e.toString());
     }
   }
 }
@@ -80,14 +66,16 @@ class _DeviceInfoPageState extends State<DeviceInfoPage> {
 - 엔티티 정의
 - Use Case 정의
 
-### 구성 요소
+### 구성 요소 (feature-first)
 
-- **`entities/`**: 비즈니스 객체 (순수 Dart 클래스)
-  - 예: `DeviceInfo`, `GpsInfo`, `AcceleratorInfo` 등
-- **`repositories/`**: 데이터 접근 인터페이스 (추상 클래스)
-  - 예: `DeviceRepository`, `GpsRepository` 등
-- **`usecases/`**: 비즈니스 로직 실행 단위
-  - 예: `DeviceUseCase`, `GpsUseCase` 등
+- **`{feature}/entities/`**: 비즈니스 객체 (순수 Dart 클래스)
+  - 예: `domain/deviceInfo/entities/device_info.dart`
+- **`{feature}/repositories/`**: 데이터 접근 인터페이스 (추상 클래스)
+  - 예: `domain/gps/repositories/gps_repository.dart`
+- **`{feature}/usecases/`**: 비즈니스 로직 실행 단위
+  - 예: `domain/gps/usecases/gps_usecase.dart`
+- **`shared/entities/`**: feature 간 공유 타입
+  - 예: `server_connection_result.dart`, `app_item.dart`
 
 ### 특징
 
@@ -100,7 +88,7 @@ class _DeviceInfoPageState extends State<DeviceInfoPage> {
 #### Entity (순수 Dart 클래스)
 
 ```dart
-// domain/entities/device_info.dart
+// domain/deviceInfo/entities/device_info.dart
 class DeviceInfo {
   final int sn;
   final String uuid;
@@ -129,7 +117,7 @@ class DeviceInfo {
 #### Repository Interface (추상 클래스)
 
 ```dart
-// domain/repositories/device_repository.dart
+// domain/deviceInfo/repositories/device_repository.dart
 abstract class DeviceRepository {
   Future<DeviceInfo> getDeviceInfo();
   Future<bool> uploadDeviceInfo(DeviceInfo deviceInfo);
@@ -142,7 +130,7 @@ abstract class DeviceRepository {
 #### Use Case (비즈니스 로직)
 
 ```dart
-// domain/usecases/device_usecase.dart
+// domain/deviceInfo/usecases/device_usecase.dart
 class DeviceUseCase {
   final DeviceRepository repository;  // 인터페이스에 의존
 
@@ -173,12 +161,12 @@ class DeviceUseCase {
 - 로컬 데이터베이스 관리
 - 파일 시스템 접근
 
-### 구성 요소
+### 구성 요소 (feature-first)
 
-- **`datasources/`**: 실제 데이터 소스 접근 (API, 로컬 파일 등)
-  - 예: `DeviceService`, `GpsService` 등
-- **`repositories/`**: Domain 레이어의 Repository 인터페이스 구현
-  - 예: `DeviceRepositoryImpl`, `GpsRepositoryImpl` 등
+- **`{feature}/datasources/`**: 실제 데이터 소스 접근 (API, SQLite, 센서 등)
+  - 예: `data/deviceInfo/datasources/device_service.dart`
+- **`{feature}/repositories/`**: Domain 레이어의 Repository 인터페이스 구현
+  - 예: `data/gps/repositories/gps_repository_impl.dart`
 
 ### 특징
 
@@ -191,7 +179,7 @@ class DeviceUseCase {
 #### Repository Implementation
 
 ```dart
-// data/repositories/device_repository_impl.dart
+// data/deviceInfo/repositories/device_repository_impl.dart
 class DeviceRepositoryImpl implements DeviceRepository {
   DeviceRepositoryImpl();
 
@@ -212,7 +200,7 @@ class DeviceRepositoryImpl implements DeviceRepository {
 #### Data Source (Service)
 
 ```dart
-// data/datasources/device_service.dart
+// data/deviceInfo/datasources/device_service.dart
 class DeviceService {
   static Future<DeviceInfo> getDeviceInfo() async {
     final deviceInfoPlugin = DeviceInfoPlugin(); // 외부 라이브러리 사용
@@ -250,19 +238,19 @@ Presentation → Domain ← Data
 
 ```dart
 // ✅ 올바른 예시: Domain이 인터페이스에만 의존
-// domain/usecases/device_usecase.dart
+// domain/deviceInfo/usecases/device_usecase.dart
 class DeviceUseCase {
   final DeviceRepository repository;  // ✅ 인터페이스에 의존
   
   // ...
 }
 
-// domain/repositories/device_repository.dart
+// domain/deviceInfo/repositories/device_repository.dart
 abstract class DeviceRepository {  // Domain에 인터페이스 정의
   Future<DeviceInfo> getDeviceInfo();
 }
 
-// data/repositories/device_repository_impl.dart
+// data/deviceInfo/repositories/device_repository_impl.dart
 class DeviceRepositoryImpl implements DeviceRepository {  // Data에서 구현
   // ...
 }

@@ -1,39 +1,33 @@
 package egovframework.hyb.mbl.itf.service.impl;
 
+import org.egovframe.rte.psl.dataaccess.mapper.EgovMapper;
+
 import java.util.List;
 
-import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
-import org.springframework.stereotype.Repository;
 
 import egovframework.hyb.mbl.itf.service.InterfaceAPIVO;
 
 /**
  * 통합 Interface API DAO
  */
-@Repository
-public class InterfaceAPIDAO extends EgovAbstractMapper {
+@EgovMapper("InterfaceAPIDAO")
+public interface InterfaceAPIDAO {
 
-    public int insertInterfaceInfo(InterfaceAPIVO vo) {
-        return insert("interfaceAPIDAO.insertInterfaceInfo", vo);
-    }
+    public int insertInterfaceInfo(InterfaceAPIVO vo);
 
-    public int updateInterfaceInfo(InterfaceAPIVO vo) {
-        return update("interfaceAPIDAO.updateInterfaceInfo", vo);
-    }
 
-    public int deleteInterfaceInfo(InterfaceAPIVO vo) {
-        return delete("interfaceAPIDAO.deleteInterfaceInfo", vo);
-    }
+    public int updateInterfaceInfo(InterfaceAPIVO vo);
 
-    public InterfaceAPIVO selectInterfaceInfo(InterfaceAPIVO vo) {
-        return (InterfaceAPIVO) selectOne("interfaceAPIDAO.selectInterfaceInfo", vo);
-    }
 
-    public List<InterfaceAPIVO> selectInterfaceInfoList(InterfaceAPIVO searchVO) {
-        return selectList("interfaceAPIDAO.selectInterfaceInfoList", searchVO);
-    }
+    public int deleteInterfaceInfo(InterfaceAPIVO vo);
 
-    public int selectInterfaceInfoListTotCnt(InterfaceAPIVO searchVO) {
-        return selectOne("interfaceAPIDAO.selectInterfaceInfoListTotCnt", searchVO);
-    }
+
+    public InterfaceAPIVO selectInterfaceInfo(InterfaceAPIVO vo);
+
+
+    public List<InterfaceAPIVO> selectInterfaceInfoList(InterfaceAPIVO searchVO);
+
+
+    public int selectInterfaceInfoListTotCnt(InterfaceAPIVO searchVO);
+
 }

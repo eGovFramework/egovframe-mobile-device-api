@@ -1,29 +1,23 @@
 package egovframework.hyb.mbl.frw.web;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egovframe.rte.fdl.property.EgovPropertyService;
-import org.springframework.http.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 
+import egovframework.hyb.mbl.fop.service.EgovFileOpenerDeviceAPIService;
+import egovframework.hyb.mbl.fop.service.FileOpenerDeviceAPIVO;
 import egovframework.hyb.mbl.frw.service.EgovFileReaderWriterAPIService;
 import egovframework.hyb.mbl.frw.service.FileReaderWriterAPIVO;
+import egovframework.hyb.utils.DeviceUuidCheck;
 import egovframework.hyb.utils.EgovFileMngUtil;
 import egovframework.hyb.utils.EgovFileService;
 import egovframework.hyb.utils.FileVO;
@@ -31,22 +25,27 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import java.io.IOException;
 
 /**
  * 통합 FileReaderWriter API Controller
  */
 @Controller
-@Tag(name = "06. FileReaderWriter Guide Program Service", description = "파일 읽기/쓰기 API 관리")
+@Tag(name = "05. FileReaderWriter Guide Program Service", description = "파일 읽기/쓰기 API 관리")
 public class EgovFileReaderWriterAPIController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EgovFileReaderWriterAPIController.class);
 
     @Resource(name = "EgovFileReaderWriterAPIService")
     private EgovFileReaderWriterAPIService egovFileReaderWriterAPIService;
 
-    @Resource(name = "propertiesService")
-    protected EgovPropertyService propertiesService;
-    
+    @Resource(name = "EgovFileOpenerDeviceAPIService")
+    private EgovFileOpenerDeviceAPIService egovFileOpenerDeviceAPIService;
+
     @Resource(name = "egovFileMngUtil")
     private EgovFileMngUtil fileMngUtil;
 
@@ -54,18 +53,21 @@ public class EgovFileReaderWriterAPIController {
     private EgovFileService fileService;
 
     @Operation(summary = "파일 읽기/쓰기 정보 목록 조회", description = "파일 읽기/쓰기 정보 목록을 조회합니다.")
-    @RequestMapping(value = "/frw/selectFileReaderWriterInfoList.do", method = RequestMethod.GET)
-    public ResponseEntity<?> selectFileReaderWriterInfoList(@ModelAttribute("searchVO") FileReaderWriterAPIVO searchVO, ModelMap model) throws Exception {
+    @GetMapping("/frw/selectFileReaderWriterInfoList.do")
+    public ResponseEntity<Map<String, Object>> selectFileReaderWriterInfoList(FileReaderWriterAPIVO searchVO) throws Exception {
+        if (DeviceUuidCheck.isBlank(searchVO.getUuid())) {
+            return DeviceUuidCheck.requiredResponse();
+        }
         Map<String, Object> response = new HashMap<>();
-        List<?> fileReaderWriterInfoList = egovFileReaderWriterAPIService.selectFileReaderWriterInfoList(searchVO);
+        List<FileReaderWriterAPIVO> fileReaderWriterInfoList = egovFileReaderWriterAPIService.selectFileReaderWriterInfoList(searchVO);
         response.put("fileReaderWriterInfoList", fileReaderWriterInfoList);
         response.put("resultState", "OK");
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "파일 읽기/쓰기 정보 등록", description = "파일 읽기/쓰기 정보를 등록합니다.")
-    @RequestMapping(value = "/frw/insertFileReaderWriterInfo.do", method = RequestMethod.POST)
-    public ResponseEntity<?> insertFileReaderWriterInfo(FileReaderWriterAPIVO fileReaderWriterVO, BindingResult bindingResult, Model model, SessionStatus status) throws Exception {
+    @PostMapping("/frw/insertFileReaderWriterInfo.do")
+    public ResponseEntity<Map<String, Object>> insertFileReaderWriterInfo(FileReaderWriterAPIVO fileReaderWriterVO) throws Exception {
         Map<String, Object> response = new HashMap<>();
 
         String uuid = fileReaderWriterVO.getUuid();
@@ -101,8 +103,11 @@ public class EgovFileReaderWriterAPIController {
     }
 
     @Operation(summary = "파일 읽기/쓰기 정보 삭제", description = "파일 읽기/쓰기 정보를 삭제합니다.")
-    @RequestMapping(value = "/frw/deleteFileReaderWriterInfo.do", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteFileReaderWriterInfo(FileReaderWriterAPIVO fileReaderWriterVO, BindingResult bindingResult, Model model, SessionStatus status) throws Exception {
+    @DeleteMapping("/frw/deleteFileReaderWriterInfo.do")
+    public ResponseEntity<Map<String, Object>> deleteFileReaderWriterInfo(FileReaderWriterAPIVO fileReaderWriterVO) throws Exception {
+        if (DeviceUuidCheck.isBlank(fileReaderWriterVO.getUuid())) {
+            return DeviceUuidCheck.requiredResponse();
+        }
         Map<String, Object> response = new HashMap<>();
         int cnt = egovFileReaderWriterAPIService.deleteFileReaderWriterInfo(fileReaderWriterVO);
         if(cnt > 0) {
@@ -116,14 +121,14 @@ public class EgovFileReaderWriterAPIController {
     }
     
     @Operation(summary = "파일 업로드", description = "파일을 업로드합니다. (단일 또는 여러 파일 지원, 확장자 제한 없음)")
-    @RequestMapping(value="/frw/fileupload.do", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadFile(
-            @Parameter(description = "업로드할 파일") @RequestPart("files") MultipartFile[] files,
-            @Parameter(description = "기기 식별코드") @RequestParam("uuid") String uuid,
-            HttpServletRequest request) throws Exception {
-    	
+    @PostMapping("/frw/fileupload.do")
+    public ResponseEntity<Map<String, Object>> uploadFile(
+            @Parameter(description = "업로드할 파일") @RequestParam("files") MultipartFile[] files,
+            @Parameter(description = "기기 식별코드") @RequestParam("uuid") String uuid) throws Exception {
+        if (DeviceUuidCheck.isBlank(uuid)) {
+            return DeviceUuidCheck.requiredResponse();
+        }
         Map<String, Object> response = new HashMap<>();
-        
         try {
             if (files == null || files.length == 0) {
                 response.put("resultState", "FAIL");
@@ -176,8 +181,9 @@ public class EgovFileReaderWriterAPIController {
             }
             
         } catch (Exception e) {
+            LOGGER.error("파일 업로드 실패", e);
             response.put("resultState", "FAIL");
-            response.put("resultMessage", "업로드 실패: " + e.getMessage());
+            response.put("resultMessage", "업로드에 실패했습니다");
         }
         
         return ResponseEntity.ok(response);
@@ -193,32 +199,30 @@ public class EgovFileReaderWriterAPIController {
         vo.setFileSize(fileVO.getFileSize());
         vo.setUseYn("Y");
         egovFileReaderWriterAPIService.insertFileReaderWriterInfo(vo);
+
+        FileOpenerDeviceAPIVO opener = new FileOpenerDeviceAPIVO();
+        opener.setUuid(uuid);
+        opener.setFileSn(fileVO.getFileSn());
+        egovFileOpenerDeviceAPIService.insertFileOpenerList(opener);
     }
 
     @Operation(summary = "파일 다운로드", description = "기기 UUID 소유권을 검증한 뒤 파일을 다운로드합니다.")
-    @RequestMapping(value = "/frw/fileDownload.do", method = RequestMethod.GET)
+    @GetMapping("/frw/fileDownload.do")
     public void fileDownload(
             @Parameter(description = "기기 식별코드") @RequestParam("uuid") String uuid,
             @Parameter(description = "파일 일련번호") @RequestParam("fileSn") int fileSn,
             HttpServletResponse response) throws IOException {
-        byte[] fileData;
+        if (DeviceUuidCheck.isBlank(uuid)) {
+            fileMngUtil.writeDownloadError(response, HttpServletResponse.SC_BAD_REQUEST, "uuid is required");
+            return;
+        }
         try {
-            fileData = fileMngUtil.fileDownload(response, fileSn, uuid);
+            fileMngUtil.fileDownload(response, fileSn, uuid);
         } catch (SecurityException e) {
             fileMngUtil.writeDownloadError(response, HttpServletResponse.SC_FORBIDDEN, "파일 접근 권한이 없습니다.");
             return;
         } catch (IOException e) {
             fileMngUtil.writeDownloadError(response, HttpServletResponse.SC_NOT_FOUND, "파일을 찾을 수 없습니다.");
-            return;
-        }
-
-        response.setContentType("application/octet-stream");
-        response.setContentLength(fileData.length);
-        try {
-            response.getOutputStream().write(fileData);
-            response.getOutputStream().flush();
-        } catch (IOException e) {
-            fileMngUtil.writeDownloadError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null);
         }
     }
 

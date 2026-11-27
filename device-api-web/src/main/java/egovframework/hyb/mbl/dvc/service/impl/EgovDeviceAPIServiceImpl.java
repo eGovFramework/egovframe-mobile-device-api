@@ -7,18 +7,16 @@ import org.springframework.stereotype.Service;
 
 import egovframework.hyb.mbl.dvc.service.DeviceAPIVO;
 import egovframework.hyb.mbl.dvc.service.EgovDeviceAPIService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.annotation.Resource;
 
 /**
  * 통합 Device API ServiceImpl
  */
-@Service
-@RequiredArgsConstructor
-@Slf4j
+@Service("EgovDeviceAPIService")
 public class EgovDeviceAPIServiceImpl extends EgovAbstractServiceImpl implements EgovDeviceAPIService {
 
-    private final DeviceAPIDAO deviceAPIDAO;
+    @Resource(name="DeviceAPIDAO")
+    private DeviceAPIDAO deviceAPIDAO;
 
     public int insertDeviceInfo(DeviceAPIVO vo) {
         return deviceAPIDAO.insertDeviceInfo(vo);
@@ -33,7 +31,6 @@ public class EgovDeviceAPIServiceImpl extends EgovAbstractServiceImpl implements
     }
 
     public List<DeviceAPIVO> selectDeviceInfoList(DeviceAPIVO searchVO) {
-        log.debug("uuid={}", searchVO.getUuid());
         return deviceAPIDAO.selectDeviceInfoList(searchVO);
     }
 

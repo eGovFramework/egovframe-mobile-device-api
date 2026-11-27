@@ -1,0 +1,2675 @@
+{
+  "@@locale": "en",
+  "commonError": "Error",
+  "commonSuccess": "Success",
+  "commonRetry": "Retry",
+  "commonConfirm": "Confirm",
+  "commonCancel": "Cancel",
+  "commonClose": "Close",
+  "commonCreate": "Create",
+  "commonDelete": "Delete",
+  "commonCopy": "Copy",
+  "commonMove": "Move",
+  "commonRename": "Rename",
+  "commonRegister": "Register",
+  "commonOpenSettings": "Open settings",
+  "commonShortcut": "Shortcut",
+  "commonCurrentScreen": "Current screen",
+  "commonBottomTabNavigation": "Bottom tab navigation",
+  "commonTabMainFunction": "Main",
+  "commonTabGuide": "Guide",
+  "commonTabLicense": "License",
+  "commonTabMore": "More",
+  "commonRegisterConfirmTitle": "Register confirmation",
+  "commonDeleteConfirmTitle": "Delete confirmation",
+  "commonDeleteListTitle": "Delete list",
+  "commonDeleteListMessage": "Pressing delete will remove all items. Do you want to continue?",
+  "commonRefresh": "Refresh",
+  "commonDeleteListButton": "Delete list",
+  "commonUuidLabel": "UUID",
+  "commonTimeLabel": "Time",
+  "commonTimestampLabel": "Timestamp",
+  "commonSn": "SN",
+  "commonNotAvailable": "N/A",
+  "commonUseYnY": "In use",
+  "commonUseYnN": "Not in use",
+  "commonHomeTooltip": "Go to home",
+  "commonActionSave": "Save",
+  "commonActionUpload": "Upload",
+  "commonActionDelete": "Delete",
+  "commonActionCreate": "Create",
+  "commonActionModify": "Modify",
+  "commonActionComplete": "Complete",
+  "commonToastFeatureActionSuccess": "{feature} {action} succeeded",
+  "@commonToastFeatureActionSuccess": {
+    "placeholders": {
+      "feature": {
+        "type": "String"
+      },
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "commonToastFeatureActionFailure": "{feature} {action} failed",
+  "@commonToastFeatureActionFailure": {
+    "placeholders": {
+      "feature": {
+        "type": "String"
+      },
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "commonConnectionDisconnected": "Not connected",
+  "commonConnectionDisconnectedDetail": "External server ({url}) and SQLite are unavailable.",
+  "@commonConnectionDisconnectedDetail": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "commonConnectionExternalServer": "External server connected",
+  "commonConnectionSqlite": "SQLite connected",
+  "commonConnectionSqliteToggle": "SQLite",
+  "commonConnectionSqliteDetail": "DB: {fileName} · table: {tableName}",
+  "@commonConnectionSqliteDetail": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      },
+      "tableName": {
+        "type": "String"
+      }
+    }
+  },
+  "commonConnectionSqliteTableReady": "{tableName} table exists in the internal DB",
+  "@commonConnectionSqliteTableReady": {
+    "placeholders": {
+      "tableName": {
+        "type": "String"
+      }
+    }
+  },
+  "commonConnectionSqliteTableMissing": "{tableName} table is missing in the internal DB",
+  "@commonConnectionSqliteTableMissing": {
+    "placeholders": {
+      "tableName": {
+        "type": "String"
+      }
+    }
+  },
+  "commonConnectionStatusChecking": "Checking connection...",
+  "commonConnectionStatusTitle": "Data store",
+  "commonSqliteConnectedTitle": "SQLite connected",
+  "commonSqliteConnectedMessage": "DB: {fileName}",
+  "@commonSqliteConnectedMessage": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "commonSqliteDatabaseAlreadyExists": "A database with this name already exists.",
+  "commonSqliteImportButton": "Import DB",
+  "commonSqliteImportFileNotFound": "Could not find the DB file to import.",
+  "commonSqliteImportNameLabel": "DB name to save",
+  "commonSqliteImportTitle": "Import SQLite DB",
+  "commonSqliteInvalidDatabaseName": "Only letters, numbers, and underscore (_) are allowed.",
+  "commonSqliteInvalidImportFileType": "Only SQLite DB files (.db, .sqlite, .sqlite3) can be selected.",
+  "commonSqlitePickDatabaseTitle": "Select a DB to connect",
+  "commonSqliteSelectDatabaseButton": "Select DB",
+  "commonSqliteSetupTitle": "SQLite DB required",
+  "commonSqliteSetupNoDatabase": "No local DB found.\nCreate a DB with the {tableName} table in Egov SQLite Manager, export it, then import here.",
+  "@commonSqliteSetupNoDatabase": {
+    "placeholders": {
+      "tableName": {
+        "type": "String"
+      }
+    }
+  },
+  "commonSqliteSetupNoTable": "{tableName} table not found.\nCreate the {tableName} table in SQLite Manager.\n(table: {tableName})",
+  "@commonSqliteSetupNoTable": {
+    "placeholders": {
+      "tableName": {
+        "type": "String"
+      }
+    }
+  },
+  "commonPreviousScreen": "Previous screen",
+  "commonNoUuid": "Device UUID is missing.",
+  "commonUuidRequired": "Device UUID is missing. The request cannot be processed.",
+  "commonUuidMismatch": "Only data from the current device can be read or deleted.",
+  "commonLabelSuffix": "{label} :",
+  "@commonLabelSuffix": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "commonGuideSqliteNoteTitle": "SQLite / MySQL table notes",
+  "permissionGranted": "{permissionType} permission granted.",
+  "@permissionGranted": {
+    "placeholders": {
+      "permissionType": {
+        "type": "String"
+      }
+    }
+  },
+  "permissionDenied": "{permissionType} permission denied. Enable it in Settings.",
+  "@permissionDenied": {
+    "placeholders": {
+      "permissionType": {
+        "type": "String"
+      }
+    }
+  },
+  "permissionPermanentlyDenied": "{permissionType} permission permanently denied. Allow it in app settings.",
+  "@permissionPermanentlyDenied": {
+    "placeholders": {
+      "permissionType": {
+        "type": "String"
+      }
+    }
+  },
+  "permissionRestricted": "{permissionType} permission is restricted.",
+  "@permissionRestricted": {
+    "placeholders": {
+      "permissionType": {
+        "type": "String"
+      }
+    }
+  },
+  "permissionLimited": "{permissionType} permission is limited.",
+  "@permissionLimited": {
+    "placeholders": {
+      "permissionType": {
+        "type": "String"
+      }
+    }
+  },
+  "permissionProvisional": "{permissionType} permission is provisionally granted.",
+  "@permissionProvisional": {
+    "placeholders": {
+      "permissionType": {
+        "type": "String"
+      }
+    }
+  },
+  "permissionRequiredTitle": "{permissionType} permission required",
+  "@permissionRequiredTitle": {
+    "placeholders": {
+      "permissionType": {
+        "type": "String"
+      }
+    }
+  },
+  "permissionRequiredMessage": "Permission is required to use {permissionType}. Allow it in settings?",
+  "@permissionRequiredMessage": {
+    "placeholders": {
+      "permissionType": {
+        "type": "String"
+      }
+    }
+  },
+  "loadingSplashAppName": "DeviceAPI",
+  "loadingSplashFrameworkName": "Flutter",
+  "applicationListTitle": "Device API Application List",
+  "applicationListCopyright": "Copyright 2025",
+  "navigationHubDescription": "You can move to another API screen or app list.",
+  "navigationHubAppListSubtitle": "List of 9 Device API demo apps",
+  "featureGuideUsageTitle": "How to use",
+  "featureGuideFeatureTitle": "Feature description",
+  "connectionBarHint": "Use Connect or Change to set up SQLite and the database.",
+  "connectionBarConnectButton": "Connect",
+  "connectionBarChangeButton": "Change",
+  "serverConnectionErrorTitle": "Server Connection Error",
+  "serverConnectionErrorMessage": "Unable to connect to the server.",
+  "serverConnectionChecking": "Checking connection...",
+  "serverDbErrorMessage": "The server is running but MySQL is unavailable. Start MySQL on port 3306 and verify the hyb schema.",
+  "serverNetworkUnavailableMessage": "Please check your network connection.",
+  "licenseIntroText": "This application is developed under an open source license and follows Apache License 2.0.",
+  "licenseInfoTitle": "License information",
+  "licenseLabelLicense": "License",
+  "licenseValueApache": "Apache License 2.0",
+  "licenseLabelDeveloper": "Developer",
+  "licenseValueDeveloper": "eGovFrame",
+  "licenseLabelVersion": "Version",
+  "licenseValueVersion": "5.0.0",
+  "licenseCopyrightYear": "Copyright 2025",
+  "licenseCopyrightNotice": "© Ministry of the Interior and Safety. All rights reserved.",
+  "deviceInfoApiTitle": "DeviceInfo API",
+  "deviceInfoTitle": "Device Information",
+  "deviceInfoDescription": "View hardware and software information about the device, including model, OS version, and memory usage.",
+  "deviceInfoLoadFailedTitle": "Failed to load device information",
+  "deviceInfoNoUploadData": "No device information to upload.",
+  "deviceInfoServerRegisterTitle": "Register on server",
+  "deviceInfoServerRegisterMessage": "Register this device information on the server?",
+  "deviceInfoUploading": "Uploading information...",
+  "deviceInfoUploadSuccess": "Device information uploaded successfully.",
+  "deviceInfoCannotLoad": "Unable to load device information.",
+  "deviceInfoServerListFirst": "Load device information first before viewing the server list.",
+  "deviceInfoServerListButton": "View server list",
+  "deviceInfoUploadButton": "Upload information",
+  "deviceInfoEmptyList": "No saved device information.",
+  "deviceInfoNetworkConnectionType": "Network Connection Type : {type}",
+  "deviceInfoLabelOs": "OS",
+  "deviceInfoDetailTitle": "Device details",
+  "deviceInfoDeleteTitle": "Delete device information",
+  "deviceInfoDeleteConfirm": "Delete this device information?",
+  "deviceInfoDeleteSuccess": "Device deleted successfully.",
+  "deviceInfoDeviceDetailTitle": "Device details",
+  "deviceInfoSerialNumber": "Serial number",
+  "deviceInfoUuid": "UUID",
+  "deviceInfoOperatingSystem": "Operating system",
+  "deviceInfoNetworkInfo": "Network information",
+  "deviceInfoProgramVersion": "Program version",
+  "deviceInfoDeviceName": "Device name",
+  "deviceInfoUseStatus": "Usage status",
+  "deviceInfoInUse": "In use",
+  "deviceInfoNotInUse": "Not in use",
+  "deviceInfoContactCount": "Contact count",
+  "deviceInfoStorageInfo": "Storage information",
+  "deviceInfoListButton": "List",
+  "deviceInfoProgramVersionLabel": "Program Version",
+  "deviceInfoNetworkInfoLabel": "Network Info",
+  "deviceInfoDeviceNameLabel": "Device Name",
+  "deviceInfoStorageCapacity": "Storage capacity",
+  "deviceInfoDetailCount": "Details ({count})",
+  "deviceInfoQueryComplete": "Information loaded",
+  "deviceInfoStorage": "Storage",
+  "deviceInfoContacts": "Contacts",
+  "deviceInfoVersion": "Version",
+  "deviceInfoLoadFailed": "Failed to load device information: {error}",
+  "@deviceInfoLoadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "deviceInfoUploadFailed": "Failed to upload information to the server.",
+  "deviceInfoUploadError": "An error occurred while uploading: {error}",
+  "@deviceInfoUploadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "deviceInfoListLoadError": "An error occurred while loading the device list: {error}",
+  "@deviceInfoListLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "deviceInfoInvalidSerial": "Invalid device serial number.",
+  "deviceInfoGenericError": "An error occurred: {error}",
+  "@deviceInfoGenericError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "deviceInfoDeleteFailed": "Delete failed: the server could not process the request.",
+  "deviceInfoLoadFaile": "deviceInfoLoadFaile",
+  "deviceInfoUploadErro": "deviceInfoUploadErro",
+  "deviceInfoListLoadErro": "deviceInfoListLoadErro",
+  "deviceInfoGenericErro": "deviceInfoGenericErro",
+  "acceleratorApiTitle": "Accelerator Info API",
+  "acceleratorTitle": "Accelerometer Information",
+  "acceleratorDescription": "Monitors device acceleration data in real time.",
+  "acceleratorRegisterTitle": "Register accelerometer data",
+  "acceleratorRegisterMessage": "Register accelerometer information on the server?",
+  "acceleratorListButton": "List",
+  "acceleratorSaveButton": "Save",
+  "acceleratorDeleteTitle": "Delete accelerometer info",
+  "acceleratorDeleteConfirm": "Delete this accelerometer record?",
+  "acceleratorDeleteSuccess": "Accelerometer record deleted successfully.",
+  "acceleratorDetailTitle": "Accelerometer details",
+  "acceleratorDetailInfo": "You can review and manage details of the selected accelerometer record.",
+  "acceleratorDetailTableTitle": "Accelerometer details",
+  "acceleratorXAxis": "X axis",
+  "acceleratorYAxis": "Y axis",
+  "acceleratorZAxis": "Z axis",
+  "acceleratorSavedAt": "Saved at",
+  "acceleratorUseYn": "Usage status",
+  "acceleratorSaveSuccess": "Accelerometer information has been saved successfully.",
+  "acceleratorEmptyList": "No saved accelerometer information.",
+  "acceleratorDeleteFailed": "Delete failed: the server could not process the request.",
+  "acceleratorInvalidSerial": "Invalid serial number.",
+  "acceleratorTransferFailed": "An error occurred while sending data.",
+  "acceleratorListLoadError": "An error occurred while loading accelerometer records: {error}",
+  "@acceleratorListLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "acceleratorGenericError": "An error occurred: {error}",
+  "@acceleratorGenericError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "acceleratorListLoadErro": "acceleratorListLoadErro",
+  "acceleratorGenericErro": "acceleratorGenericErro",
+  "gpsApiTitle": "GPS API",
+  "gpsTitle": "GPS Location Service",
+  "gpsDescription": "Retrieves current location using GPS and supports location-based services with real-time tracking.",
+  "gpsPermissionLocation": "Location",
+  "gpsSaveTitle": "Save GPS information",
+  "gpsSaveConfirm": "Save GPS information to the server?",
+  "gpsRegisterTitle": "Register GPS information",
+  "gpsRegisterConfirm": "Register saved GPS information on the server?",
+  "gpsServerListButton": "Server list",
+  "gpsSaveButton": "Save",
+  "gpsSavedListTitle": "Saved GPS list",
+  "gpsLatitudeLabel": "Latitude",
+  "gpsLongitudeLabel": "Longitude",
+  "gpsAccuracyLabel": "Accuracy",
+  "gpsAltitudeLabel": "Altitude",
+  "gpsClearAllButton": "Clear all",
+  "gpsServerUploadButton": "Upload to server",
+  "gpsDetailTitle": "GPS details",
+  "gpsDetailInfo": "You can review and manage details of the selected GPS record.",
+  "gpsDetailTableTitle": "GPS details",
+  "gpsNoLocationData": "No location information available.",
+  "gpsMapApiNotConfiguredTitle": "Google Maps API key is not configured",
+  "gpsMapApiNotConfiguredMessage": "Set the same API key in AndroidManifest.xml and app_config.dart to display maps in the app.",
+  "gpsLocationServiceDisabled": "Location service is disabled.",
+  "gpsCurrentLocation": "Current location",
+  "gpsLoadingLocation": "Loading location...",
+  "gpsLoadingMap": "Loading map...",
+  "gpsCheckingNetwork": "Checking network connection...",
+  "gpsDeleteAllSuccess": "All GPS records were deleted successfully.",
+  "gpsDeleteSelectedButton": "Delete selected",
+  "gpsSelectionHint": "Only checked locations can be deleted.",
+  "gpsSelectedCount": "{count} selected",
+  "@gpsSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gpsDeleteSelectedTitle": "Delete locations",
+  "gpsDeleteSelectedConfirm": "Delete the {count} selected locations?",
+  "@gpsDeleteSelectedConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gpsDeleteSelectedSuccess": "The selected locations were deleted.",
+  "gpsNoSelection": "Select at least one item to delete.",
+  "gpsSaveSuccess": "GPS information has been saved successfully.",
+  "gpsEmptyList": "No saved GPS information.",
+  "gpsSaveFailed": "Failed to save GPS information.",
+  "gpsNoLocation": "Unable to retrieve location information.",
+  "gpsDeleteFailed": "Delete failed: the server could not process the request.",
+  "gpsSaveNoLocation": "No location to save. Please fetch location first.",
+  "gpsSavingInProgress": "Saving GPS information...",
+  "gpsSavedStatus": "GPS information has been saved.",
+  "gpsDeletedStatus": "GPS information has been deleted.",
+  "gpsClearedStatus": "All GPS information has been deleted.",
+  "gpsUploadedStatus": "GPS information has been uploaded to the server.",
+  "gpsPermissionGranted": "GPS mode is enabled. Press the button to fetch your current location.",
+  "gpsPermissionDenied": "Location permission is denied. Please allow location permission in settings.",
+  "gpsPermissionPermanentlyDenied": "Location permission is permanently denied. Please allow location permission in settings.",
+  "gpsPermissionUnknown": "Unable to determine location permission status.",
+  "gpsInitError": "An error occurred while initializing GPS: {error}",
+  "@gpsInitError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "gpsFetchFailed": "Failed to fetch location: {error}",
+  "@gpsFetchFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "gpsSaveError": "An error occurred while saving GPS information: {error}",
+  "@gpsSaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "gpsListLoadError": "An error occurred while loading GPS records: {error}",
+  "@gpsListLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "gpsGenericError": "An error occurred: {error}",
+  "@gpsGenericError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "gpsInitErro": "gpsInitErro",
+  "gpsFetchFaile": "gpsFetchFaile",
+  "gpsSaveErro": "gpsSaveErro",
+  "gpsListLoadErro": "gpsListLoadErro",
+  "gpsGenericErro": "gpsGenericErro",
+  "networkApiTitle": "Network API",
+  "networkTitle": "Network Information",
+  "networkDescription": "Checks network status and manages internet communication, including Wi-Fi and mobile data connections.",
+  "networkRegisterTitle": "Register network information",
+  "networkRegisterMessage": "Register network information on the server?",
+  "networkListButton": "List",
+  "networkSendButton": "Send info",
+  "networkCurrentStatus": "Current network status",
+  "networkConnected": "Connected",
+  "networkDisconnected": "Disconnected",
+  "networkTypeLabel": "Network type",
+  "networkDeviceLabel": "Device",
+  "networkIpAddressLabel": "IP address",
+  "networkWifiSsidLabel": "Wi-Fi SSID",
+  "networkDetailTitle": "Network details",
+  "networkDetailInfo": "You can review and manage details of the selected network record.",
+  "networkDetailTableTitle": "Network details",
+  "networkDeviceIdLabel": "Device ID",
+  "networkDeviceNameLabel": "Device name",
+  "networkMacAddressLabel": "MAC address",
+  "networkSsidLabel": "SSID",
+  "networkDeleteTitle": "Delete network information",
+  "networkDeleteConfirm": "Delete this network information?",
+  "networkDeleteSuccess": "Network information was deleted successfully.",
+  "networkSendSuccess": "Network information has been saved on the server.",
+  "networkSendFailed": "Failed to send network information.",
+  "networkEmptyList": "No saved network information.",
+  "networkNoCurrentInfo": "Unable to load current network information.",
+  "networkDeleteSnMissing": "No network SN provided for deletion.",
+  "networkDeleteFailed": "Failed to delete network information.",
+  "networkActiveEmpty": "No active network information.",
+  "networkUnknownQuality": "Unknown",
+  "networkSendError": "An error occurred while sending network information: {error}",
+  "@networkSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "networkListLoadError": "An error occurred while loading network records: {error}",
+  "@networkListLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "networkDeleteError": "An error occurred while deleting network information: {error}",
+  "@networkDeleteError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "networkSendErro": "networkSendErro",
+  "networkListLoadErro": "networkListLoadErro",
+  "networkDeleteErro": "networkDeleteErro",
+  "mediaImagePickCancelled": "mediaImagePickCancelled",
+  "mediaVideoPickCancelled": "mediaVideoPickCancelled",
+  "mediaDeleteSelectedTitle": "Delete selected media",
+  "mediaDeleteSelectedMessag": "mediaDeleteSelectedMessag",
+  "mediaTypeImage": "Image",
+  "mediaAddImage": "Add image",
+  "mediaAddVideo": "Add video",
+  "mediaSelectSourc": "mediaSelectSourc",
+  "mediaFromCamer": "mediaFromCamer",
+  "mediaFromGaller": "mediaFromGaller",
+  "mediaNoticeTitle": "Media notice",
+  "mediaConfirm": "Confirm",
+  "mediaCancel": "Cancel",
+  "mediaApiTitle": "Media API",
+  "mediaFeatureTitle": "Media",
+  "mediaFeatureDescription": "Manage local media files and sync them with the server.",
+  "mediaSelectedCoun": "mediaSelectedCoun",
+  "mediaLearnMore": "Learn more",
+  "mediaDelete": "Delete",
+  "mediaUpload": "Upload",
+  "mediaTypeVideo": "Video",
+  "mediaServerListButton": "Server list",
+  "mediaUploadTitle": "Upload media",
+  "mediaUploadConfir": "mediaUploadConfir",
+  "mediaImageListLoading": "Loading image list...",
+  "mediaNoImages": "No images available.",
+  "mediaPleaseWait": "Please wait a moment.",
+  "mediaAddImageGuide": "Tap Add image to select from camera or gallery.",
+  "mediaSelectedImage": "mediaSelectedImage",
+  "mediaLocalImage": "mediaLocalImage",
+  "mediaDeleteSelectedTooltip": "Delete selected files",
+  "mediaExitSelectionTooltip": "Exit selection mode",
+  "mediaVideoListLoading": "Loading video list...",
+  "mediaNoVideos": "No videos available.",
+  "mediaAddVideoGuide": "Tap Add video to select from camera or gallery.",
+  "mediaSelectedVideo": "mediaSelectedVideo",
+  "mediaLocalVideo": "mediaLocalVideo",
+  "mediaDownloadUrlChecke": "mediaDownloadUrlChecke",
+  "mediaDownloadConfirmTitle": "Download media file",
+  "mediaDownloadConfirmMessag": "mediaDownloadConfirmMessag",
+  "mediaDownloadButton": "Download",
+  "mediaDownloadSuccess": "Download completed.",
+  "mediaDownloadServerError": "An error occurred while downloading from the server.",
+  "mediaServerDeleteTitle": "Delete server file",
+  "mediaServerDeleteConfir": "mediaServerDeleteConfir",
+  "mediaDeleteServerError": "An error occurred while deleting server file.",
+  "mediaServerListTitle": "Server media list",
+  "mediaLocalListButton": "Local list",
+  "mediaNoServerFiles": "No media files on server.",
+  "mediaServerFileBadge": "Server file",
+  "mediaUnknownSize": "Unknown size",
+  "mediaNoPlayableVideo": "This video cannot be played.",
+  "mediaPreview": "Preview",
+  "mediaVideoPreviewGuide": "Tap to play this video.",
+  "mediaDetailTitle": "Media details",
+  "mediaDetailInfo": "You can review details of the selected media file.",
+  "mediaDetailTableTitle": "Media file details",
+  "mediaLabelFileName": "File name",
+  "mediaLabelFileSize": "File size",
+  "mediaLabelType": "Type",
+  "mediaLabelPath": "Path",
+  "mediaLabelStoredName": "Stored file name",
+  "mediaListButton": "List",
+  "mediaVideoPlayError": "Failed to play video.",
+  "mediaDeleteSelectedMessage": "mediaDeleteSelectedMessage {arg1}",
+  "@mediaDeleteSelectedMessage": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaSelectSource": "mediaSelectSource {arg1}",
+  "@mediaSelectSource": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaFromCamera": "mediaFromCamera {arg1}",
+  "@mediaFromCamera": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaFromGallery": "mediaFromGallery {arg1}",
+  "@mediaFromGallery": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaSelectedCount": "mediaSelectedCount {arg1}",
+  "@mediaSelectedCount": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaUploadConfirm": "mediaUploadConfirm {arg1}",
+  "@mediaUploadConfirm": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaSelectedImages": "mediaSelectedImages {arg1}",
+  "@mediaSelectedImages": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaLocalImages": "mediaLocalImages {arg1}",
+  "@mediaLocalImages": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaSelectedVideos": "mediaSelectedVideos {arg1}",
+  "@mediaSelectedVideos": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaLocalVideos": "mediaLocalVideos {arg1}",
+  "@mediaLocalVideos": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaDownloadUrlChecked": "mediaDownloadUrlChecked {arg1}",
+  "@mediaDownloadUrlChecked": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaDownloadConfirmMessage": "mediaDownloadConfirmMessage {arg1}",
+  "@mediaDownloadConfirmMessage": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaServerDeleteConfirm": "mediaServerDeleteConfirm {arg1}",
+  "@mediaServerDeleteConfirm": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaPermissionCheckError": "Failed to check {permission} permission: {error}",
+  "@mediaPermissionCheckError": {
+    "placeholders": {
+      "permission": {
+        "type": "String"
+      },
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaPermissionGranted": "{label} permission granted.",
+  "@mediaPermissionGranted": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaPermissionUnknown": "Unknown {label} permission state.",
+  "@mediaPermissionUnknown": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaLocalListFailed": "Failed to load local media list: {error}",
+  "@mediaLocalListFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaUploadSummary": "Upload complete (success: {success}, failed: {failed})",
+  "@mediaUploadSummary": {
+    "placeholders": {
+      "success": {
+        "type": "String"
+      },
+      "failed": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaDeleteSummary": "Delete complete (success: {success}, failed: {failed})",
+  "@mediaDeleteSummary": {
+    "placeholders": {
+      "success": {
+        "type": "String"
+      },
+      "failed": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaImageSaved": "Image saved successfully.",
+  "mediaVideoSaved": "Video saved successfully.",
+  "mediaImagePickError": "Failed to pick image: {error}",
+  "@mediaImagePickError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaVideoPickError": "Failed to pick video: {error}",
+  "@mediaVideoPickError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaImageSaveError": "Failed to save image: {error}",
+  "@mediaImageSaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaVideoSaveError": "Failed to save video: {error}",
+  "@mediaVideoSaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaUploadError": "Upload failed: {error}",
+  "@mediaUploadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaServerListFailed": "Failed to load server media list: {error}",
+  "@mediaServerListFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaDownloadFailedWithReason": "Download failed: {error}",
+  "@mediaDownloadFailedWithReason": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaServerDeleteFailed": "Failed to delete server media: {error}",
+  "@mediaServerDeleteFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaServerDeleteError": "Server delete error: {error}",
+  "@mediaServerDeleteError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaDownloadUrlError": "Failed to retrieve download URL: {error}",
+  "@mediaDownloadUrlError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaNoFilesToDelete": "No media files selected for deletion.",
+  "mediaNoFilesToUpload": "No media files selected for upload.",
+  "mediaNoValidFilesToUpload": "No valid media files to upload.",
+  "mediaSaveSuccess": "Media file saved.",
+  "mediaNoDeviceUuid": "Device UUID is missing.",
+  "mediaServerListEmpty": "No files found on the server.",
+  "mediaServerDeleted": "Server file deleted.",
+  "mediaUploadFailed": "Media upload failed.",
+  "mediaDownloadFailed": "Media download failed.",
+  "mediaCameraPermissionRequired": "Camera permission is required.",
+  "mediaCameraPermissionGuide": "Please enable camera permission in settings.",
+  "fileReadWriteCreateNewFile": "Create new file",
+  "fileReadWriteLabelFileName": "File name",
+  "fileReadWriteLabelContent": "File content",
+  "fileReadWriteContentHint": "Enter file content.",
+  "fileReadWriteCancelButton": "Cancel",
+  "fileReadWriteCreateButton": "Create",
+  "fileReadWriteNoticeTitle": "File notice",
+  "fileReadWriteConfirmButton": "Confirm",
+  "fileReadWriteNoFilesSelectedForUpload": "fileReadWriteNoFilesSelectedForUpload",
+  "fileReadWriteUploadTitle": "Upload files",
+  "fileReadWriteUploadConfir": "fileReadWriteUploadConfir",
+  "fileReadWriteUploadServerError": "An error occurred while uploading to server.",
+  "fileReadWriteNoFilesToDelete": "No files selected for deletion.",
+  "fileReadWriteDeleteTitle": "Delete selected files",
+  "fileReadWriteDeleteConfir": "fileReadWriteDeleteConfir",
+  "fileReadWriteDeleteAllSuccess": "All selected files were deleted.",
+  "fileReadWriteDeleteFailedFile": "fileReadWriteDeleteFailedFile",
+  "fileReadWriteSelectedFile": "fileReadWriteSelectedFile",
+  "fileReadWriteLocalFile": "fileReadWriteLocalFile",
+  "fileReadWriteDeleteSelectedTooltip": "Delete selected files",
+  "fileReadWriteExitSelectionTooltip": "Exit selection mode",
+  "fileReadWriteListLoading": "fileReadWriteListLoading",
+  "fileReadWriteNoLocalFiles": "No local files.",
+  "fileReadWriteNoLocalFilesHint": "Use Import or Create New File to add files.",
+  "fileReadWriteImportButton": "Import files",
+  "fileReadWriteImportSuccess": "Imported {count} file(s).",
+  "@fileReadWriteImportSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteImportInProgress": "Importing files...",
+  "fileReadWriteImportFailed": "Could not import files.",
+  "fileReadWriteSiz": "fileReadWriteSiz",
+  "fileReadWriteModifiedA": "fileReadWriteModifiedA",
+  "fileReadWriteApiTitle": "File Read/Write API",
+  "fileReadWriteFeatureTitle": "File Read/Write",
+  "fileReadWriteFeatureDescription": "Create, read, delete, and upload local files.",
+  "fileReadWriteSelectedCoun": "fileReadWriteSelectedCoun",
+  "fileReadWriteUploadSelecte": "fileReadWriteUploadSelecte",
+  "fileReadWriteServerListButton": "Server list",
+  "fileReadWriteServerListTitle": "Server file list",
+  "fileReadWriteNoServerFiles": "No server files.",
+  "fileReadWriteLabelSize": "Size",
+  "fileReadWriteLabelUploadedAt": "Uploaded at",
+  "fileReadWriteLabelFileSn": "File SN",
+  "fileReadWriteLabelUseYn": "Use status",
+  "fileReadWriteUseYes": "In use",
+  "fileReadWriteUseNo": "Not in use",
+  "fileReadWriteServerDeleteTitle": "Delete server file",
+  "fileReadWriteServerDeleteConfir": "fileReadWriteServerDeleteConfir",
+  "fileReadWriteServerDeleteSucces": "fileReadWriteServerDeleteSucces",
+  "fileReadWriteDeleteServerError": "An error occurred while deleting server file.",
+  "fileReadWriteDetailTitle": "File details",
+  "fileReadWriteDetailInfo": "You can review details of the selected file.",
+  "fileReadWriteDetailTableTitle": "File details",
+  "fileReadWriteLabelPath": "Path",
+  "fileReadWriteListButton": "List",
+  "fileReadWriteLocalDeleteConfir": "fileReadWriteLocalDeleteConfir",
+  "fileReadWriteLocalDeleteSucces": "fileReadWriteLocalDeleteSucces",
+  "fileReadWritePreviewTitle": "Preview",
+  "fileReadWriteImagePreviewGuide": "Tap image to view full screen.",
+  "fileReadWriteVideoPreviewGuide": "Tap video to play.",
+  "fileReadWritePreviewNotSupported": "Preview is not supported for this file type.",
+  "fileReadWriteLocalDetailTitle": "Local file details",
+  "fileReadWriteLocalDetailInfo": "Check and manage details of this local file.",
+  "fileReadWriteLabelModifiedAt": "Modified at",
+  "fileReadWriteUploadConfirm": "fileReadWriteUploadConfirm {arg1}",
+  "@fileReadWriteUploadConfirm": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteDeleteConfirm": "fileReadWriteDeleteConfirm {arg1}",
+  "@fileReadWriteDeleteConfirm": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteDeleteFailedFiles": "fileReadWriteDeleteFailedFiles {arg1} {arg2} {arg3} {arg4}",
+  "@fileReadWriteDeleteFailedFiles": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      },
+      "arg3": {
+        "type": "String"
+      },
+      "arg4": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteSelectedFiles": "fileReadWriteSelectedFiles {arg1}",
+  "@fileReadWriteSelectedFiles": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteLocalFiles": "fileReadWriteLocalFiles {arg1}",
+  "@fileReadWriteLocalFiles": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteSize": "fileReadWriteSize {arg1}",
+  "@fileReadWriteSize": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteModifiedAt": "fileReadWriteModifiedAt {arg1}",
+  "@fileReadWriteModifiedAt": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteSelectedCount": "fileReadWriteSelectedCount {arg1}",
+  "@fileReadWriteSelectedCount": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteUploadSelected": "fileReadWriteUploadSelected {arg1}",
+  "@fileReadWriteUploadSelected": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteServerDeleteConfirm": "fileReadWriteServerDeleteConfirm {arg1}",
+  "@fileReadWriteServerDeleteConfirm": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteServerDeleteSuccess": "fileReadWriteServerDeleteSuccess {arg1}",
+  "@fileReadWriteServerDeleteSuccess": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteLocalDeleteConfirm": "fileReadWriteLocalDeleteConfirm {arg1}",
+  "@fileReadWriteLocalDeleteConfirm": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteLocalDeleteSuccess": "fileReadWriteLocalDeleteSuccess {arg1}",
+  "@fileReadWriteLocalDeleteSuccess": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteListUpdated": "List updated: {count} files loaded.",
+  "@fileReadWriteListUpdated": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteDeletingSelected": "Deleting {count} selected files...",
+  "@fileReadWriteDeletingSelected": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteDeleteSummary": "Delete complete (success: {success}, failed: {failed})",
+  "@fileReadWriteDeleteSummary": {
+    "placeholders": {
+      "success": {
+        "type": "String"
+      },
+      "failed": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteUploadingSelected": "Uploading {count} selected files...",
+  "@fileReadWriteUploadingSelected": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteUploadSummary": "Upload complete (success: {success}, failed: {failed})",
+  "@fileReadWriteUploadSummary": {
+    "placeholders": {
+      "success": {
+        "type": "String"
+      },
+      "failed": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteListLoadFailed": "Failed to load file list: {error}",
+  "@fileReadWriteListLoadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteCreateFailed": "Failed to create file.",
+  "fileReadWriteCreateFailedWith": "Failed to create file: {error}",
+  "@fileReadWriteCreateFailedWith": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteReadFailed": "Failed to read file: {error}",
+  "@fileReadWriteReadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteDeleteFailed": "Failed to delete file: {error}",
+  "@fileReadWriteDeleteFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteUploadFailed": "Failed to upload file: {error}",
+  "@fileReadWriteUploadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteUploadError": "Upload error: {error}",
+  "@fileReadWriteUploadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteServerListFailed": "Failed to load server file list: {error}",
+  "@fileReadWriteServerListFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteServerDeleteFailed": "Failed to delete server file: {error}",
+  "@fileReadWriteServerDeleteFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReadWriteInitialGuide": "Create a file first, then upload or manage it.",
+  "fileReadWriteCreateSuccess": "File created successfully.",
+  "fileReadWriteUploadSuccess": "File uploaded successfully.",
+  "fileReadWriteFileNotFound": "File not found.",
+  "fileReadWriteNoDeviceUuid": "Device UUID is missing.",
+  "fileReadWriteNoUploadFiles": "No files available for upload.",
+  "fileReadWriteNoValidUploadFiles": "No valid files to upload.",
+  "fileReadWriteCreateInProgress": "Creating file...",
+  "fileReadWriteFileNameHint": "example.txt",
+  "fileOpenerDeleteTitle": "Delete file",
+  "fileOpenerDeleteConfir": "fileOpenerDeleteConfir",
+  "fileOpenerCancelButton": "Cancel",
+  "fileOpenerDeleteSucces": "fileOpenerDeleteSucces",
+  "fileOpenerApiTitle": "File Opener API",
+  "fileOpenerFeatureTitle": "File Opener",
+  "fileOpenerFeatureDescription": "Open local documents and download files from server.",
+  "fileOpenerAddFilesButton": "Add files",
+  "fileOpenerServerListButton": "Server list",
+  "fileOpenerLocalLis": "fileOpenerLocalLis",
+  "fileOpenerNoTypeFiles": "No files for selected type.",
+  "fileOpenerNoLocalFiles": "No local files.",
+  "fileOpenerEmptyGuide": "Tap Add files to load local documents.",
+  "fileOpenerServerListTitle": "Server file list",
+  "fileOpenerLocalListButton": "Local list",
+  "fileOpenerNoServerFiles": "No server files.",
+  "fileOpenerLabelFileType": "File type",
+  "fileOpenerLabelFileSize": "File size",
+  "fileOpenerLabelUpdatedAt": "Updated at",
+  "fileOpenerDetailTitle": "File details",
+  "fileOpenerDetailInfo": "You can review details of the selected file.",
+  "fileOpenerDetailTableTitle": "File details",
+  "fileOpenerLabelFileName": "File name",
+  "fileOpenerLabelFileNumber": "File number",
+  "fileOpenerLabelStoredFileName": "Stored file name",
+  "fileOpenerListButton": "List",
+  "fileOpenerDownloading": "Downloading...",
+  "fileOpenerDownloadButton": "Download",
+  "fileOpenerDeleteConfirm": "fileOpenerDeleteConfirm {arg1}",
+  "@fileOpenerDeleteConfirm": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "fileOpenerDeleteSuccess": "fileOpenerDeleteSuccess {arg1}",
+  "@fileOpenerDeleteSuccess": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "fileOpenerLocalList": "fileOpenerLocalList {arg1}",
+  "@fileOpenerLocalList": {
+    "placeholders": {
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "fileOpenerAddFilesSummary": "{count} files added.",
+  "@fileOpenerAddFilesSummary": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "fileOpenerLocalListFailed": "Failed to load local file list: {error}",
+  "@fileOpenerLocalListFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileOpenerOpenError": "Failed to open file: {error}",
+  "@fileOpenerOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileOpenerPickError": "Failed to select file: {error}",
+  "@fileOpenerPickError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileOpenerDeleteError": "Failed to delete file: {error}",
+  "@fileOpenerDeleteError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileOpenerServerListError": "Failed to load server file list: {error}",
+  "@fileOpenerServerListError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileOpenerDownloadError": "Failed to download file: {error}",
+  "@fileOpenerDownloadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileOpenerDownloadSuccessWith": "Download completed: {fileName}",
+  "@fileOpenerDownloadSuccessWith": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "fileOpenerOpenFailed": "Failed to open file.",
+  "fileOpenerDeleteFailed": "Failed to delete file.",
+  "fileOpenerDownloadSuccess": "File downloaded successfully.",
+  "fileOpenerDownloadFailed": "File download failed.",
+  "fileOpenerTypeDocument": "Document",
+  "fileOpenerTypeText": "Text",
+  "fileOpenerTypeSpreadsheet": "Spreadsheet",
+  "fileOpenerTypePresentation": "Presentation",
+  "fileOpenerTypeOther": "Other",
+  "fileOpenerFileInfoLine": "{type} 쨌 {size}",
+  "@fileOpenerFileInfoLine": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtApiTitle": "File Management API",
+  "fileMgmtFeatureTitle": "File Management",
+  "fileMgmtFeatureDescription": "Provides access to the mobile device file system to create, edit, delete, copy, and move files and folders.",
+  "fileMgmtGuideOverview": "Browse, create, copy, move, and delete files and folders in the app Documents directory. There is no server or SQLite connection.",
+  "fileMgmtGuideUsage1": "Check the current folder list on the main tab. Tap a folder to open it.",
+  "fileMgmtGuideUsage2": "Use Create File at the bottom to add a folder or a sample text file.",
+  "fileMgmtGuideUsage3": "Long-press an item to copy, move, rename, delete, or enter selection mode.",
+  "fileMgmtGuideUsage4": "In selection mode, pick multiple items and use the bottom buttons to copy, move, or delete them.",
+  "fileMgmtGuideFeatureExploreTitle": "Browse files",
+  "fileMgmtGuideFeatureExploreContent": "List the app Documents directory and move between folders.",
+  "fileMgmtGuideFeatureCreateTitle": "Create folders and files",
+  "fileMgmtGuideFeatureCreateContent": "Create a new folder or sample txt/json/md files in the current path.",
+  "fileMgmtGuideFeatureEditTitle": "Copy, move, delete",
+  "fileMgmtGuideFeatureEditContent": "Copy, move, or delete selected items. Copying in the same folder appends a suffix.",
+  "fileMgmtGuideFeatureInfoTitle": "File info",
+  "fileMgmtGuideFeatureInfoContent": "Shows file size or folder item count under each list row.",
+  "fileMgmtGuideNoteTitle": "Note",
+  "fileMgmtGuideNote": "This feature does not connect to a server or SQLite. Work is limited to the app Documents folder. Deleted items cannot be recovered.",
+  "fileMgmtSelectionMode": "Selection mode",
+  "fileMgmtCreateFileAndFolder": "Create File And Folder",
+  "fileMgmtSelectedCount": "{count} selected",
+  "@fileMgmtSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fileMgmtGoToRoot": "Go to root folder",
+  "fileMgmtAlreadyRootDirectory": "Already at root directory.",
+  "fileMgmtEmptyFolderTitle": "This folder is empty",
+  "fileMgmtEmptyFolderDescription": "Use the button below to create a folder or add a file.",
+  "fileMgmtItemCount": "{count} items",
+  "@fileMgmtItemCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fileMgmtActionSheetMessage": "Yon Can Create File And Folder",
+  "fileMgmtNewFolder": "New folder",
+  "fileMgmtNewTextFile": "New text file",
+  "fileMgmtItemSelectedMessage": "Item selected.",
+  "fileMgmtCreateFolderTitle": "Create new folder",
+  "fileMgmtCreateTextFileTitle": "Create new text file",
+  "fileMgmtDeleteSelectedConfirm": "Delete {count} selected item(s)?",
+  "@fileMgmtDeleteSelectedConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fileMgmtDeleteSelectedDescription": "Selected items will be permanently removed.",
+  "fileMgmtSelectCopyDestination": "Select destination folder to copy",
+  "fileMgmtSelectMoveDestination": "Select destination folder to move",
+  "fileMgmtPermissionTitle": "All file access permission required",
+  "fileMgmtPermissionMessage": "To use file management, allow all file access and external storage management permissions in Settings.",
+  "fileMgmtNewNameLabel": "New name",
+  "fileMgmtNoSubFolder": "No subfolders",
+  "fileMgmtSelectThisFolder": "Select this folder",
+  "fileMgmtFolderCreated": "Folder created: {name}",
+  "@fileMgmtFolderCreated": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtFolderCreateFailed": "Failed to create folder: {error}",
+  "@fileMgmtFolderCreateFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtRenameFailed": "Rename failed: {error}",
+  "@fileMgmtRenameFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtInitInProgress": "File system initialization in progress.",
+  "fileMgmtCannotAccessDocuments": "Unable to access documents folder: {error}",
+  "@fileMgmtCannotAccessDocuments": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtInitError": "File system initialization error: {error}",
+  "@fileMgmtInitError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtDirectoryLoadError": "Directory load error: {error}",
+  "@fileMgmtDirectoryLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtFolderCreateError": "Folder creation error: {error}",
+  "@fileMgmtFolderCreateError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtSampleFileCreated": "Sample file created: {fileName}",
+  "@fileMgmtSampleFileCreated": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtSampleFileCreateError": "Sample file creation error: {error}",
+  "@fileMgmtSampleFileCreateError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtNoItemsToDelete": "No items to delete.",
+  "fileMgmtDeletedCount": "{count} item(s) deleted.",
+  "@fileMgmtDeletedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fileMgmtDeleteError": "Delete error: {error}",
+  "@fileMgmtDeleteError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtNoItemsToCopy": "No items to copy.",
+  "fileMgmtCopiedCount": "{count} item(s) copied.",
+  "@fileMgmtCopiedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fileMgmtCopyError": "Copy error: {error}",
+  "@fileMgmtCopyError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtNoItemsToMove": "No items to move.",
+  "fileMgmtMovedCount": "{count} item(s) moved.",
+  "@fileMgmtMovedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fileMgmtMoveError": "Move error: {error}",
+  "@fileMgmtMoveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtRenameSuccess": "Name changed successfully.",
+  "fileMgmtRenameError": "Rename error: {error}",
+  "@fileMgmtRenameError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtSampleFileNameHint": "sample.txt",
+  "fileMgmtWelcomeFileContent": "Welcome to eGovFrame file management!\n\nThis sample file verifies that file management works correctly on iOS.",
+  "fileMgmtSampleTxtContent": "This is a sample text file.\nCreated at: {timestamp}\n\neGovFrame device file management test",
+  "@fileMgmtSampleTxtContent": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtSampleJsonTitle": "Sample JSON file",
+  "fileMgmtSampleJsonDescription": "eGovFrame file management test",
+  "fileMgmtSampleMdContent": "# {mdTitle}\n\nCreated at: {timestamp}\n\n## {mdSectionTitle}\n\n- Create folder\n- Create file\n- Copy/move/delete",
+  "@fileMgmtSampleMdContent": {
+    "placeholders": {
+      "mdTitle": {
+        "type": "String"
+      },
+      "timestamp": {
+        "type": "String"
+      },
+      "mdSectionTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtSampleMdTitle": "Sample markdown file",
+  "fileMgmtSampleMdSectionTitle": "eGovFrame device file management",
+  "fileMgmtSampleDefaultContent": "eGovFrame device file management sample file\nCreated at: {timestamp}",
+  "@fileMgmtSampleDefaultContent": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "fileMgmtCopySuffix": "_copy",
+  "interfaceApiTitle": "Interface (Login) API",
+  "interfaceSuccessApiTitle": "Interface (Success) API",
+  "interfaceFeatureTitle": "Interface",
+  "interfaceFeatureDescription": "Provides functions to build and manage user interfaces, including UI component handling and event processing.",
+  "interfaceUserIdLabel": "User ID",
+  "interfaceUserIdHint": "Enter ID",
+  "interfaceUserIdRequired": "Please enter ID",
+  "interfacePasswordLabel": "Password",
+  "interfacePasswordHint": "Enter password",
+  "interfacePasswordRequired": "Please enter password",
+  "interfacePasswordMinLength": "Password must be at least 6 characters",
+  "interfaceEmailLabel": "Email",
+  "interfaceEmailHint": "Enter email",
+  "interfaceEmailInvalid": "Please enter a valid email address",
+  "interfaceLoginButton": "Login",
+  "interfaceRegisterButton": "Register",
+  "interfaceLogoutTitle": "Logout",
+  "interfaceLogoutConfirm": "Do you want to logout?",
+  "interfaceLogoutButton": "Logout",
+  "interfaceWithdrawTitle": "Withdraw account",
+  "interfaceWithdrawConfirm": "Do you really want to proceed with account withdrawal?\nThis action cannot be undone.",
+  "interfaceWithdrawButton": "Withdraw",
+  "interfaceLoginSuccessInfo": "Login successful! You can check user information.",
+  "interfaceUserInfoTitle": "User information",
+  "interfaceUserInfoId": "User ID",
+  "interfaceUserInfoPassword": "Password",
+  "interfaceUserInfoEmail": "Email",
+  "interfaceUserInfoUuid": "UUID",
+  "interfaceUserInfoUnavailable": "Unavailable",
+  "interfaceLoginSuccess": "Login successful.",
+  "interfaceRegisterSuccess": "Registration completed.",
+  "interfaceRegisterAccountExists": "Account already exists. Please login.",
+  "interfaceWithdrawSuccess": "Account withdrawal completed.",
+  "interfaceLogoutSuccess": "You have been logged out.",
+  "interfaceLoginInvalidCredentials": "Invalid ID or password.",
+  "interfaceLoginUserNotFound": "The ID does not exist. Please check again.",
+  "interfaceLoginFailedTitle": "Login failed!",
+  "interfaceLoginFailed": "Login failed.",
+  "interfaceUnknownError": "Unknown error.",
+  "interfaceRegisterFailed": "Registration failed: {error}",
+  "@interfaceRegisterFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "interfaceWithdrawFailed": "Account withdrawal failed: {error}",
+  "@interfaceWithdrawFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "interfaceGenericError": "An error occurred: {error}",
+  "@interfaceGenericError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "barcodeApiTitle": "BarcodeScanner API",
+  "barcodeTitle": "Barcode Information",
+  "barcodeDescription": "Scan QR codes and barcodes with the camera, then save, list, or delete records on the server or SQLite.",
+  "barcodeGuideOverview": "Sample app that reads barcodes via flutter_zxing and syncs records with the eGovFrame web server (/bar).",
+  "barcodeCodeTypeLabel": "Code Type",
+  "barcodeCodeTextLabel": "Code Text",
+  "barcodeCodeDtLabel": "Scan Time",
+  "barcodeToggleButton": "Scan Barcode",
+  "barcodeScanPageTitle": "Scan Barcode",
+  "barcodeScanPageHint": "Align the barcode you want within the scan area",
+  "barcodeNoScanResultYet": "No scan result yet. Tap the scan button to start.",
+  "barcodeSaveButton": "Save Info",
+  "barcodeListButton": "Info List",
+  "barcodeDeleteSelectedButton": "Delete Selected",
+  "barcodeSelectionModeHint": "Tap items to select them.",
+  "barcodeSelectedCount": "{count} selected",
+  "@barcodeSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "barcodeDeleteSelectedConfirm": "Delete {count} selected barcode record(s)?",
+  "@barcodeDeleteSelectedConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "barcodeDeleteSelectedTitle": "Delete Barcode Info",
+  "barcodeDeleteSelectedSuccess": "Selected barcode records deleted successfully.",
+  "barcodeNoSelection": "Select at least one item to delete.",
+  "barcodeSaveConfirm": "Save the scanned barcode information?",
+  "barcodeSaveTitle": "Save Barcode Info",
+  "barcodeUploading": "Saving...",
+  "barcodeSaveSuccess": "Barcode information saved successfully.",
+  "barcodeEmptyList": "No barcode records found.",
+  "barcodeNoScanData": "No barcode data to save. Tap the scan button to scan first.",
+  "barcodeUploadFailed": "Failed to save barcode information.",
+  "barcodeDeleteFailed": "Delete failed: server could not process the request.",
+  "barcodeCameraUnavailable": "Camera is not available.",
+  "barcodeUploadError": "An error occurred while saving: {error}",
+  "@barcodeUploadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "barcodeListLoadError": "An error occurred while loading the list: {error}",
+  "@barcodeListLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "barcodeGenericError": "Error: {error}",
+  "@barcodeGenericError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "barcodeCameraError": "Barcode scan error: {error}",
+  "@barcodeCameraError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "barcodePermissionDenied": "Camera permission is required for barcode scanning.",
+  "barcodeListItemCodeText": "Code Text",
+  "barcodeDegrees": "{value}°",
+  "@barcodeDegrees": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "barcodeGuideSqliteNote": "Create a local BARCODE_INFO table matching the server MySQL BARCODE_INFO schema (sn, codeType, codeText, useYn, codeDt) via SQLite Manager for offline CRUD.",
+  "compassApiTitle": "Compass API",
+  "compassTitle": "Compass Information",
+  "compassDescription": "View device heading in real time and save, list, or delete compass records on the server.",
+  "compassGuideOverview": "Sample app that reads compass heading via the device Compass API and syncs records with the eGovFrame web server.",
+  "compassHeadingLabel": "Heading",
+  "compassAccuracyLabel": "Error Margin",
+  "compassTimestampLabel": "Timestamp",
+  "compassStatusOff": "Compass stopped",
+  "compassStatusOn": "Compass active",
+  "compassStatusComplete": "Reading complete",
+  "compassToggleButton": "Start Compass",
+  "compassToggleStopButton": "Stop Compass",
+  "compassSaveButton": "Save Info",
+  "compassListButton": "Info List",
+  "compassDeleteSelectedButton": "Delete Selected",
+  "compassSelectionModeHint": "Tap items to select them.",
+  "compassSelectedCount": "{count} selected",
+  "@compassSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "compassSaveConfirm": "Save current compass information to the server?",
+  "compassSaveTitle": "Save Compass Info",
+  "compassDeleteSelectedConfirm": "Delete {count} selected compass record(s)?",
+  "@compassDeleteSelectedConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "compassDeleteSelectedTitle": "Delete Compass Info",
+  "compassUploading": "Saving...",
+  "compassSaveSuccess": "Compass information saved successfully.",
+  "compassDeleteSelectedSuccess": "Selected compass records deleted successfully.",
+  "compassEmptyList": "No compass records found.",
+  "compassNoHeadingData": "No compass data to save. Wait until a heading is available.",
+  "compassUploadFailed": "Failed to save compass information.",
+  "compassDeleteFailed": "Delete failed: server could not process the request.",
+  "compassNoSelection": "Select at least one item to delete.",
+  "compassSensorUnavailable": "Compass sensor is not available.",
+  "compassUploadError": "An error occurred while saving: {error}",
+  "@compassUploadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "compassListLoadError": "An error occurred while loading the list: {error}",
+  "@compassListLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "compassGenericError": "Error: {error}",
+  "@compassGenericError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "compassSensorError": "Compass monitoring error: {error}",
+  "@compassSensorError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "compassPermissionDenied": "Location permission is required for compass.",
+  "compassListItemUuid": "UUID",
+  "compassListItemDrc": "Heading",
+  "compassListItemAccrcy": "Error Margin",
+  "compassDegrees": "{value}°",
+  "@compassDegrees": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "compassGuideSqliteNote": "Create a local COMPASS table matching the server MySQL COMPASS schema (sn, uuid, drc, accrcy, useYn, timestamp) via SQLite Manager for offline CRUD.",
+  "contactsApiTitle": "Contacts API",
+  "contactsTitle": "Contacts Information",
+  "contactsDescription": "Browse device contacts, select one, and save, list, or delete contact records on the server or SQLite.",
+  "contactsGuideOverview": "Sample app that reads device contacts via flutter_contacts and syncs records with the eGovFrame web server (/ctt).",
+  "contactsHeadingLabel": "Name",
+  "contactsAccuracyLabel": "Phone",
+  "contactsTimestampLabel": "Email",
+  "contactsStatusOff": "Select contacts from the list",
+  "contactsStatusEmptyDevice": "No device contacts. You can save contacts from the info list.",
+  "contactsSelectedCount": "{count} selected",
+  "@contactsSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "contactsStatusOn": "Loading contacts",
+  "contactsStatusComplete": "Contact selected",
+  "contactsToggleButton": "Device Contacts",
+  "contactsDeviceCount": "{count} contacts",
+  "@contactsDeviceCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "contactsDeviceCountHint": "Tap to select and save contacts",
+  "contactsDeviceCountHintEmpty": "Save contacts from the info list to this device",
+  "contactsToggleStopButton": "Clear selection",
+  "contactsSaveButton": "Save Info",
+  "contactsListButton": "Info List",
+  "contactsDeleteAllButton": "Delete All",
+  "contactsDeleteSelectedButton": "Delete Selected",
+  "contactsServerListSelectionHint": "Tap items to select them.",
+  "contactsSaveConfirm": "Save the selected contact to the server?",
+  "contactsSaveConfirmCount": "Save {count} selected contacts to the server?",
+  "@contactsSaveConfirmCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "contactsSaveTitle": "Save Contact Info",
+  "contactsDeleteAllConfirm": "Delete all saved contact records?",
+  "contactsDeleteSelectedConfirm": "Delete {count} selected contact record(s)?",
+  "@contactsDeleteSelectedConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "contactsDeleteSelectedSuccess": "Selected contact records deleted successfully.",
+  "contactsNoSelection": "Select at least one item to delete.",
+  "contactsSaveToDeviceButton": "Save to Device",
+  "contactsSaveToDeviceTitle": "Save to Device Contacts",
+  "contactsSaveToDeviceConfirm": "Save {count} selected contact(s) to this device?",
+  "@contactsSaveToDeviceConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "contactsSaveToDeviceSuccess": "{count} contact(s) saved to this device.",
+  "@contactsSaveToDeviceSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "contactsSaveToDeviceAlreadyOnDevice": "Already saved to this device.",
+  "contactsSaveToDeviceSuccessWithSkipped": "{saved} contact(s) saved. {skipped} already on this device.",
+  "@contactsSaveToDeviceSuccessWithSkipped": {
+    "placeholders": {
+      "saved": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "contactsSavingToDevice": "Saving to device...",
+  "contactsWritePermissionDenied": "Write permission is required to save contacts.",
+  "contactsSaveToDeviceFailed": "Failed to save contacts to this device.",
+  "contactsDeleteAllTitle": "Delete Contact Info",
+  "contactsUploading": "Saving...",
+  "contactsSaveSuccess": "Contact information saved successfully.",
+  "contactsSaveSuccessCount": "{count} contacts saved successfully.",
+  "@contactsSaveSuccessCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "contactsDeleteAllSuccess": "All contact records deleted successfully.",
+  "contactsEmptyList": "No saved contact records found.",
+  "contactsEmptyDeviceContacts": "No device contacts found or permission is required.",
+  "contactsNoHeadingData": "Select a contact to save first.",
+  "contactsUploadFailed": "Failed to save contact information.",
+  "contactsDeleteFailed": "Delete failed: server could not process the request.",
+  "contactsSensorUnavailable": "Unable to load contacts.",
+  "contactsUploadError": "An error occurred while saving: {error}",
+  "@contactsUploadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "contactsListLoadError": "An error occurred while loading the list: {error}",
+  "@contactsListLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "contactsLoadError": "An error occurred while loading contacts: {error}",
+  "@contactsLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "contactsGenericError": "Error: {error}",
+  "@contactsGenericError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "contactsSensorError": "Contact loading error: {error}",
+  "@contactsSensorError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "contactsPermissionDenied": "READ_CONTACTS permission is required to access contacts.",
+  "contactsListItemUuid": "Contact ID",
+  "contactsListItemDrc": "Phone",
+  "contactsListItemAccrcy": "Email",
+  "contactsDegrees": "{value}",
+  "@contactsDegrees": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "contactsGuideSqliteNote": "Create a local CONTACT_INFO table matching the server MySQL CONTACT_INFO schema (sn, name, telno, emails, useYn, uuid) via SQLite Manager for offline CRUD.",
+  "pushApiTitle": "PushNotifications API",
+  "pushTitle": "Push Device Registration",
+  "pushDescription": "Receive remote FCM push from the eGov server and register or list device tokens on the server or SQLite.",
+  "pushGuideOverview": "Receiver-only sample app for FCM push. Register your device, then send messages from the server web UI (/fcm).",
+  "pushPermissionGranted": "Notification permission granted",
+  "pushWebAdminTitle": "Send push from server web",
+  "pushWebAdminDesc": "Compose and send messages on device-api-web /fcm. This app handles registration and receiving only.",
+  "pushTokenLabel": "Token ID",
+  "pushDeviceNameLabel": "Device Name",
+  "pushOsTypeLabel": "OS Type",
+  "pushOsVerLabel": "OS Version",
+  "pushNetworkLabel": "Network",
+  "pushUuidLabel": "UUID",
+  "pushStatusNotInitialized": "Notifications not initialized",
+  "pushStatusInitialized": "Notifications initialized",
+  "pushNotificationHeroReady": "Ready to receive FCM push notifications.",
+  "pushNotificationHeroNotReady": "Initialize notifications to obtain an FCM token and send a test alert.",
+  "pushNotificationStepsTitle": "Notification Features",
+  "pushStepInitializeDesc": "Request permission and obtain an FCM registration token.",
+  "pushStepTestDesc": "Verify FCM integration with a local test notification.",
+  "pushStepRegisterTitle": "Register Device",
+  "pushStepRegisterDesc": "Use the '{saveButton}' button below to save the token and device info to the server or SQLite.",
+  "@pushStepRegisterDesc": {
+    "placeholders": {
+      "saveButton": {
+        "type": "String"
+      }
+    }
+  },
+  "pushTokenSectionDesc": "FCM registration token used when sending push from the server.",
+  "pushFcmTokenFailed": "Failed to obtain an FCM token. Check your Firebase configuration (google-services.json).",
+  "pushFirebaseInitFailed": "Firebase initialization failed. Check your google-services.json configuration.",
+  "pushStepAutoSetupTitle": "FCM Auto Setup",
+  "pushStepAutoSetupDesc": "Checks notification permission and obtains an FCM token automatically on app launch.",
+  "pushAutoSetupInProgress": "Preparing notifications...",
+  "pushPermissionOpenSettings": "Allow notifications in Settings",
+  "pushInitializeButton": "Initialize Notifications",
+  "pushReinitializeButton": "Reinitialize Notifications",
+  "pushShowNotificationButton": "Show Test Notification",
+  "pushSaveButton": "Register Device",
+  "pushListButton": "Message List",
+  "pushMessageListTitle": "Received Messages",
+  "pushMessageSentAtLabel": "Sent at",
+  "pushEmptyMessageList": "No push messages received for this device.",
+  "pushMessageListItemEmpty": "(No content)",
+  "pushDeleteAllButton": "Delete All",
+  "pushSaveConfirm": "Register current device info on the server?",
+  "pushSaveTitle": "Register Push Device",
+  "pushAlreadyRegistered": "This device is already registered.",
+  "pushDeleteAllConfirm": "Delete all registered push devices on the server?",
+  "pushDeleteAllTitle": "Delete Push Devices",
+  "pushUploading": "Registering...",
+  "pushSaveSuccess": "Push device registered successfully.",
+  "pushDeleteAllSuccess": "All push devices deleted successfully.",
+  "pushEmptyList": "No registered push devices found.",
+  "pushNoDeviceData": "No device data to register. Initialize notifications first.",
+  "pushUploadFailed": "Failed to register push device.",
+  "pushDeleteFailed": "Delete failed: server could not process the request.",
+  "pushNotificationsUnavailable": "Local notifications are not available.",
+  "pushInitFailed": "Failed to initialize notifications.",
+  "pushInitSuccess": "Notifications initialized successfully.",
+  "pushNotificationFailed": "Failed to show test notification.",
+  "pushNotificationSuccess": "Test notification displayed.",
+  "pushTestNotificationDialogTitle": "Compose Test Notification",
+  "pushTestNotificationTitleLabel": "Title",
+  "pushTestNotificationTitleHint": "Enter notification title",
+  "pushTestNotificationBodyLabel": "Message",
+  "pushTestNotificationBodyHint": "Enter the message to display",
+  "pushTestNotificationSendButton": "Send Notification",
+  "pushTestMessageEmpty": "Please enter a message.",
+  "pushNotInitialized": "Initialize notifications first.",
+  "pushUploadError": "An error occurred while registering: {error}",
+  "@pushUploadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pushListLoadError": "An error occurred while loading push messages: {error}",
+  "@pushListLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pushGenericError": "Error: {error}",
+  "@pushGenericError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pushInitError": "Notification initialization error: {error}",
+  "@pushInitError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pushPermissionDenied": "Notification permission is required for push alerts.",
+  "pushListItemOsType": "OS",
+  "pushDegrees": "{value}°",
+  "@pushDegrees": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "pushGuideSqliteNote": "Create a local PUSH_DEVICE table matching the server MySQL PUSH_DEVICE schema (sn, uuid, ntwrkDeviceInfo, osVer, deviceNm, useYn, osType, tokenId) via SQLite Manager for offline CRUD.",
+  "socketApiTitle": "SocketIO API",
+  "socketTitle": "WebSocket Chat",
+  "socketDescription": "Chat in real time over WebSocket and save, list, or delete chat messages on the server or SQLite.",
+  "socketGuideOverview": "Sample app that connects to the eGovFrame WebSocket endpoint (/websocket/chat.ws) via web_socket_client and persists messages through HTTP REST (/ws) or SQLite.",
+  "socketTimestampLabel": "Timestamp",
+  "socketSaveButton": "Save Message",
+  "socketListButton": "Message List",
+  "socketDeleteAllButton": "Delete All",
+  "socketSaveConfirm": "Save {count} unsynced chat message(s)?",
+  "@socketSaveConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "socketSaveTitle": "Save Chat Message",
+  "socketDeleteAllConfirm": "Delete all chat messages on the server?",
+  "socketDeleteAllTitle": "Delete Chat Messages",
+  "socketUploading": "Saving...",
+  "socketSaveSuccess": "{count} chat message(s) saved successfully.",
+  "@socketSaveSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "socketDeleteAllSuccess": "All chat messages deleted successfully.",
+  "socketEmptyList": "No chat messages found.",
+  "socketNoMessageData": "No chat message to save. Send a message first.",
+  "socketNoNewMessages": "There are no new chat messages to save.",
+  "socketNicknameRequired": "Please enter a nickname.",
+  "socketNicknameInvalid": "The nickname format is invalid.",
+  "socketUploadFailed": "Failed to save chat message.",
+  "socketDeleteFailed": "Delete failed: server could not process the request.",
+  "socketWebsocketConnected": "WebSocket connected",
+  "socketWebsocketConnecting": "Connecting to WebSocket...",
+  "socketWebsocketReconnecting": "Reconnecting WebSocket...",
+  "socketWebsocketDisconnected": "WebSocket disconnected",
+  "socketWebsocketConnectButton": "Connect WebSocket",
+  "socketWebsocketDisconnectButton": "Disconnect WebSocket",
+  "socketWebsocketNotConnected": "WebSocket is not connected.",
+  "socketWebsocketUnavailable": "WebSocket server is unavailable.",
+  "socketWebsocketUrl": "WebSocket URL: {url}",
+  "@socketWebsocketUrl": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "socketChatMessagesTitle": "Chat Messages",
+  "socketChatEmpty": "No messages yet. Connect WebSocket and send a message.",
+  "socketChatInputHint": "Enter a message",
+  "socketChatSendButton": "Send Message",
+  "socketChatNicknameLabel": "Nickname",
+  "socketChatNicknameHint": "Enter a nickname for chat",
+  "socketChatOpenButton": "Open Chat",
+  "socketUploadError": "An error occurred while saving: {error}",
+  "@socketUploadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "socketListLoadError": "An error occurred while loading the list: {error}",
+  "@socketListLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "socketGenericError": "Error: {error}",
+  "@socketGenericError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "socketWebsocketError": "WebSocket connection error: {error}",
+  "@socketWebsocketError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "socketListItemSender": "Sender",
+  "socketDegrees": "{value}°",
+  "@socketDegrees": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "socketGuideSqliteNote": "Create a local SOCKET_MESSAGE table matching the server MySQL SOCKET_MESSAGE schema (sn, uuid, message, sender, useYn, timestamp) via SQLite Manager for offline CRUD.",
+  "streamingApiTitle": "StreamingMedia API",
+  "streamingTitle": "Streaming Media",
+  "streamingDescription": "Fetch multimedia lists from the web server, play videos via network streaming, and update play counts.",
+  "streamingGuideOverview": "Flutter sample app that loads and plays server multimedia using /stm/mediaInfoList.do, /stm/getMediaStreaming.do, and /stm/updateMediaInfoRevivCo.do.",
+  "streamingMainIntro": "Provides real-time video playback using the StreamingMedia DeviceAPI.",
+  "streamingGuideFeatureList": "Media list",
+  "streamingGuideFeaturePlay": "Media playback",
+  "streamingGuideFeatureCount": "Play count update",
+  "streamingGuideFeatureListDetail": "Loads title, file type, and play count from the server MEDIA table.",
+  "streamingGuideFeaturePlayDetail": "Tap a list item, confirm, then play the network stream with video_player.",
+  "streamingGuideFeatureCountDetail": "Automatically increments REVIV_CO on the server when playback starts.",
+  "streamingGuideUsageStep1": "Tap 'View Media List' to load multimedia registered on the server.",
+  "streamingGuideUsageStep2": "Tap an item and confirm to start video playback.",
+  "streamingGuideUsageStep3": "Play count is updated on the server and the video streams in the built-in player.",
+  "streamingListButton": "View Media List",
+  "streamingEmptyList": "No multimedia items found.",
+  "streamingFileTypeLabel": "File type",
+  "streamingPlayCountLabel": "Play count",
+  "streamingPlayConfirmTitle": "Notice",
+  "streamingPlayConfirmMessage": "Do you want to play the video?",
+  "streamingPlayCountUpdateFailed": "Failed to update play count.",
+  "streamingRequiresServer": "Video streaming is only available in external server mode.",
+  "streamingVideoPlayError": "An error occurred while playing the video.",
+  "streamingVideoFileNotFound": "The video file linked to this media was not found on the server. Please verify the media upload.",
+  "streamingListLoadError": "An error occurred while loading the list: {error}",
+  "@streamingListLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "streamingGenericError": "Error: {error}",
+  "@streamingGenericError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "streamingStreamError": "Streaming playback error: {error}",
+  "@streamingStreamError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "streamingGuideSqliteNote": "Create a local MEDIA table matching the server MEDIA schema (sn, mdSj, mdCode, revivCo, useYn, fileSn) via SQLite Manager for offline list viewing. Video streaming requires server mode.",
+  "faceMeshGuideNoteTitle": "Notes",
+  "faceMeshPickImageTitle": "Select Image",
+  "faceMeshPickImageMessage": "Choose an image for face mesh.",
+  "faceMeshPickFromCamera": "Camera",
+  "faceMeshPickFromGallery": "Gallery",
+  "faceMeshPermissionDenied": "Camera or gallery permission was denied.",
+  "faceMeshNoFacesDetected": "No faces were detected.",
+  "faceMeshSuccess": "Detected {count} face(s).",
+  "@faceMeshSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faceMeshPickCancelled": "Image selection was cancelled.",
+  "faceMeshCameraUnavailable": "Camera is unavailable.",
+  "faceMeshImageLoadFailed": "Failed to load the image.",
+  "faceMeshPickError": "An error occurred while picking an image: {error}",
+  "@faceMeshPickError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "faceMeshDetectError": "An error occurred during face mesh: {error}",
+  "@faceMeshDetectError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "faceMeshCameraError": "An error occurred while using the camera: {error}",
+  "@faceMeshCameraError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "faceMeshGenericError": "An error occurred: {error}",
+  "@faceMeshGenericError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "faceMeshSwitchCamera": "Switch camera",
+  "faceMeshCaptureButton": "Capture",
+  "faceMeshNoResultYet": "No detection result yet. Pick an image or use live camera.",
+  "faceMeshPickImageButton": "Detect from Image",
+  "faceMeshLiveCameraButton": "Live Camera",
+  "faceMeshDetectedAtLabel": "Detected at",
+  "faceMeshDetailTitle": "Face mesh Details",
+  "faceMeshTrackingImageTitle": "Tracking box image",
+  "faceMeshTrackingImageUnavailable": "The original image was not found on this device. The path may be missing or the file may have been deleted.",
+  "faceMeshTrackingBoxUnavailable": "Bounding box or image size is missing, so the tracking box cannot be displayed.",
+  "faceMeshSerialNumber": "Serial number",
+  "faceMeshUuidLabel": "UUID",
+  "faceMeshUseStatus": "Status",
+  "faceMeshInUse": "In use",
+  "faceMeshNotInUse": "Not in use",
+  "faceMeshDeleteTitle": "Delete Face mesh Info",
+  "faceMeshDeleteConfirm": "Delete this face mesh record?",
+  "faceMeshDeleteSuccess": "Face mesh record deleted successfully.",
+  "faceMeshSaveButton": "Save Info",
+  "faceMeshListButton": "Info List",
+  "faceMeshListTitle": "Face mesh List",
+  "faceMeshGroupFacesTitle": "Detected Faces",
+  "faceMeshEmptyGroupFaces": "No face records found for this group.",
+  "faceMeshNoImage": "No image",
+  "faceMeshFaceCountBadge": "{count}",
+  "@faceMeshFaceCountBadge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faceMeshSelectionModeHint": "Use checkboxes to select groups for deletion. Tap an image to open faces in that group.",
+  "faceMeshSelectedCount": "{count} selected",
+  "@faceMeshSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faceMeshDeleteSelectedButton": "Delete Selected",
+  "faceMeshDeleteSelectedGroupsConfirm": "Delete all face mesh records in the {count} selected group(s)?",
+  "@faceMeshDeleteSelectedGroupsConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "faceMeshDeleteSelectedTitle": "Delete Face mesh Info",
+  "faceMeshDeleteSelectedGroupsSuccess": "Face mesh records in the selected groups were deleted.",
+  "faceMeshNoSelection": "Select at least one item to delete.",
+  "faceMeshSaveConfirm": "Save the detected face information?",
+  "faceMeshSaveTitle": "Save Face mesh Info",
+  "faceMeshUploading": "Saving...",
+  "faceMeshUploadSuccess": "Face mesh information saved successfully.",
+  "faceMeshEmptyList": "No face mesh records found.",
+  "faceMeshNoDetectionData": "No face mesh data to save. Detect faces first.",
+  "faceMeshUploadFailed": "Failed to save face mesh information.",
+  "faceMeshDeleteFailed": "Delete failed: server could not process the request.",
+  "faceMeshUploadError": "An error occurred while saving: {error}",
+  "@faceMeshUploadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "faceMeshListLoadError": "An error occurred while loading the list: {error}",
+  "@faceMeshListLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "faceMeshListItemFaceGroupId": "Group ID",
+  "faceMeshListItemSource": "Source",
+  "faceMeshApiTitle": "Face Mesh API",
+  "faceMeshTitle": "Face Mesh",
+  "faceMeshDescription": "Visualize and save facial landmarks (468/478) with MediaPipe Face Mesh.",
+  "faceMeshGuideOverview": "Detect facial landmarks on-device with MediaPipe Face Mesh. Pick a gallery/camera image or use the live camera preview.",
+  "faceMeshGuideNote": "Face Mesh runs on-device via MediaPipe. Results can be saved to the server (/fms) or local SQLite. Camera/gallery permissions are required. Android minSdk 24+.",
+  "faceMeshGuideFeatureImageTitle": "Image upload detection",
+  "faceMeshGuideFeatureImageContent": "Detect faces with Face Mesh from gallery or camera images.",
+  "faceMeshGuideFeatureLiveTitle": "Live camera detection",
+  "faceMeshGuideFeatureLiveContent": "Show face landmarks and face regions on the camera preview in real time.",
+  "faceMeshGuideFeatureAttrTitle": "Face Mesh info",
+  "faceMeshGuideFeatureAttrContent": "Show landmark count (468/478), score, anchors (nose/eyes/mouth), and head pose.",
+  "faceMeshGuideFeatureOnDeviceTitle": "On-device processing",
+  "faceMeshGuideFeatureOnDeviceContent": "Runs MediaPipe Face Mesh natively without sending frames to a server.",
+  "faceMeshGuideUsage1": "On the Main tab, tap image detection and pick camera or gallery.",
+  "faceMeshGuideUsage2": "When faces are found, landmarks, face region, and attributes are shown.",
+  "faceMeshGuideUsage3": "Tap live camera detection to run Face Mesh on the camera preview.",
+  "faceMeshGuideUsage4": "Capture on the live screen to bring the frame result back to Main.",
+  "iotApiTitle": "IoT MQTT API",
+  "iotTitle": "IoT Control",
+  "iotDescription": "Subscribe to IoT telemetry and publish control commands over RabbitMQ MQTT.",
+  "iotGuideOverview": "Connect to RabbitMQ MQTT plugin with mqtt5_client, subscribe to iot/deviceId/telemetry, and publish commands to iot/deviceId/command.",
+  "iotGuideNoteTitle": "Notes",
+  "iotGuideNote": "When a data store (server/SQLite) is connected, telemetry value changes and command publishes are saved to the DB automatically. You can test without a real device using MQTT Explorer on the same topics. On Android emulator, use Host 10.0.2.2.",
+  "iotConnected": "MQTT connected",
+  "iotConnecting": "Connecting MQTT...",
+  "iotDisconnected": "MQTT disconnected",
+  "iotBrokerSection": "Broker settings",
+  "iotHostLabel": "Host",
+  "iotPortLabel": "Port",
+  "iotUsernameLabel": "Username",
+  "iotPasswordLabel": "Password",
+  "iotDeviceIdLabel": "Device ID",
+  "iotTelemetryTopicLabel": "Telemetry Topic",
+  "iotCommandTopicLabel": "Command Topic",
+  "iotConnectButton": "Connect MQTT",
+  "iotDisconnectButton": "Disconnect",
+  "iotBarConnectButton": "Connect",
+  "iotBarDisconnectButton": "Disconnect",
+  "iotLogListButton": "Message Log",
+  "iotMainConnectHint": "Use Connect on the MQTT bar, then telemetry and commands become available.",
+  "iotLogsCleared": "Message logs cleared.",
+  "iotTelemetrySection": "Telemetry",
+  "iotTemperatureLabel": "Temperature",
+  "iotHumidityLabel": "Humidity",
+  "iotTelemetryEmpty": "No telemetry yet. Publish from MQTT Explorer to test.",
+  "iotCommandSection": "Commands",
+  "iotLastCommandEmpty": "Sent command payload will appear here.",
+  "iotCommandPreviewTitle": "Published command (sample)",
+  "iotFanOnButton": "Fan ON",
+  "iotFanOffButton": "Fan OFF",
+  "iotCommandActionLabel": "Action",
+  "iotCommandValueLabel": "Value",
+  "iotSendCommandButton": "Send Command",
+  "iotLogSection": "Message log",
+  "iotClearLogsButton": "Clear logs",
+  "iotLogEmpty": "No message logs yet.",
+  "iotLogIncoming": "IN",
+  "iotLogOutgoing": "OUT",
+  "iotPublishSuccess": "Command published.",
+  "iotHostRequired": "Host is required.",
+  "iotPortInvalid": "Port is invalid.",
+  "iotDeviceIdRequired": "Device ID is required.",
+  "iotNotConnected": "MQTT is not connected.",
+  "iotTopicRequired": "Topic is empty.",
+  "iotPayloadRequired": "Payload is empty.",
+  "iotConnectError": "MQTT connect error: {error}",
+  "@iotConnectError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "iotPublishError": "Publish error: {error}",
+  "@iotPublishError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "iotSaveButton": "Save",
+  "iotSavedListButton": "List",
+  "iotDeleteAllButton": "Delete",
+  "iotDeleteAllTitle": "Delete Saved Logs",
+  "iotDeleteAllConfirm": "Delete all IoT logs saved on the server?",
+  "iotDeleteAllSuccess": "Saved logs deleted.",
+  "iotTimestampLabel": "Time",
+  "iotSaveTitle": "Save Logs",
+  "iotSaveConfirm": "Save {count} unsynced log(s)?",
+  "@iotSaveConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "iotSaving": "Saving logs...",
+  "iotSaveSuccess": "Saved {count} log(s).",
+  "@iotSaveSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "iotNoLogData": "No logs to save.",
+  "iotNoNewLogs": "No new logs to save.",
+  "iotDeleteFailed": "Delete failed.",
+  "iotSavedEmptyList": "No saved logs.",
+  "iotMessageTypeTelemetry": "telemetry",
+  "iotMessageTypeCommand": "command",
+  "iotLogSynced": "Saved",
+  "iotUploadError": "Upload error: {error}",
+  "@iotUploadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "iotListLoadError": "List load error: {error}",
+  "@iotListLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "iotGenericError": "Error: {error}",
+  "@iotGenericError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "aiChatApiTitle": "AI Chat API",
+  "aiChatTitle": "AI Chat",
+  "aiChatDescription": "Ask eGovFrame document questions through egovframe-ai-rag and save Q&A to the web database.",
+  "aiChatGuideOverview": "Flutter provides the chat UI only. device-api-web asks egovframe-ai-rag and stores results in AI_CHAT_INFO.",
+  "aiChatGuideSqliteNote": "Create an AI_CHAT_INFO table matching MySQL (sn, uuid, question, answer, chatMode, modelNm, sessionId, useYn, questionTimestamp, answerTimestamp) in SQLite Manager, then import it for local CRUD. Asking the AI requires the web server.",
+  "aiChatQuestionLabel": "Question",
+  "aiChatAnswerLabel": "Answer",
+  "aiChatTimestampLabel": "Time",
+  "aiChatQuestionHint": "Ask a question about the eGovFrame.",
+  "aiChatModeRag": "Document search (RAG)",
+  "aiChatModeSimple": "Simple chat",
+  "aiChatEmptyConversation": "No conversation yet. Enter a question and tap Send.",
+  "aiChatSaveButton": "Save",
+  "aiChatSendButton": "Send",
+  "aiChatListButton": "List",
+  "aiChatListTooltip": "Saved chat list",
+  "aiChatConnectionBarHint": "Use Connect or Change to set up SQLite and the database.",
+  "aiChatDeleteSelectedButton": "Delete selected",
+  "aiChatSelectionModeHint": "Tap a session to view its chat, or check items to delete.",
+  "aiChatSelectedCount": "{count} selected",
+  "@aiChatSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "aiChatSaveConfirm": "Send this question to AI and save it to the web DB?",
+  "aiChatSaveTitle": "Save AI chat",
+  "aiChatDeleteSelectedConfirm": "Delete {count} selected session(s)?",
+  "@aiChatDeleteSelectedConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "aiChatDeleteSelectedTitle": "Delete AI chat",
+  "aiChatAsking": "Waiting for AI response...",
+  "aiChatSaveSuccess": "The question and answer were saved to the web DB.",
+  "aiChatDeleteSelectedSuccess": "The selected sessions were deleted.",
+  "aiChatEmptyList": "No saved chats.",
+  "aiChatAiServerDisconnected": "The AI server is not connected. Saved chats can be viewed, but new questions cannot be sent.",
+  "aiChatDetailTitle": "Chat details",
+  "aiChatSessionMessageCount": "{count} message(s)",
+  "@aiChatSessionMessageCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "aiChatDeleteSessionButton": "Delete this session",
+  "aiChatDeleteSessionTitle": "Delete session",
+  "aiChatDeleteSessionConfirm": "Delete all messages in this session?",
+  "aiChatDeleteSessionSuccess": "The session was deleted.",
+  "aiChatNoQuestion": "Please enter a question.",
+  "aiChatAskFailed": "AI request failed. Check the ai-rag server.",
+  "aiChatUploadFailed": "Failed to save the chat.",
+  "aiChatDeleteFailed": "Delete failed on the server.",
+  "aiChatNoSelection": "Select items to delete.",
+  "aiChatServerRequired": "Asking the AI requires the external web server.",
+  "aiChatAskError": "A problem occurred while asking AI: {error}",
+  "@aiChatAskError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "aiChatUploadError": "A problem occurred while saving: {error}",
+  "@aiChatUploadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "aiChatListLoadError": "A problem occurred while loading the chat list: {error}",
+  "@aiChatListLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "aiChatGenericError": "Error: {error}",
+  "@aiChatGenericError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "sqliteAppTitle": "SQLite Internal DB",
+  "sqliteFeatureTitle": "SQLite Internal DB Manager",
+  "sqliteFeatureDescription": "Create and manage SQLite databases, tables, columns, and data in local storage.",
+  "sqliteGuideBasicsTitle": "SQLite / sqflite basics",
+  "sqliteGuideBasicsContent": "SQLite is a file-based RDBMS that runs without a server. In Flutter, use sqflite openDatabase(), execute(), insert(), query(), update(), and delete() to manage DB files under getDatabasesPath() (app-private storage).",
+  "sqliteGuideColumnTypesTitle": "Column types and constraints",
+  "sqliteGuideColumnTypesContent": "Common types: INTEGER, TEXT, REAL, BLOB, NUMERIC\nConstraints: PRIMARY KEY, AUTOINCREMENT, NOT NULL, UNIQUE, DEFAULT, FOREIGN KEY\nYou may need PRAGMA foreign_keys = ON when using foreign keys.",
+  "sqliteGuideDesignTipsTitle": "Design tips",
+  "sqliteGuideDesignTipsContent": "Prefer alphanumeric table/column names with underscores. Add INDEXes for frequently queried columns and FOREIGN KEYs for relational integrity. Use LIMIT/OFFSET for large result sets and back up before major DB changes.",
+  "sqliteEmptyDatabaseList": "No internal databases yet.\nCreate or import one using the buttons below.",
+  "sqliteCreateDatabaseButton": "Create DB",
+  "sqliteCreateDatabaseTitle": "Create internal DB",
+  "sqliteCreateDatabaseSuccess": "Database created.",
+  "sqliteImportDatabaseSuccess": "Database imported.",
+  "sqliteDeleteDatabaseSuccess": "Database deleted.",
+  "sqliteDatabaseNameLabel": "DB name",
+  "sqliteDatabaseNameHint": "e.g. my_app_db",
+  "sqliteDatabaseNameRequired": "Please enter a DB name.",
+  "sqliteInitialVersionLabel": "Initial schema version",
+  "sqliteExportDatabase": "Save to Downloads",
+  "sqliteShareDatabase": "Share DB",
+  "sqliteExportSuccess": "Saved to Downloads: {fileName}",
+  "@sqliteExportSuccess": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "sqliteExportFailed": "Failed to save to Downloads.",
+  "sqliteShareFailed": "Failed to share database.",
+  "sqliteShareRequiresRestart": "Please stop the app completely and run it again to use sharing.",
+  "sqliteDownloadsUnavailable": "Downloads folder is unavailable.",
+  "sqliteDeleteDatabase": "Delete DB",
+  "sqliteDeleteDatabaseTitle": "Delete DB",
+  "sqliteDeleteDatabaseMessage": "Delete {fileName}?",
+  "@sqliteDeleteDatabaseMessage": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "sqliteModifiedAt": "Modified: {dateTime}",
+  "@sqliteModifiedAt": {
+    "placeholders": {
+      "dateTime": {
+        "type": "String"
+      }
+    }
+  },
+  "sqliteDatabaseDetailTitle": "DB detail",
+  "sqliteDatabaseDetailDescription": "Manage tables, data, and schema.",
+  "sqliteDatabaseGuideTitle": "DB usage",
+  "sqliteDatabaseGuideBody": "Current DB: {databaseName}\nTap table for data, ⋮ menu for data/schema",
+  "@sqliteDatabaseGuideBody": {
+    "placeholders": {
+      "databaseName": {
+        "type": "String"
+      }
+    }
+  },
+  "sqliteEmptyTableList": "No tables yet.\nCreate one using the button below.",
+  "sqliteCreateTableButton": "Create table",
+  "sqliteCreateTableTitle": "Create table",
+  "sqliteTableNameLabel": "Table name",
+  "sqliteTableNameHint": "e.g. users",
+  "sqliteTableNameRequired": "Please enter a table name.",
+  "sqliteInvalidTableName": "Invalid table name.",
+  "sqliteColumnsTitle": "Columns",
+  "sqliteAddColumn": "Add column",
+  "sqliteAddColumnTitle": "Add column (ALTER TABLE)",
+  "sqliteAddColumnButton": "Add column",
+  "sqliteColumnLabel": "Column",
+  "sqliteColumnNameLabel": "Column name",
+  "sqliteColumnNameRequired": "Please enter a column name.",
+  "sqliteInvalidColumnName": "Invalid column name.",
+  "sqliteColumnTypeLabel": "Type",
+  "sqlitePrimaryKey": "PRIMARY KEY",
+  "sqliteNotNull": "NOT NULL",
+  "sqliteUnique": "UNIQUE",
+  "sqliteAutoIncrement": "AUTOINCREMENT",
+  "sqliteDefaultValueLabel": "DEFAULT value",
+  "sqliteColumnRequired": "At least one column is required.",
+  "sqliteForeignKeyTitle": "Foreign key",
+  "sqliteForeignKeyTableLabel": "Reference table",
+  "sqliteForeignKeyColumnLabel": "Reference column",
+  "sqliteNoForeignKey": "None",
+  "sqliteOnDeleteLabel": "ON DELETE",
+  "sqliteOnUpdateLabel": "ON UPDATE",
+  "sqliteIndexesTitle": "Indexes",
+  "sqliteAddIndex": "Add index",
+  "sqliteIndexLabel": "Index",
+  "sqliteIndexNameLabel": "Index name",
+  "sqliteIndexColumnsLabel": "Columns (comma-separated)",
+  "sqliteIndexColumnsHint": "e.g. name, email",
+  "sqliteUniqueIndex": "UNIQUE INDEX",
+  "sqliteEmptyIndexes": "No indexes registered.",
+  "sqliteRowCount": "{count} rows",
+  "@sqliteRowCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sqliteViewData": "View data",
+  "sqliteViewSchema": "View schema",
+  "sqliteSchemaButton": "Schema",
+  "sqliteSchemaTitle": "{tableName} schema",
+  "@sqliteSchemaTitle": {
+    "placeholders": {
+      "tableName": {
+        "type": "String"
+      }
+    }
+  },
+  "sqliteEmptyTableData": "No data yet.",
+  "sqliteInsertRowTitle": "Insert row",
+  "sqliteInsertRowButton": "Add data",
+  "sqliteUpdateRowTitle": "Update row",
+  "sqliteUpdateRowButton": "Update",
+  "sqliteDeleteRowTitle": "Delete row",
+  "sqliteDeleteRowMessage": "Delete the selected row?",
+  "sqliteDeleteRowButton": "Delete",
+  "sqliteUpdateFailed": "Update failed.",
+  "sqliteDeleteFailed": "Delete failed.",
+  "sqliteInsertValueRequired": "Enter at least one value.",
+  "sqliteRowActionHint": "Tap or long-press a row to update or delete."
+}

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.hyb.mbl.pus.service.impl.PushDeviceAPIDAO">
+
+	<resultMap id="pushDeviceAPIInfo" type="egovframework.hyb.mbl.pus.service.PushDeviceAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="ntwrkDeviceInfo" column="NTWRK_DEVICE_INFO"/>
+		<result property="osVer" column="OS_VER"/>
+		<result property="deviceNm" column="DEVICE_NM"/>
+		<result property="useYn" column="USEYN"/>
+		<result property="osType" column="OS_TYPE"/>
+		<result property="tokenId" column="TOKEN_ID"/>
+	</resultMap>
+
+	<insert id="insertPushDevice">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (NVL(MAX(SN), 0)+1) sn from PUSH_DEVICE WHERE UUID = #{uuid}
+		</selectKey>
+		INSERT INTO PUSH_DEVICE (SN, UUID, NTWRK_DEVICE_INFO, OS_VER, DEVICE_NM, USEYN, OS_TYPE, TOKEN_ID)
+		VALUES (#{sn}, #{uuid}, #{ntwrkDeviceInfo}, #{osVer}, #{deviceNm}, #{useYn}, #{osType}, #{tokenId})
+	</insert>
+
+	<select id="selectPushDeviceList" parameterType="egovframework.hyb.mbl.pus.service.PushDeviceAPIVO" resultMap="pushDeviceAPIInfo">
+		<choose>
+			<when test="recordCountPerPage > 0">
+				SELECT * FROM (
+					SELECT a.*, ROWNUM rnum FROM (
+						SELECT SN, UUID, NTWRK_DEVICE_INFO, OS_VER, DEVICE_NM, USEYN, OS_TYPE, TOKEN_ID
+						FROM PUSH_DEVICE
+						WHERE USEYN='Y'
+							AND UUID = #{uuid}
+						ORDER BY SN DESC
+					) a WHERE ROWNUM &lt;= #{lastIndex}
+				) WHERE rnum &gt; #{firstIndex}
+			</when>
+			<otherwise>
+				SELECT SN, UUID, NTWRK_DEVICE_INFO, OS_VER, DEVICE_NM, USEYN, OS_TYPE, TOKEN_ID
+				FROM PUSH_DEVICE
+				WHERE USEYN='Y'
+					AND UUID = #{uuid}
+				ORDER BY SN DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="selectPushDeviceCount" parameterType="egovframework.hyb.mbl.pus.service.PushDeviceAPIVO" resultType="int">
+		SELECT COUNT(*)
+		FROM PUSH_DEVICE
+		WHERE USEYN='Y'
+			AND UUID = #{uuid}
+	</select>
+
+	<select id="selectAllPushDeviceList" parameterType="egovframework.hyb.mbl.pus.service.PushDeviceAPIVO" resultMap="pushDeviceAPIInfo">
+		<choose>
+			<when test="recordCountPerPage > 0">
+				SELECT * FROM (
+					SELECT a.*, ROWNUM rnum FROM (
+						SELECT SN, UUID, NTWRK_DEVICE_INFO, OS_VER, DEVICE_NM, USEYN, OS_TYPE, TOKEN_ID
+						FROM PUSH_DEVICE
+						WHERE USEYN='Y'
+						ORDER BY SN DESC
+					) a WHERE ROWNUM &lt;= #{lastIndex}
+				) WHERE rnum &gt; #{firstIndex}
+			</when>
+			<otherwise>
+				SELECT SN, UUID, NTWRK_DEVICE_INFO, OS_VER, DEVICE_NM, USEYN, OS_TYPE, TOKEN_ID
+				FROM PUSH_DEVICE
+				WHERE USEYN='Y'
+				ORDER BY SN DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="selectAllPushDeviceCount" parameterType="egovframework.hyb.mbl.pus.service.PushDeviceAPIVO" resultType="int">
+		SELECT COUNT(*)
+		FROM PUSH_DEVICE
+		WHERE USEYN='Y'
+	</select>
+
+	<delete id="deletePushDevice">
+		DELETE FROM PUSH_DEVICE
+		WHERE UUID = #{uuid}
+	</delete>
+
+	<resultMap id="pushMessageAPIInfo" type="egovframework.hyb.mbl.pus.service.PushDeviceAPIVO">
+		<result property="sn" column="SN"/>
+		<result property="uuid" column="UUID"/>
+		<result property="message" column="MESSAGE"/>
+		<result property="sndDt" column="SND_DT"/>
+		<result property="tokenId" column="TOKEN_ID"/>
+		<result property="deviceCount" column="DEVICE_CNT"/>
+	</resultMap>
+
+	<insert id="insertPushInfo">
+		<selectKey keyProperty="sn" resultType="int" order="BEFORE">
+		   SELECT (NVL(MAX(SN), 0)+1) sn from PUSH_MESSAGE WHERE UUID = #{uuid}
+		</selectKey>
+		INSERT INTO PUSH_MESSAGE (SN, UUID, MESSAGE, SND_DT, TOKEN_ID)
+		VALUES (#{sn}, #{uuid}, #{message}, #{sndDt}, #{tokenId})
+	</insert>
+
+	<select id="selectPushMessageList" parameterType="egovframework.hyb.mbl.pus.service.PushDeviceAPIVO" resultMap="pushMessageAPIInfo">
+		<choose>
+			<when test="recordCountPerPage > 0">
+				SELECT * FROM (
+					SELECT a.*, ROWNUM rnum FROM (
+						SELECT SN, UUID, MESSAGE, SND_DT, TOKEN_ID
+						FROM PUSH_MESSAGE
+							WHERE UUID = #{uuid}
+						ORDER BY SN DESC
+					) a WHERE ROWNUM &lt;= #{lastIndex}
+				) WHERE rnum &gt; #{firstIndex}
+			</when>
+			<otherwise>
+				SELECT SN, UUID, MESSAGE, SND_DT, TOKEN_ID
+				FROM PUSH_MESSAGE
+					WHERE UUID = #{uuid}
+				ORDER BY SN DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="selectPushMessageCount" parameterType="egovframework.hyb.mbl.pus.service.PushDeviceAPIVO" resultType="int">
+		SELECT COUNT(*)
+		FROM PUSH_MESSAGE
+			WHERE UUID = #{uuid}
+	</select>
+
+	<select id="selectAllPushMessageList" parameterType="egovframework.hyb.mbl.pus.service.PushDeviceAPIVO" resultMap="pushMessageAPIInfo">
+		<choose>
+			<when test="recordCountPerPage > 0">
+				SELECT * FROM (
+					SELECT a.*, ROWNUM rnum FROM (
+						SELECT
+							MIN(SN) AS SN,
+							<choose>
+								<when test="uuid != null and uuid != ''">
+									NVL(MIN(CASE WHEN UUID LIKE '%' || #{uuid} || '%' THEN UUID END), MIN(UUID)) AS UUID,
+								</when>
+								<otherwise>
+									MIN(UUID) AS UUID,
+								</otherwise>
+							</choose>
+							MESSAGE,
+							SND_DT,
+							COUNT(*) AS DEVICE_CNT
+						FROM PUSH_MESSAGE
+						<if test="uuid != null and uuid != ''">
+							WHERE EXISTS (
+								SELECT 1
+								FROM PUSH_MESSAGE matched_row
+								WHERE matched_row.MESSAGE = PUSH_MESSAGE.MESSAGE
+									AND matched_row.SND_DT = PUSH_MESSAGE.SND_DT
+									AND (matched_row.UUID LIKE '%' || #{uuid} || '%' OR matched_row.MESSAGE LIKE '%' || #{uuid} || '%')
+							)
+						</if>
+						GROUP BY MESSAGE, SND_DT
+						ORDER BY (
+							LPAD(REGEXP_SUBSTR(SND_DT, '[0-9]+', 1, 1), 4, '0') ||
+							LPAD(NVL(REGEXP_SUBSTR(SND_DT, '[0-9]+', 1, 2), '0'), 2, '0') ||
+							LPAD(NVL(REGEXP_SUBSTR(SND_DT, '[0-9]+', 1, 3), '0'), 2, '0') ||
+							LPAD(NVL(REGEXP_SUBSTR(SND_DT, '[0-9]+', 1, 4), '0'), 2, '0') ||
+							LPAD(NVL(REGEXP_SUBSTR(SND_DT, '[0-9]+', 1, 5), '0'), 2, '0') ||
+							LPAD(NVL(REGEXP_SUBSTR(SND_DT, '[0-9]+', 1, 6), '0'), 2, '0') ||
+							LPAD(NVL(REGEXP_SUBSTR(SND_DT, '[0-9]+', 1, 7), '0'), 3, '0')
+						) DESC, MIN(SN) DESC
+					) a WHERE ROWNUM &lt;= #{lastIndex}
+				) WHERE rnum &gt; #{firstIndex}
+			</when>
+			<otherwise>
+				SELECT
+					MIN(SN) AS SN,
+					<choose>
+						<when test="uuid != null and uuid != ''">
+							NVL(MIN(CASE WHEN UUID LIKE '%' || #{uuid} || '%' THEN UUID END), MIN(UUID)) AS UUID,
+						</when>
+						<otherwise>
+							MIN(UUID) AS UUID,
+						</otherwise>
+					</choose>
+					MESSAGE,
+					SND_DT,
+					COUNT(*) AS DEVICE_CNT
+				FROM PUSH_MESSAGE
+				<if test="uuid != null and uuid != ''">
+					WHERE EXISTS (
+						SELECT 1
+						FROM PUSH_MESSAGE matched_row
+						WHERE matched_row.MESSAGE = PUSH_MESSAGE.MESSAGE
+							AND matched_row.SND_DT = PUSH_MESSAGE.SND_DT
+							AND (matched_row.UUID LIKE '%' || #{uuid} || '%' OR matched_row.MESSAGE LIKE '%' || #{uuid} || '%')
+					)
+				</if>
+				GROUP BY MESSAGE, SND_DT
+				ORDER BY (
+					LPAD(REGEXP_SUBSTR(SND_DT, '[0-9]+', 1, 1), 4, '0') ||
+					LPAD(NVL(REGEXP_SUBSTR(SND_DT, '[0-9]+', 1, 2), '0'), 2, '0') ||
+					LPAD(NVL(REGEXP_SUBSTR(SND_DT, '[0-9]+', 1, 3), '0'), 2, '0') ||
+					LPAD(NVL(REGEXP_SUBSTR(SND_DT, '[0-9]+', 1, 4), '0'), 2, '0') ||
+					LPAD(NVL(REGEXP_SUBSTR(SND_DT, '[0-9]+', 1, 5), '0'), 2, '0') ||
+					LPAD(NVL(REGEXP_SUBSTR(SND_DT, '[0-9]+', 1, 6), '0'), 2, '0') ||
+					LPAD(NVL(REGEXP_SUBSTR(SND_DT, '[0-9]+', 1, 7), '0'), 3, '0')
+				) DESC, MIN(SN) DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="selectAllPushMessageCount" parameterType="egovframework.hyb.mbl.pus.service.PushDeviceAPIVO" resultType="int">
+		SELECT COUNT(*)
+		FROM (
+			SELECT MESSAGE, SND_DT
+			FROM PUSH_MESSAGE
+			<if test="uuid != null and uuid != ''">
+				WHERE EXISTS (
+					SELECT 1
+					FROM PUSH_MESSAGE matched_row
+					WHERE matched_row.MESSAGE = PUSH_MESSAGE.MESSAGE
+						AND matched_row.SND_DT = PUSH_MESSAGE.SND_DT
+						AND (matched_row.UUID LIKE '%' || #{uuid} || '%' OR matched_row.MESSAGE LIKE '%' || #{uuid} || '%')
+				)
+			</if>
+			GROUP BY MESSAGE, SND_DT
+		) grouped_message
+	</select>
+
+</mapper>

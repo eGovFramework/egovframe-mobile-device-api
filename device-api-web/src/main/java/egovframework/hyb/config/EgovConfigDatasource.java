@@ -1,15 +1,23 @@
 package egovframework.hyb.config;
 
+import java.util.Locale;
+import java.util.Set;
+
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
+/**
+ * DataSource 설정. 접속 정보는 Globals.* 프로퍼티에서 읽는다.
+ */
 @Configuration
 public class EgovConfigDatasource {
+
+	/** 매퍼(*_SQL_{DbType}.xml)가 있는 DB */
+	private static final Set<String> SUPPORTED_DB_TYPES = Set.of("hsql", "mysql", "oracle", "altibase", "tibero", "cubrid");
 
 	@Value("${Globals.DbType}")
 	private String dbType;
@@ -26,92 +34,16 @@ public class EgovConfigDatasource {
 	@Value("${Globals.Password}")
 	private String password;
 
-	/**
-	 * MySQL DataSource
-	 * XML의 destroy-method="close"와 동일 (Spring Boot는 자동으로 close 메서드 인식)
-	 */
-	@Bean(name = "dataSource-mysql", destroyMethod = "close")
-	DataSource dataSourceMysql() {
-		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setDriverClassName(driverClassName);
-		dataSource.setUrl(url);
-		dataSource.setUsername(username);
-		dataSource.setPassword(password);
-		return dataSource;
-	}
-
-	/**
-	 * Oracle DataSource
-	 */
-	@Bean(name = "dataSource-oracle", destroyMethod = "close")
-	DataSource dataSourceOracle() {
-		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setDriverClassName(driverClassName);
-		dataSource.setUrl(url);
-		dataSource.setUsername(username);
-		dataSource.setPassword(password);
-		return dataSource;
-	}
-
-	/**
-	 * Altibase DataSource
-	 */
-	@Bean(name = "dataSource-altibase", destroyMethod = "close")
-	DataSource dataSourceAltibase() {
-		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setDriverClassName(driverClassName);
-		dataSource.setUrl(url);
-		dataSource.setUsername(username);
-		dataSource.setPassword(password);
-		return dataSource;
-	}
-
-	/**
-	 * Tibero DataSource
-	 */
-	@Bean(name = "dataSource-tibero", destroyMethod = "close")
-	DataSource dataSourceTibero() {
-		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setDriverClassName(driverClassName);
-		dataSource.setUrl(url);
-		dataSource.setUsername(username);
-		dataSource.setPassword(password);
-		return dataSource;
-	}
-
-	/**
-	 * Cubrid DataSource
-	 */
-	@Bean(name = "dataSource-cubrid", destroyMethod = "close")
-	DataSource dataSourceCubrid() {
-		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setDriverClassName(driverClassName);
-		dataSource.setUrl(url);
-		dataSource.setUsername(username);
-		dataSource.setPassword(password);
-		return dataSource;
-	}
-
-	/**
-	 * Primary DataSource (Globals.DbType에 따라 동적으로 선택)
-	 * XML의 alias name="dataSource-${Globals.DbType}" alias="dataSource"와 동일한 역할
-	 */
-	@Bean(name = "dataSource")
-	@Primary
+	@Bean(name = "dataSource", destroyMethod = "close")
 	DataSource dataSource() {
-		switch (dbType.toLowerCase()) {
-			case "mysql":
-				return dataSourceMysql();
-			case "oracle":
-				return dataSourceOracle();
-			case "altibase":
-				return dataSourceAltibase();
-			case "tibero":
-				return dataSourceTibero();
-			case "cubrid":
-				return dataSourceCubrid();
-			default:
-				throw new IllegalArgumentException("Unsupported database type: " + dbType);
+		if (!SUPPORTED_DB_TYPES.contains(dbType.toLowerCase(Locale.ROOT))) {
+			throw new IllegalArgumentException("Unsupported database type: " + dbType);
 		}
+		BasicDataSource dataSource = new BasicDataSource();
+		dataSource.setDriverClassName(driverClassName);
+		dataSource.setUrl(url);
+		dataSource.setUsername(username);
+		dataSource.setPassword(password);
+		return dataSource;
 	}
 }

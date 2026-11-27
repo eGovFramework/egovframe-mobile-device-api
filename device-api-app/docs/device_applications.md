@@ -1,160 +1,123 @@
 # Flutter Device API Application
 
-Flutter를 사용한 모바일 디바이스 정보 조회 및 관리 애플리케이션입니다.
-Clean Architecture 패턴을 적용하여 개발되었으며, 다양한 디바이스 기능을 통합적으로 관리할 수 있습니다.
+이 저장소(`flutter_deviceapi_19_edit`)의 `device-api-app`은 전자정부 모바일 Device API 샘플입니다.  
+Clean Architecture + feature-first 폴더 + **Riverpod** 으로 구성되어 있으며, 앱 목록(`data/app_list_data.json`)에 **19개 기능**이 있습니다.
+
+서버 연동은 `device-api-web`(기본 `:9700`) REST를 씁니다. AI 채팅만 웹이 `egovframe-ai-rag`로 한 단 더 중계합니다. 3단 구조는 저장소 루트 [docs/3tier-architecture-guide.md](../../docs/3tier-architecture-guide.md) 를 보면 됩니다.
 
 ## 주요 기능
 
+앱 목록 순서와 같습니다. 전용 가이드가 있는 항목은 링크로 연결합니다.
+
 ### 1. [가속도계 (Accelerator)](applications/accelerator.md)
 
-#### 기능
+- 3축 가속도 실시간 조회, 3D 도형 시각화
+- 서버(`/acl`) 또는 SQLite 저장·목록·삭제
+- 의존성: `sensors_plus: ^4.0.2`
 
-- 3D 형태의 도형을 통한 실시간 가속도 정보 시각화
-- Three.js 기반 3D 애니메이션
-- 디바이스의 가속도 변화에 따른 도형 회전
-- 가속도 데이터 저장 및 서버 업로드
-- 저장된 가속도 정보 목록 조회 및 삭제
+### 2. [파일 관리 (File Management)](applications/file_management.md)
 
-#### 의존성
+- 기기 Documents 폴더 탐색, 생성·삭제·이동·복사 (서버 연결 없음)
+- 의존성: `path_provider: ^2.1.2`
 
-- `sensors_plus: ^4.0.2`
+### 3. [기기 정보 (Device Info)](applications/device_info.md)
 
-### 2. [파일 관리 (File Management)](/fileManagement.md)
+- OS, 모델, UUID, 용량, 앱 버전 조회
+- 서버(`/dvc`) 업로드·목록
+- 의존성: `device_info_plus: ^12.2.0`, `package_info_plus: ^8.0.0`, `flutter_storage_info: ^1.0.0`
 
-#### 기능
+### 4. [문서 뷰어 (File Opener)](applications/file_opener.md)
 
-- 디바이스 파일 시스템 접근
-- 파일 생성, 삭제, 이동, 복사 기능
-- 폴더 생성 및 관리
-- 다중 파일 선택 및 일괄 작업
-- 파일 정보 표시 (크기, 수정일, 항목 수)
-- 텍스트 파일 읽기/쓰기
-- JSON 파일 처리
+- PDF/Office 등 문서 다운로드·외부 앱으로 열기
+- 웹 경로 `/fop`
 
-#### 의존성
+### 5. [파일 읽기/쓰기 (File Read/Write)](applications/file_readwrite.md)
 
-- `file_picker: ^8.0.0+1`
-- `open_file: ^3.3.2`
+- 텍스트 파일 로컬 CRUD, 서버(`/frw`) 업로드·다운로드
+- 의존성: `path_provider: ^2.1.2`
 
-### 3. [기기 정보 (Device Info)](/deiveInfo.md)
+### 6. [위치 서비스 (GPS)](applications/gps.md)
 
-#### 기능
+- 실제 GPS + Google Maps 마커, 서버(`/gps`) 저장
+- 의존성: `geolocator: ^10.1.0`, `google_maps_flutter: ^2.13.1`
 
-- 디바이스 하드웨어 및 소프트웨어 정보 조회
-- OS 버전, 디바이스 모델, UUID 정보
-- 네트워크 연결 상태 확인
-- 앱 버전 정보
-- 서버 업로드 및 목록 조회
-- 상세 정보 화면 제공
+### 7. [인터페이스 (Interface)](applications/interface.md)
 
-#### 의존성
+- 로그인·회원가입 정보를 서버(`/itf`)와 송수신하고, 세션은 `flutter_secure_storage`에 둡니다
+- 의존성: `flutter_secure_storage: ^9.2.4`, `bcrypt: ^1.1.3`
 
-- `device_info_plus: ^12.2.0`
-- `package_info_plus: ^8.0.0`
-- `flutter_contacts: ^1.1.8+1`
+### 8. [미디어 (Media)](applications/media.md)
 
-### 4. [문서 뷰어 (File Opener)](/fileOpener.md)
+- 카메라·갤러리 사진/동영상, 서버(`/mda`) 업로드
+- 의존성: `image_picker: ^1.0.7`, `video_player: ^2.10.0`, `photo_manager: ^3.9.0`
 
-#### 기능
+### 9. [네트워크 (Network)](applications/network.md)
 
-- PDF, Word, Excel, PowerPoint 파일 지원
-- 웹서버에서 파일 다운로드
-- 다양한 문서 형식 열기
-- 로컬 파일 목록 조회 및 관리
-- 파일 검색 및 정렬 기능
-- 외부 앱 실행을 통한 파일 열기
+- Wi-Fi/모바일 연결·SSID·IP 조회, 서버(`/nwk`) 저장
+- 의존성: `connectivity_plus: ^6.0.3`, `network_info_plus: ^5.0.1`
 
-### 5. [파일 읽기/쓰기 (File Read/Write)](/fileReadWriter.md)
+### 10. [바코드 스캐너 (Barcode)](applications/barcode.md)
 
-#### 기능
+- 카메라로 바코드/QR 스캔, 서버(`/bar`) 저장·목록·삭제
+- 의존성: `flutter_zxing: 2.2.1`, `camera: ^0.11.0`
 
-- 텍스트 파일 생성 및 편집
-- 로컬 파일 목록 조회 및 미리보기
-- 로컬 파일 삭제
-- 파일 업로드 (로컬 → 서버)
-- 파일 다운로드 (서버 → 로컬)
-- 서버 파일 목록 조회 및 삭제
+### 11. [나침반 (Compass)](applications/compass.md)
 
-#### 의존성
+- 방위각 실시간 조회, 서버(`/cps`) 저장
+- 의존성: `flutter_compass: ^0.8.1`
 
-- `path_provider: ^2.1.2`
+### 12. [연락처 (Contacts)](applications/contacts.md)
 
-### 6. [위치 서비스 (GPS)](/gps.md)
+- 기기 연락처 조회, 서버(`/ctt`) 저장·목록·디바이스 저장
+- 의존성: `flutter_contacts: ^1.1.9+2`
 
-#### 기능
+### 13. [푸시 알림 (Push)](applications/push.md)
 
-- **실제 GPS 센서 사용**: Mock 데이터 제거, 실제 위치 정보 수집
-- Google Maps를 활용한 실시간 위치 표시
-- 현재 위치 조회 및 마커 표시
-- 위치 정보 저장 및 관리
-- 지도 스크롤 및 줌 기능
-- 위치 정확도 및 타임스탬프 표시
-- **권한 관리**: 런타임 위치 권한 요청 및 상태 관리
-- 저장된 위치 정보 목록 조회 및 삭제
+- FCM 수신, 디바이스 등록 정보를 서버(`/pus`)에 저장
+- 의존성: `firebase_core: ^3.15.2`, `firebase_messaging: ^15.2.10`, `flutter_local_notifications: ^18.0.1`
 
-#### 의존성
+### 14. [소켓 IO (Socket)](applications/socket.md)
 
-- `geolocator: ^10.1.0`
-- `google_maps_flutter: ^2.13.1`
+- WebSocket 실시간 채팅, 메시지 서버(`/ws`) 저장
+- 의존성: `web_socket_client: ^0.1.0`
 
-### 7. [인터페이스 (Interface)](/interface.md)
+### 15. [스트리밍 미디어 (Streaming)](applications/streaming.md)
 
-#### 기능
+- 서버(`/stm`) 미디어 목록 조회·스트리밍 재생
 
-- RESTful API를 통한 서버 통신
-- 정보데이터 서버로 송신
-- 정보데이터 기기로 수신
-- 서버의 데이터 삭제 요청
-- 웹서버와의 데이터 송수신 참고 및 활용
+### 16. [얼굴 메시 (Face Mesh)](applications/face_mesh.md)
 
-#### 의존성
+- MediaPipe Face Mesh 468/478 랜드마크 시각화, 서버(`/fms`) 저장
+- 의존성: `mediapipe_face_mesh: ^2.4.0`
 
-- `flutter_secure_storage: ^9.2.4`
-- `crypto: ^3.0.5`
+### 17. [IoT 제어 (IoT MQTT)](applications/iot.md)
 
-### 8. [미디어 (Media)](/media.md)
+- RabbitMQ MQTT 텔레메트리 구독·제어 명령, 서버(`/iot`) 이력
+- 의존성: `mqtt5_client: ^5.0.0`
 
-#### 기능
+### 18. [AI 채팅 (AI Chat)](applications/ai_chat.md)
 
-- 카메라를 통한 사진 촬영
-- 갤러리에서 이미지 선택
-- 동영상 녹화 및 재생
-- 갤러리 접근 및 미디어 파일 관리
-- **성능 최적화**: 이미지 캐싱 및 비디오 플레이어 메모리 관리
-- **권한 관리**: 카메라 및 저장소 권한 자동 요청
-- 미디어 파일 서버 업로드 및 다운로드
-- 미디어 파일 삭제
+- Flutter → `device-api-web` `/aic` → `egovframe-ai-rag` 3단 질의
+- SSE 스트리밍, RAG/일반 채팅, 세션 목록·삭제
+- 질의는 서버 필수. SQLite는 저장된 이력 CRUD만
+- 의존성: `flutter_markdown: ^0.7.7+1`, `http: ^1.5.0`
 
-#### 의존성
+### 19. [SQLite Manager](applications/sqlite.md)
 
-- `image_picker: ^1.0.7`
-- `video_player: ^2.8.2`
-
-### 9. [네트워크 (Network)](/network.md)
-
-#### 기능
-
-- Wi-Fi, 모바일 데이터 연결 상태 모니터링
-- 네트워크 정보 조회 (IP 주소, SSID, 네트워크 타입)
-- 연결 상태 실시간 확인
-- 네트워크 정보 서버 저장 및 목록 조회
-- 네트워크 정보 삭제
-
-#### 의존성
-
-- `connectivity_plus: ^6.0.3`
-- `network_info_plus: ^5.0.1`
-
-</br>
+- 앱 내부 SQLite DB 생성·테이블 편집·import/export
+- 모듈: `lib/sqlite` (`sqlite/sqlite.dart`)
 
 ---
 
 ### 공통 의존성
 
-- 의존성 주입 : `get_it: ^7.6.4`
-- HTTP 통신 (서버 연동용) `http: ^1.5.0`
-- 권한 관리 : `permission_handler: ^11.2.0`
-- SVG 이미지 지원 : `flutter_svg: ^2.0.10+1`
-- 설정 저장 : `shared_preferences: ^2.2.2`
-- URL 실행 : `url_launcher: ^6.2.5`
-- 정적 분석 규칙 세트(개발용) : `flutter_lints: ^5.0.0`
+- 상태·DI: `flutter_riverpod: 3.0.3`, `riverpod_annotation: 3.0.3`
+- 코드 생성: `riverpod_generator: 3.0.3`, `build_runner: ^2.7.0`
+- HTTP: `http: ^1.5.0`
+- 권한: `permission_handler: ^11.2.0`
+- SVG: `flutter_svg: ^2.0.10+1`
+- 설정 저장: `shared_preferences: ^2.2.2`
+- URL: `url_launcher: ^6.2.5`
+- 린트: `flutter_lints: ^5.0.0`
+
+`get_it` 은 쓰지 않습니다. 의존성 주입은 [architecture/5_dependency_injection.md](architecture/5_dependency_injection.md) 를 따릅니다.

@@ -26,12 +26,14 @@ public class EgovFileServiceImpl extends EgovAbstractServiceImpl implements Egov
 		if (uuid == null || uuid.isBlank()) {
 			return false;
 		}
-		return fileDAO.countFileOwnershipByUuid(fileSn, uuid) > 0;
+		Integer count = fileDAO.countFileOwnershipByUuid(fileSn, uuid);
+		return count != null && count > 0;
 	}
 
 	@Override
 	public boolean isFileRegistered(int fileSn) {
-		return fileDAO.countFileRegistration(fileSn) > 0;
+		Integer count = fileDAO.countFileRegistration(fileSn);
+		return count != null && count > 0;
 	}
 
 }

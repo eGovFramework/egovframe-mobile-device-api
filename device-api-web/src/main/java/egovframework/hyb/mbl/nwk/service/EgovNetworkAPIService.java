@@ -17,15 +17,7 @@ package egovframework.hyb.mbl.nwk.service;
 
 import java.util.List;
 
-/**
- * @Class Name : EgovNetworkAPIService.java
- * @Description : 통합 Network API Service Class
- * @Modification Information
- * @
- * @ 수정일         수정자        수정내용
- * @ ----------   ---------   -----------------------------------------------------------
- *   2026.07.21  이백행          [2026년 컨트리뷰션] 사용하지 않는 import 제거
- */
+
 public interface EgovNetworkAPIService {
 
     /**
@@ -34,7 +26,7 @@ public interface EgovNetworkAPIService {
      * @return 등록 결과
      * @exception Exception
      */
-    int insertNetworkInfo(NetworkAPIVO vo) throws Exception;
+    int insertNetworkInfo(NetworkAPIVO vo);
 
     /**
      * 네트워크 정보를 삭제한다.
@@ -42,7 +34,7 @@ public interface EgovNetworkAPIService {
      * @return 삭제 결과
      * @exception Exception
      */
-    int deleteNetworkInfo(NetworkAPIVO vo) throws Exception;
+    int deleteNetworkInfo(NetworkAPIVO vo);
 
 
     /**
@@ -51,12 +43,12 @@ public interface EgovNetworkAPIService {
      * @return 네트워크 정보 목록
      * @exception Exception
      */
-    List<?> selectNetworkInfoList(Object vo) throws Exception;
+    List<NetworkAPIVO> selectNetworkInfoList(Object vo);
 
     /**
-     * 네트워크 정보 총 개수를 조회한다.
+     * 네트워크 정보 총 갯수를 조회한다.
      * @param vo - 조회할 정보가 담긴 VO
-     * @return 네트워크 정보 총 개수
+     * @return 네트워크 정보 총 갯수
      * @exception
      */
     int selectNetworkInfoListTotCnt(Object vo);

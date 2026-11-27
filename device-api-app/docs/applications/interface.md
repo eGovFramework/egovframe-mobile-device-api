@@ -2,40 +2,62 @@
 
 ## 개요
 
-인터페이스 기능은 웹서버와의 데이터 송수신을 쉽고 편하게 RESTful 방식으로 구현할 수 있도록 참고 및 활용할 수 있는 기능입니다. 
+인터페이스 기능은 웹서버와의 데이터 송수신을 쉽고 편하게 RESTful 방식으로 구현할 수 있도록 참고 및 활용할 수 있는 기능입니다. 로그인 및 회원가입 기능을 제공하며, 세션 관리와 보안 기능을 포함합니다.
 
 ## 주요 기능
 
 ### 1. 로그인
-- 사용자 ID와 비밀번호로 서버에 조회 요청
-- 성공 시 앱에 **세션 정보**(userId + 비밀번호 해시값) 저장 → 다음 실행 시 자동 로그인
+- 사용자 ID와 비밀번호를 입력하여 로그인합니다
+- 서버와의 인증 처리
+- 로그인 성공 시 세션 정보 저장
+- 자동 로그인 기능 (세션 유지)
 
 ### 2. 회원가입
-- userId, 비밀번호, 이메일, 기기 `uuid`를 서버로 전송
-- 원본 가이드와 같이 `INTERFACE_EGOV` 테이블에 저장
+- 새로운 사용자 계정을 생성합니다
+- 사용자 ID, 비밀번호, 이메일 입력
+- 계정 중복 확인
+- 회원가입 성공 시 자동 로그인
 
 ### 3. 세션 관리
-- `flutter_secure_storage`에 로그인 상태 저장
-- `app_config.dart`의 `sessionTimeout`(기본 10분) 경과 시 자동 로그아웃
+- 로그인 세션 정보를 안전하게 저장합니다
+- 세션 만료 시간 관리
+- 자동 로그인 기능
 
-### 4. 회원탈퇴
-- userId·비밀번호 확인 후 서버 데이터 삭제
+### 4. 보안 기능
+- 비밀번호 암호화 저장
+- 안전한 세션 정보 저장 (flutter_secure_storage)
+- 세션 만료 시 자동 로그아웃
 
-### 5. REST 송수신
-- **송신:** 회원가입
-- **수신:** 로그인·사용자 정보 조회
-- **삭제:** 회원탈퇴
+### 5. 정보데이터 서버로 송신
+- RESTful API를 통한 데이터 전송
+- 서버와의 통신 처리
+
+### 6. 정보데이터 기기로 수신
+- 서버에서 데이터 수신
+- RESTful API를 통한 데이터 조회
+
+### 7. 서버의 데이터 삭제 요청
+- 서버에 저장된 데이터 삭제 요청
+- RESTful API를 통한 삭제 처리
 
 ## 아키텍처 구조
- 
+
 ### Domain Layer
-- **Validator**: `interface_input_validator.dart` — 폼 입력 규칙 (`validate*`)
-- **UseCase**: `interface_usecase.dart` — API 호출 전 `ensure*` 검증 후 Repository 호출
+- **Entity**: Interface 관련 엔티티
+  - 사용자 정보
+  - 세션 정보
+
+- **Repository**: `InterfaceRepository` (인터페이스)
+- **UseCase**: `InterfaceUseCase`
 
 ### Data Layer
-- **Service**: `interface_service.dart` — HTTP 통신만 담당
-- **Local storage**: `interface_credential_storage.dart` — 로그인 세션(해시값) 기기 저장
-- **Repository**: `InterfaceRepositoryImpl`
+- **Service**: `InterfaceService`
+  - 로그인 처리
+  - 회원가입 처리
+  - 세션 관리
+  - 서버 통신
+
+- **Repository Implementation**: `InterfaceRepositoryImpl`
 
 ### Presentation Layer
 - **Screen**: `InterfaceScreen`
@@ -44,22 +66,11 @@
   - 입력 검증
   - 성공 화면 (`InterfaceSuccessPage`)
 
-## 비밀번호 처리 (학습용 최소 수준)
-
-| 단계 | 처리 |
-|------|------|
-| 사용자 입력 | 화면에서는 **평문** 비밀번호 입력 |
-| 앱 → 서버 | `SHA-256(userId ‖ password)` → **Base64** (해시값) |
-| 서버 DB | 앱이 보낸 **해시값을 그대로** 저장·비교 |
-| 앱 저장 | `flutter_secure_storage`에 **해시값만** 저장 (평문 미저장) |
-
-- 앱: `lib/utils/password_encryption.dart` — `encryptPassword(password, userId)`
-
 ## 의존성
 
 - `http: ^1.5.0`: 서버 통신
-- `flutter_secure_storage: ^9.2.4`: 세션(해시값) 저장
-- `crypto: ^3.0.5`: 비밀번호 해시
+- `flutter_secure_storage: ^9.2.4`: 안전한 데이터 저장
+- `bcrypt: ^1.1.3`: SQLite에 저장하는 비밀번호 해시
 
 ## 화면 구성 및 사용 방법
 
@@ -111,7 +122,7 @@
   <image src="images/interface_loginError.png" alt="interface 로그인 에러 화면">
 </div>
 
-아이디 또는 비밀번호를 입력하지 않거나 서버 DB에 저장되어있지 않은 유저정보인 경우 해당 에러가 출력됩니다.
+아이디 또는 비밀번호를 입력하지 않거나 계정과 맞지 않으면 `아이디 또는 비밀번호가 올바르지 않습니다.`가 출력됩니다.
 
 ### 로그아웃
 <div style="width:300px; margin-bottom:10px;">
@@ -134,11 +145,10 @@
 
 ## 주의사항
 
-- 웹 서버가 실행 중이어야 합니다 ([웹 서버 가이드](../webserver.md))
-- 비밀번호는 최소 6자 이상
-- 회원가입 시 이메일 필수 (서버 검증)
-- 세션 만료 후에는 다시 로그인해야 합니다
-- **HTTP 샘플**이므로 운영 배포 시 HTTPS를 별도 구성하세요
+- 서버 연결 기능을 사용하려면 웹서버가 실행 중이어야 합니다
+- 비밀번호는 최소 6자 이상이어야 합니다
+- 이메일은 선택 사항이지만 입력 시 올바른 형식이어야 합니다
+- 세션 만료 시간은 설정에 따라 자동으로 로그아웃됩니다
 
 ## 기술적 특징
 
@@ -157,8 +167,10 @@
   - 세션이 만료되면 저장된 정보가 자동으로 삭제되고 다시 로그인해야 합니다
   - 앱 실행 시 세션 유효성을 확인하여 자동 로그인을 처리합니다
 - **비밀번호 처리**
-  - 비밀번호는 평문으로 저장되지만, flutter_secure_storage를 통해 암호화되어 저장됩니다
-  - 서버 전송 시에는 암호화되어 전송됩니다
+  - 앱은 입력한 비밀번호를 서버로 보냅니다. 서버는 BCrypt 해시만 `INTERFACE_EGOV.USER_PW`에 저장하고, 로그인·조회·탈퇴는 아이디로 찾은 뒤 입력값과 비교합니다
+  - 로그인 실패는 아이디 없음과 비밀번호 불일치를 같은 문구로 반환합니다
+  - SQLite 모드도 가입 시 BCrypt 해시를 저장하고, 조회·탈퇴는 같은 방식으로 확인합니다
+  - 앱 세션에는 입력한 비밀번호가 `flutter_secure_storage`의 `password` 키로 남습니다. 세션으로 조회·탈퇴를 다시 호출할 때 이 값을 보냅니다
 - **입력 검증** 폼 입력값 검증 기능
   - 사용자 ID: 필수 입력, 빈 값 불가
   - 비밀번호: 필수 입력, 최소 6자 이상

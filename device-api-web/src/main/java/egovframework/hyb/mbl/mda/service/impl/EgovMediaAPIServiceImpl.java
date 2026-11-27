@@ -7,18 +7,16 @@ import org.springframework.stereotype.Service;
 
 import egovframework.hyb.mbl.mda.service.EgovMediaAPIService;
 import egovframework.hyb.mbl.mda.service.MediaAPIVO;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.annotation.Resource;
 
 /**
  * 통합 Media API ServiceImpl
  */
-@Service
-@RequiredArgsConstructor
-@Slf4j
+@Service("EgovMediaAPIService")
 public class EgovMediaAPIServiceImpl extends EgovAbstractServiceImpl implements EgovMediaAPIService {
 
-    private final MediaAPIDAO mediaAPIDAO;
+    @Resource(name="MediaAPIDAO")
+    private MediaAPIDAO mediaAPIDAO;
 
     public int insertMediaInfo(MediaAPIVO vo) {
         return mediaAPIDAO.insertMediaInfo(vo);
@@ -37,11 +35,23 @@ public class EgovMediaAPIServiceImpl extends EgovAbstractServiceImpl implements 
     }
 
     public List<MediaAPIVO> selectMediaInfoList(MediaAPIVO searchVO) {
-        log.debug("uuid={}", searchVO.getUuid());
         return mediaAPIDAO.selectMediaInfoList(searchVO);
     }
 
     public int selectMediaInfoListTotCnt(MediaAPIVO searchVO) {
         return mediaAPIDAO.selectMediaInfoListTotCnt(searchVO);
+    }
+
+    public MediaAPIVO selectMediaInfoDetail(MediaAPIVO vo) {
+        return mediaAPIDAO.selectMediaInfoDetail(vo);
+    }
+
+    public int updateMediaInfoRevivCo(MediaAPIVO vo) {
+        return mediaAPIDAO.updateMediaInfoRevivCo(vo);
+    }
+
+    public int selectMediaFileSnBySn(MediaAPIVO vo) {
+        Integer fileSn = mediaAPIDAO.selectMediaFileSnBySn(vo);
+        return fileSn == null ? 0 : fileSn;
     }
 }

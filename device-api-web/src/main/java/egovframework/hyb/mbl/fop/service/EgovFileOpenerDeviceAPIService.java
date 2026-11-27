@@ -17,22 +17,12 @@ package egovframework.hyb.mbl.fop.service;
 
 import java.util.List;
 
-/**  
- * @Class Name : EgovPushAPIService.java
- * @Description : EgovPushAPIService Class
- * @Modification Information
- * @
- * @  수정일       수정자                 수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2016.07.11   장성호                 최초생성
- *   2026.07.21  이백행          [2026년 컨트리뷰션] 사용하지 않는 import 제거
- * 
- * @author 디바이스 API 실행환경 개발팀
- * @since 2016. 07. 11
- * @version 1.0
- * @see
- * 
- *  Copyright (C) by Ministry of Interior All right reserved.
+/**
+ * EgovPushAPIService
+ *
+ * 수정이력
+ * 2016.07.11 장성호 최초생성
+ * 2026.07.21 이백행 [2026년 컨트리뷰션] 사용하지 않는 import 제거
  */
 public interface EgovFileOpenerDeviceAPIService {
     
@@ -42,5 +32,12 @@ public interface EgovFileOpenerDeviceAPIService {
 	 * @return 네트워크 정보 목록
 	 */
 	List<FileOpenerDeviceAPIVO> selectFileOpenerList(FileOpenerDeviceAPIVO searchVO);
+
+	/**
+	 * 업로드된 파일을 문서 뷰어 목록에 등록한다.
+	 * @param vo uuid, fileSn
+	 * @return 등록 건수
+	 */
+	int insertFileOpenerList(FileOpenerDeviceAPIVO vo);
 	
 }

@@ -8,38 +8,20 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * ID 생성 설정. 업로드 파일 일련번호(COMTECOPSEQ.FILE)
+ */
 @Configuration
 public class EgovConfigIdGeneration {
 
-	@Bean
-	EgovIdGnrStrategyImpl mixPrefixSample() {
-		EgovIdGnrStrategyImpl egovIdGnrStrategyImpl = new EgovIdGnrStrategyImpl();
-		egovIdGnrStrategyImpl.setPrefix("SAMPLE-");
-		egovIdGnrStrategyImpl.setCipers(5);
-		egovIdGnrStrategyImpl.setFillChar('0');
-		return egovIdGnrStrategyImpl;
-	}
-
-	@Bean(destroyMethod="destroy")
-	EgovTableIdGnrServiceImpl egovIdGnrService(@Qualifier("dataSource") DataSource dataSource) {
-		EgovTableIdGnrServiceImpl egovTableIdGnrServiceImpl = new EgovTableIdGnrServiceImpl();
-		egovTableIdGnrServiceImpl.setDataSource(dataSource);
-		egovTableIdGnrServiceImpl.setStrategy(mixPrefixSample());
-		egovTableIdGnrServiceImpl.setBlockSize(10);
-		egovTableIdGnrServiceImpl.setTable("IDS");
-		egovTableIdGnrServiceImpl.setTableName("SAMPLE");
-		return egovTableIdGnrServiceImpl;	
-	}
-	
-	// FILEUPLOAD IDGENERATION
 	@Bean
 	EgovIdGnrStrategyImpl filePrefix() {
 		EgovIdGnrStrategyImpl egovIdGnrStrategyImpl = new EgovIdGnrStrategyImpl();
 		egovIdGnrStrategyImpl.setCipers(10);
 		return egovIdGnrStrategyImpl;
 	}
-	
-	@Bean(name= "egovFileIdGnrService", destroyMethod = "destroy")
+
+	@Bean(name = "egovFileIdGnrService", destroyMethod = "destroy")
 	EgovTableIdGnrServiceImpl egovFileIdGnrService(@Qualifier("dataSource") DataSource dataSource) {
 		EgovTableIdGnrServiceImpl egovTableIdGnrServiceImpl = new EgovTableIdGnrServiceImpl();
 		egovTableIdGnrServiceImpl.setDataSource(dataSource);
@@ -48,7 +30,6 @@ public class EgovConfigIdGeneration {
 		egovTableIdGnrServiceImpl.setTable("COMTECOPSEQ");
 		egovTableIdGnrServiceImpl.setTableName("FILE");
 		return egovTableIdGnrServiceImpl;
-		
 	}
 
 }

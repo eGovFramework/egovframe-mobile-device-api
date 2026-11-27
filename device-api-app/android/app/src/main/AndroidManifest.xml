@@ -1,45 +1,42 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.egovframe.hyb.egovframe_mobile_deviceapi_app">
-    <!-- GPS 및 위치 권한 -->
+    <!-- 사용 중 위치. GPS, 지도, 나침반, Wi-Fi 이름 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    
-    <!-- Google Play Services 관련 권한 -->
+
+    <!-- 지도 -->
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    
-    <!-- 카메라 권한 -->
+
+    <!-- 카메라 -->
     <uses-permission android:name="android.permission.CAMERA" />
-    
-    <!-- 저장소 권한 (Android 12 이하) -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" 
+    <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove" />
+
+    <!-- 연락처 조회와 기기 저장 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+
+    <!-- 푸시 수신 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Android 12 이하 사진·파일 선택, Android 9 이하 사진첩 저장 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" 
-        android:maxSdkVersion="29" />
-    
-    <!-- 미디어 권한 (Android 13+) -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29"
+        tools:replace="android:maxSdkVersion" />
+
+    <!-- Android 13+ 사진·동영상 -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-    
-    <!-- 네트워크 권한 -->
+
+    <!-- 서버 통신과 네트워크 상태 조회 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    
-    <!-- URL 런처 권한 -->
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
-
-    <!-- 연락처 권한 -->
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
-        android:label="egovframe_mobile_deviceapi_app"
+        android:label="Device API"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true"
@@ -48,11 +45,9 @@
         android:vmSafeMode="false"
         android:allowBackup="false"
         android:supportsRtl="true"
-        android:requestLegacyExternalStorage="true"
         android:extractNativeLibs="false"
-        android:networkSecurityConfig="@xml/network_security_config">
-        <!-- 프로덕션 배포 시 android:networkSecurityConfig 줄 제거 또는 주석 처리
-        개발용 서버의 http 허용 설정 -->
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:usesCleartextTraffic="false">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -63,9 +58,7 @@
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
-            android:enableOnBackInvokedCallback="true"
-            android:showWhenLocked="true"
-            android:turnScreenOn="true">
+            android:enableOnBackInvokedCallback="true">
         <!-- android:screenOrientation="portrait" : 세로모드 고정 (기본값 - 자동회전 : unspecified) -->
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"
@@ -95,6 +88,11 @@
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data android:name="com.google.android.gms.maps.USE_GOOGLE_PLAY_SERVICES" android:value="true" />
+
+        <!-- FCM 기본 알림 채널 -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="egov_push_channel" />
             
         <!-- FileProvider for file sharing -->
         <provider
@@ -120,6 +118,14 @@
         <intent>
             <action android:name="android.intent.action.VIEW"/>
             <data android:scheme="http"/>
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:mimeType="application/*"/>
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:mimeType="text/plain"/>
         </intent>
     </queries>
 </manifest>

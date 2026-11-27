@@ -14,24 +14,21 @@ import egovframework.hyb.mbl.gps.service.EgovGPSAPIService;
 import egovframework.hyb.mbl.gps.service.GPSAPIVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.annotation.Resource;
 
 /**
  * 통합 GPS API Controller
  */
 @Controller
-@RequiredArgsConstructor
-@Slf4j
-@Tag(name = "07. GPS Guide Program Service", description = "GPS API 관리")
+@Tag(name = "06. GPS Guide Program Service", description = "GPS API 관리")
 public class EgovGPSAPIController {
 
-    private final EgovGPSAPIService egovGPSAPIService;
+    @Resource(name = "EgovGPSAPIService")
+    private EgovGPSAPIService egovGPSAPIService;
 
     @Operation(summary = "GPS 정보 목록 조회", description = "GPS 정보 목록을 조회합니다.")
     @GetMapping("/gps/selectGPSInfoList.do")
     public ResponseEntity<Map<String, Object>> selectGPSInfoList(GPSAPIVO searchVO) {
-        log.debug("uuid={}", searchVO.getUuid());
         Map<String, Object> response = new HashMap<>();
         List<GPSAPIVO> gpsInfoList = egovGPSAPIService.selectGPSInfoList(searchVO);
         response.put("gpsInfoList", gpsInfoList);
